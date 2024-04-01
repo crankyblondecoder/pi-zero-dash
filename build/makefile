@@ -1,7 +1,7 @@
 # pi-zero-dash Root Makefile
 # --------------------------
 
-export objFiles := Dash.o
+export objFiles := Dash.o Gauge.o
 
 # NOTE: Put required libs last in the build so Debian based systems don't cry.
 export libs = drm cairo
