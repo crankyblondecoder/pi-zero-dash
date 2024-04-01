@@ -6,6 +6,8 @@
 # Tell make to search other paths. Separate multiple with ":"
 VPATH = ../../src/
 
+sourceLocn = ../../src/
+
 cname = g++
 cflags = -Wall -fPIC -O3
 
@@ -17,7 +19,7 @@ release : $(objFiles)
 	@echo
 	@echo "*** Building - Release ***"
 	@echo
-	$(cname) $(cflags) -o ../$(releaseExecName) $(objFiles) $(addprefix -l, $(libs))
+	$(cname) $(cflags) -o ../$(releaseExecName) $(sourceLocn)piZeroDash.cpp $(objFiles) $(addprefix -l, $(libs)) $(adapsurfStaticLocn)
 	@echo
 	@echo
 

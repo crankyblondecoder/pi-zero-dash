@@ -4,9 +4,9 @@
 # NOTE: Put required libs last in the build so Debian based systems don't cry.
 
 # Tell make to search other paths. Separate multiple with ":"
-VPATH = ../../src/ : ../../src/test/
+VPATH = ../../src/
 
-sourceLocn = ../../src/test/
+sourceLocn = ../../src/
 
 cname = g++
 cflags = -Wall -fPIC -g3 -Og
@@ -19,7 +19,7 @@ test : pzdTest.cpp
 	@echo
 	@echo "*** Building - Test ***"
 	@echo
-	$(cname) $(cflags) -o pzdTest $(sourceLocn)pzdTest.cpp $(addprefix ../debug/, $(objFiles)) $(addprefix -l, $(libs))
+	$(cname) $(cflags) -o pzdTest $(sourceLocn)pzdTest.cpp $(addprefix ../debug/, $(objFiles)) $(addprefix -l, $(libs)) $(adapsurfStaticLocnDebug)
 	@echo
 	@echo
 

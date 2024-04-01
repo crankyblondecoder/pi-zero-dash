@@ -6,6 +6,9 @@ export objFiles := Dash.o
 # NOTE: Put required libs last in the build so Debian based systems don't cry.
 export libs = drm cairo
 
+export adapsurfStaticLocn = ../libAdapSurf.a
+export adapsurfStaticLocnDebug = ../libAdapSurf_debug.a
+
 export debugExecName = piZeroDash_debug
 export releaseExecName = piZeroDash
 
