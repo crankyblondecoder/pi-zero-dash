@@ -1,10 +1,13 @@
-#ifndef PZD_DEVICE_H
-#define PZD_DEVICE_H
+#ifndef PZD_DASH_H
+#define PZD_DASH_H
 
 #include <cstdint>
 
-namespace piZeroDash {
-
+namespace piZeroDash
+{
+	/**
+	 * A dash displays one or more gauges.
+	 */
 	class Dash
 	{
 		public:

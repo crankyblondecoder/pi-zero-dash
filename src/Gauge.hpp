@@ -3,8 +3,11 @@
 
 #include <cstdint>
 
-namespace piZeroDash {
-
+namespace piZeroDash
+{
+	/**
+	 * Gauges display data from one or more instruments.
+	 */
 	class Gauge
 	{
 		public:
