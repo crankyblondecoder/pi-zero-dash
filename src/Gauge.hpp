@@ -3,12 +3,14 @@
 
 #include <cstdint>
 
+#include "Visual.hpp"
+
 namespace piZeroDash
 {
 	/**
 	 * Gauges display data from one or more instruments.
 	 */
-	class Gauge
+	class Gauge : Visual
 	{
 		public:
 

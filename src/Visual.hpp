@@ -24,6 +24,11 @@ namespace piZeroDash
 			 */
 			static bool bindToDrmDevice(unsigned cardNumber, int connectorIndex, int modeIndex);
 
+			/**
+			 * Set the clear colour of the root surface.
+			 */
+			static void setRootClearColour(double red, double green, double blue);
+
 			static adapsurf::Device* adsDevice;
 
 		protected:

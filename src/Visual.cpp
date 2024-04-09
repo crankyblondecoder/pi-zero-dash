@@ -27,3 +27,15 @@ bool Visual::bindToDrmDevice(unsigned cardNumber, int connectorIndex, int modeIn
 
 	return success;
 }
+
+void Visual::setRootClearColour(double red, double green, double blue)
+{
+	if(adsDevice)
+	{
+		adsDevice -> setClearColour(red, green, blue);
+	}
+	else
+	{
+		std::cout << "Could not set clear colour because adsDevice has not been set.\n";
+	}
+}

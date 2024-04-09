@@ -3,17 +3,21 @@
 
 #include <cstdint>
 
+#include "Visual.hpp"
+
 namespace piZeroDash
 {
 	/**
 	 * A dash displays one or more gauges.
 	 */
-	class Dash
+	class Dash : public Visual
 	{
 		public:
 
 			virtual ~Dash(){};
-			Dash(){};
+
+			TODO;
+			Dash(unsigned width, unsigned height);
 
 		protected:
 
