@@ -19,6 +19,8 @@ namespace piZeroDash
 
 		protected:
 
+			void _drawBackground();
+
 		private:
 	};
 }

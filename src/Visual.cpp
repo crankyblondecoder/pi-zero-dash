@@ -11,6 +11,29 @@ using namespace piZeroDash;
 // Global adapsurf device.
 adapsurf::Device* Visual::adsDevice;
 
+Visual::~Visual()
+{
+	if(_backgroundSurface) delete _backgroundSurface;
+
+	if(_foregroundSurface) delete _foregroundSurface;
+}
+
+Visual::Visual(int globalPositionX, int globalPositionY, unsigned width, unsigned height, bool hasForeground,
+	bool hasBackground) : _backgroundSurface{0}, _foregroundSurface{0}
+{
+	// At this stage, visuals are only positioned globally.
+
+	if(hasBackground)
+	{
+		_backgroundSurface = new CairoSurface(globalPositionX, globalPositionY, width, height);
+	}
+
+	if(hasForeground)
+	{
+		_foregroundSurface = new CairoSurface(globalPositionX, globalPositionY, width, height);
+	}
+}
+
 bool Visual::bindToDrmDevice(unsigned cardNumber, int connectorIndex, int modeIndex)
 {
 	bool success = true;

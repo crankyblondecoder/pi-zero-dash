@@ -1,1 +1,4 @@
-Dash.o: ../../src/Dash.cpp ../../src/Dash.hpp
+Dash.o: ../../src/Dash.cpp ../../src/Dash.hpp ../../src/Gauge.hpp \
+ ../../src/Visual.hpp ../../src/adapsurf/CairoSurface.hpp \
+ ../../src/adapsurf/Surface.hpp ../../src/adapsurf/Device.hpp \
+ ../../src/adapsurf/Framebuffer.hpp

@@ -15,7 +15,14 @@ namespace piZeroDash
 		public:
 
 			virtual ~Gauge(){};
-			Gauge(){};
+
+			/**
+			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
+			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
+			 * @param width Width of gauge visual.
+			 * @param height Height of gauge visual.
+			 */
+			Gauge(int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
 		protected:
 

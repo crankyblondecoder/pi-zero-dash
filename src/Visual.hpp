@@ -3,7 +3,10 @@
 
 #include <cstdint>
 
+#include "adapsurf/CairoSurface.hpp"
 #include "adapsurf/Device.hpp"
+
+using namespace adapsurf;
 
 namespace piZeroDash
 {
@@ -14,8 +17,18 @@ namespace piZeroDash
 	{
 		public:
 
-			virtual ~Visual(){};
-			Visual(){};
+			virtual ~Visual();
+
+			/**
+			 * @param globalPositionX X coordinate of position of visual in global coordinates.
+			 * @param globalPositionY Y coordinate of position of visual in global coordinates.
+			 * @param width Width of visual.
+			 * @param height Height of visual.
+			 * @param hasForeground If true then generate foreground visual.
+			 * @param hasBackground If true then generate background visual.
+			 */
+			Visual(int globalPositionX, int globalPositionY, unsigned width, unsigned height, bool hasForeground,
+				bool hasBackground);
 
 			/**
 			 * Bind all visuals to a single drm based adapsurf device.
@@ -29,11 +42,29 @@ namespace piZeroDash
 			 */
 			static void setRootClearColour(double red, double green, double blue);
 
-			static adapsurf::Device* adsDevice;
+			static Device* adsDevice;
 
 		protected:
 
+			/**
+			 * Draw to the given background surface.
+			 * @param surface Surface to draw to.
+			 */
+			virtual void _drawBackground(CairoSurface& surface) = 0;
+
+			/**
+			 * Draw to the given background surface.
+			 * @param surface Surface to draw to.
+			 */
+			virtual void _drawForeground(CairoSurface& surface) = 0;
+
 		private:
+
+			/** Background surface. */
+			CairoSurface* _backgroundSurface;
+
+			/** Foreground surface. */
+			CairoSurface* _foregroundSurface;
 	};
 }
 
