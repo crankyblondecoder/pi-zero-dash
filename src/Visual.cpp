@@ -9,7 +9,7 @@
 using namespace piZeroDash;
 
 // Global adapsurf device.
-adapsurf::Device* Visual::adsDevice;
+adapsurf::Device* Visual::adsDevice = 0;
 
 Visual::~Visual()
 {
@@ -62,3 +62,51 @@ void Visual::setRootClearColour(double red, double green, double blue)
 		std::cout << "Could not set clear colour because adsDevice has not been set.\n";
 	}
 }
+
+void Visual::_drawBackground()
+{
+	if(_backgroundSurface) _drawBackground(*_backgroundSurface);
+}
+
+void Visual::_drawForeground()
+{
+	if(_foregroundSurface) _drawForeground(*_foregroundSurface);
+}
+
+void Visual::_composeBackground(Visual& visual)
+{
+	if(_backgroundSurface && visual._backgroundSurface)
+	{
+		_backgroundSurface -> compose(*visual._backgroundSurface);
+	}
+}
+
+void Visual::_composeForeground(Visual& visual)
+{
+	if(_foregroundSurface && visual._foregroundSurface)
+	{
+		_foregroundSurface -> compose(*visual._foregroundSurface);
+	}
+}
+
+void Visual::_composeToDisplay()
+{
+	if(Visual::adsDevice)
+	{
+		Framebuffer* fb = Visual::adsDevice -> getDrawToFramebuffer();
+
+		if(fb)
+		{
+			if(_foregroundSurface)
+			{
+				fb -> compose(*_foregroundSurface);
+			}
+
+			if(_backgroundSurface)
+			{
+				fb -> compose(*_backgroundSurface);
+			}
+		}
+	}
+}
+

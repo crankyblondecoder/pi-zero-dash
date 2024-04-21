@@ -19,7 +19,11 @@ namespace piZeroDash
 
 		protected:
 
-			void _drawBackground();
+			// Impl.
+			void _drawBackground(CairoSurface& surface);
+
+			// Impl.
+			void _drawForeground(CairoSurface& surface);
 
 		private:
 	};

@@ -10,7 +10,7 @@ namespace piZeroDash
 	/**
 	 * Gauges display data from one or more instruments.
 	 */
-	class Gauge : Visual
+	class Gauge : public Visual
 	{
 		public:
 

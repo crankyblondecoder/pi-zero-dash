@@ -44,7 +44,22 @@ namespace piZeroDash
 
 			static Device* adsDevice;
 
+			/**
+			 * Draw the background of this visual.
+			 */
+			void drawBackground();
+
+			/**
+			 * Draw the foreground of this visual.
+			 */
+			void drawForeground();
+
 		protected:
+
+			/**
+			 * Draw the background of this visual.
+			 */
+			void _drawBackground();
 
 			/**
 			 * Draw to the given background surface.
@@ -53,10 +68,30 @@ namespace piZeroDash
 			virtual void _drawBackground(CairoSurface& surface) = 0;
 
 			/**
+			 * Compose the given visuals background _onto_ this visuals background.
+			 */
+			void _composeBackground(Visual& visual);
+
+			/**
+			 * Draw the foreground of this visual.
+			 */
+			void _drawForeground();
+
+			/**
 			 * Draw to the given background surface.
 			 * @param surface Surface to draw to.
 			 */
 			virtual void _drawForeground(CairoSurface& surface) = 0;
+
+			/**
+			 * Compose the given visuals foreground _onto_ this visuals foreground.
+			 */
+			void _composeForeground(Visual& visual);
+
+			/**
+			 * Compose this visuals background and foreground to the underlying display.
+			 */
+			void _composeToDisplay();
 
 		private:
 

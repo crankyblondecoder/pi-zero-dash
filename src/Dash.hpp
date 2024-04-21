@@ -50,10 +50,16 @@ namespace piZeroDash
 			unsigned _gaugeCount;
 
 			/** If true then the background for this dash and all gauge backgrounds has been generated. */
-			bool _backgroundGenerated;
+			bool _backgroundsGenerated;
+
+			/** Whether this is currently strobing. */
+			bool _strobing;
 
 			/** Generate the background for the entire dash. Which includes the composition of all gauge backgrounds. */
-			void __generatedBackground();
+			void __generateBackgrounds();
+
+			/** Read all instruments and draw the dash. This works purely in terms of foreground surfaces. */
+			void __draw();
 	};
 }
 
