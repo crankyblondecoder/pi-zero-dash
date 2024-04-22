@@ -59,7 +59,7 @@ namespace piZeroDash
 			void __generateBackgrounds();
 
 			/** Read all instruments and draw the dash. This works purely in terms of foreground surfaces. */
-			void __draw();
+			void __scan();
 	};
 }
 

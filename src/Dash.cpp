@@ -38,7 +38,7 @@ void Dash::__generateBackgrounds()
 	_backgroundsGenerated = true;
 }
 
-void Dash::__draw()
+void Dash::__scan()
 {
 	TODO;
 }
@@ -53,9 +53,16 @@ void Dash::strobe(unsigned numberOfStrobes)
 
 	while(_strobing && (continuous || numberOfStrobes > 0))
 	{
-		__draw();
+		// Clear the foreground so that the previous gauge scans don't leave stuff behind.
+		TODO;
+
+		// Scan all the gauges.
+		__scan();
 
 		if(!continuous) numberOfStrobes--;
+
+		// Write the foreground and background to the displays back buffer.
+		_composeToDisplay();
 	}
 
 	_strobing = false;

@@ -4,7 +4,7 @@
 #include <cstdint>
 
 #include "adapsurf/CairoSurface.hpp"
-#include "adapsurf/Device.hpp"
+#include "adapsurf/DrmDevice.hpp"
 
 using namespace adapsurf;
 
@@ -42,7 +42,7 @@ namespace piZeroDash
 			 */
 			static void setRootClearColour(double red, double green, double blue);
 
-			static Device* adsDevice;
+			static DrmDevice* adsDevice;
 
 			/**
 			 * Draw the background of this visual.
@@ -90,6 +90,7 @@ namespace piZeroDash
 
 			/**
 			 * Compose this visuals background and foreground to the underlying display.
+			 * This displays the combined visuals to the screen.
 			 */
 			void _composeToDisplay();
 

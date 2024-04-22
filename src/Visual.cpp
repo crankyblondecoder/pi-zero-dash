@@ -9,7 +9,7 @@
 using namespace piZeroDash;
 
 // Global adapsurf device.
-adapsurf::Device* Visual::adsDevice = 0;
+DrmDevice* Visual::adsDevice = 0;
 
 Visual::~Visual()
 {
@@ -107,6 +107,9 @@ void Visual::_composeToDisplay()
 				fb -> compose(*_backgroundSurface);
 			}
 		}
+
+		// This should block until page flip has completed.
+		Visual::adsDevice -> pageFlip();
 	}
 }
 
