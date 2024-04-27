@@ -89,10 +89,19 @@ namespace piZeroDash
 			void _composeForeground(Visual& visual);
 
 			/**
-			 * Compose this visuals background and foreground to the underlying display.
-			 * This displays the combined visuals to the screen.
+			 * Compose this visuals background to the back buffer of the display.
 			 */
-			void _composeToDisplay();
+			void _composeBackgroundToDisplay();
+
+			/**
+			 * Compose this visuals foreground to the back buffer of the display.
+			 */
+			void _composeForegroundToDisplay();
+
+			/**
+			 * Commit this visual to be displayed. ie Page flip the backbuffer into the front buffer.
+			*/
+			void _commitToDisplay();
 
 		private:
 

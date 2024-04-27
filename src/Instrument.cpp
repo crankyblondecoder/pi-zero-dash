@@ -2,3 +2,10 @@
 
 using namespace piZeroDash;
 
+Instrument::~Instrument()
+{
+}
+
+Instrument::Instrument()
+{
+}

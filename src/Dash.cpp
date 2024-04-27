@@ -3,6 +3,11 @@
 
 using namespace piZeroDash;
 
+Dash::~Dash()
+{
+	delete[] _gauges;
+}
+
 Dash::Dash() : Visual(0, 0, (unsigned) Visual::adsDevice -> getDisplayResolutionWidth(),
 	(unsigned) Visual::adsDevice -> getDisplayResolutionHeight(), false, true)
 {
@@ -40,7 +45,10 @@ void Dash::__generateBackgrounds()
 
 void Dash::__scan()
 {
-	TODO;
+	for(unsigned index = 0; index < _gaugeCount; index++)
+	{
+		_gauges[index] -> scan();
+	}
 }
 
 void Dash::strobe(unsigned numberOfStrobes)
@@ -53,16 +61,16 @@ void Dash::strobe(unsigned numberOfStrobes)
 
 	while(_strobing && (continuous || numberOfStrobes > 0))
 	{
-		// Clear the foreground so that the previous gauge scans don't leave stuff behind.
-		TODO;
+		// Write the background to the displays back buffer.
+		_composeBackgroundToDisplay();
 
-		// Scan all the gauges.
+		// Scan all the gauges. This should trigger the gauges to draw their foreground to the back buffer.
 		__scan();
 
-		if(!continuous) numberOfStrobes--;
+		// This will block until the buffer flips.
+		_commitToDisplay();
 
-		// Write the foreground and background to the displays back buffer.
-		_composeToDisplay();
+		if(!continuous) numberOfStrobes--;
 	}
 
 	_strobing = false;

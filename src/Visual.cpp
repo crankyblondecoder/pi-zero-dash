@@ -89,7 +89,23 @@ void Visual::_composeForeground(Visual& visual)
 	}
 }
 
-void Visual::_composeToDisplay()
+void Visual::_composeBackgroundToDisplay()
+{
+	if(Visual::adsDevice)
+	{
+		Framebuffer* fb = Visual::adsDevice -> getDrawToFramebuffer();
+
+		if(fb)
+		{
+			if(_backgroundSurface)
+			{
+				fb -> compose(*_backgroundSurface);
+			}
+		}
+	}
+}
+
+void Visual::_composeForegroundToDisplay()
 {
 	if(Visual::adsDevice)
 	{
@@ -101,15 +117,12 @@ void Visual::_composeToDisplay()
 			{
 				fb -> compose(*_foregroundSurface);
 			}
-
-			if(_backgroundSurface)
-			{
-				fb -> compose(*_backgroundSurface);
-			}
 		}
-
-		// This should block until page flip has completed.
-		Visual::adsDevice -> pageFlip();
 	}
 }
 
+void Visual::_commitToDisplay()
+{
+	// This should block until page flip has completed.
+	Visual::adsDevice -> pageFlip();
+}

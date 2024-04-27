@@ -15,6 +15,13 @@ namespace piZeroDash
 			virtual ~Instrument(){};
 			Instrument(){};
 
+			/**
+			 * Latch the current state of the instrument.
+			 * This means to store it locally for later retrieval.
+			 * @returns True if the latched data is different from the previously latched data.
+			 */
+			virtual bool latch() = 0;
+
 		protected:
 
 		private:

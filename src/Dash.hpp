@@ -17,7 +17,7 @@ namespace piZeroDash
 	{
 		public:
 
-			virtual ~Dash(){};
+			virtual ~Dash();
 
 			/**
 			 * Create a dash that takes up the entire size of the display.
@@ -58,7 +58,7 @@ namespace piZeroDash
 			/** Generate the background for the entire dash. Which includes the composition of all gauge backgrounds. */
 			void __generateBackgrounds();
 
-			/** Read all instruments and draw the dash. This works purely in terms of foreground surfaces. */
+			/** Allow all gauges to read their instruments and draw their foreground surfaces. */
 			void __scan();
 	};
 }

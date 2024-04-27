@@ -3,7 +3,10 @@
 
 #include <cstdint>
 
+#include "Instrument.hpp"
 #include "Visual.hpp"
+
+#define NUM_INSTRUMENTS 16
 
 namespace piZeroDash
 {
@@ -14,7 +17,7 @@ namespace piZeroDash
 	{
 		public:
 
-			virtual ~Gauge(){};
+			virtual ~Gauge();
 
 			/**
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
@@ -24,9 +27,24 @@ namespace piZeroDash
 			 */
 			Gauge(int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
+			/**
+			 * Latch instrument(s) and write gauges foreground as a result if any latched values change.
+			 */
+			void scan();
+
 		protected:
 
+			/**
+			 * Add an instrument to this gauge that can be read to get the state to display.
+			 * @param instrument Instrument to add. Not owned by this.
+			 */
+			void _addInstrument(Instrument* instrument);
+
 		private:
+
+			unsigned _instrumentCount;
+
+			Instrument** _instruments;
 	};
 }
 
