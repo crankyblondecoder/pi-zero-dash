@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include "Dash.hpp"
+#include "GaugeSpeedo_e36.hpp"
 
 namespace piZeroDash
 {
@@ -14,8 +15,12 @@ namespace piZeroDash
 	{
 		public:
 
-			virtual ~Dash_e36(){};
-			Dash_e36();
+			virtual ~Dash_e36();
+
+			/**
+			 * @param speedoWidthPercent Speedo width as a percentage of the width of the dash.
+			 */
+			Dash_e36(double speedoWidthPercent);
 
 		protected:
 
@@ -26,6 +31,8 @@ namespace piZeroDash
 			void _drawForeground(CairoSurface& surface);
 
 		private:
+
+			GaugeSpeedo_e36* _speedo;
 	};
 }
 

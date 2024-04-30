@@ -56,6 +56,12 @@ namespace piZeroDash
 
 		protected:
 
+			/** Get width of this visual in pixels. */
+			unsigned _getWidth();
+
+			/** Get height of this visual in pixels. */
+			unsigned _getHeight();
+
 			/**
 			 * Draw the background of this visual.
 			 */
@@ -110,6 +116,12 @@ namespace piZeroDash
 
 			/** Foreground surface. */
 			CairoSurface* _foregroundSurface;
+
+			/** Width of visual in pixels. */
+			unsigned _width;
+
+			/** Height of visual in pixels. */
+			unsigned _height;
 	};
 }
 

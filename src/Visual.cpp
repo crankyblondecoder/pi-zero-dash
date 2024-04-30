@@ -126,3 +126,13 @@ void Visual::_commitToDisplay()
 	// This should block until page flip has completed.
 	Visual::adsDevice -> pageFlip();
 }
+
+unsigned Visual::_getWidth()
+{
+	return _width;
+}
+
+unsigned Visual::_getHeight()
+{
+	return _height;
+}
