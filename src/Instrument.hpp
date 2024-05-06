@@ -12,8 +12,8 @@ namespace piZeroDash
 	{
 		public:
 
-			virtual ~Instrument(){};
-			Instrument(){};
+			virtual ~Instrument();
+			Instrument();
 
 			/**
 			 * Latch the current state of the instrument.

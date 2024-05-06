@@ -32,6 +32,12 @@ namespace piZeroDash
 			 */
 			void scan();
 
+			/** Run a test cycle. */
+			virtual void test() = 0;
+
+			/** Whether this gauge is currentlyu in a test cycle. */
+			virtual bool inTestMode() = 0;
+
 		protected:
 
 			/**

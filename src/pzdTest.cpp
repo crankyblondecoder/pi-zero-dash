@@ -3,6 +3,7 @@
 
 using namespace std;
 
+#include "Dash_e36.hpp"
 #include "Visual.hpp"
 
 using namespace piZeroDash;
@@ -54,4 +55,8 @@ int main(int argc, char* argv[])
 	{
 		cout << "Could not bind to drm device. Test failed.\n";
 	}
+
+	// Generate and put into a test cycle an E36 dash.
+	Dash_e36 e36Dash(78);
+	e36Dash.test();
 }

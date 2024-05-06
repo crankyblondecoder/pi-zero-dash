@@ -63,9 +63,19 @@ void Visual::setRootClearColour(double red, double green, double blue)
 	}
 }
 
+void Visual::drawBackground()
+{
+	if(_backgroundSurface) _drawBackground(*_backgroundSurface);
+}
+
 void Visual::_drawBackground()
 {
 	if(_backgroundSurface) _drawBackground(*_backgroundSurface);
+}
+
+void Visual::drawForeground()
+{
+	if(_foregroundSurface) _drawForeground(*_foregroundSurface);
 }
 
 void Visual::_drawForeground()

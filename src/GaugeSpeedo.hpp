@@ -24,7 +24,7 @@ namespace piZeroDash
 			 */
 			GaugeSpeedo(unsigned maxSpeed, int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
-			/** Run a test cycle. */
+			// Impl.
 			void test();
 
 		protected:

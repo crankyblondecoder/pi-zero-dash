@@ -26,6 +26,9 @@ namespace piZeroDash
 			/** Produce test output. */
 			void test(unsigned maxSpeed);
 
+			/** Get whether this instrument is currently in test mode. */
+			bool inTestMode();
+
 		protected:
 
 		private:
@@ -33,6 +36,7 @@ namespace piZeroDash
 			/** Currently latched value. */
 			unsigned _latchedValue;
 
+			/** Whether this instrument is in test mode. */
 			bool _inTestMode;
 
 			/** The maximum speed allowed during test mode. */

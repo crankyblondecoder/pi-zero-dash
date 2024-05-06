@@ -33,6 +33,9 @@ namespace piZeroDash
 			/** Stop any pending strobing. */
 			void stopStrobing();
 
+			/** Run a full test cycle on this dash. */
+			void test();
+
 		protected:
 
 			/**

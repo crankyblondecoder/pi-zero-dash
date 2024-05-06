@@ -47,3 +47,8 @@ void InstrumentSpeedo::test(unsigned maxSpeed)
 	_curTestValue = 0;
 	_curTestForwardDirection = true;
 }
+
+bool InstrumentSpeedo::inTestMode()
+{
+	return _inTestMode;
+}

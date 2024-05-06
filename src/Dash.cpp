@@ -80,3 +80,25 @@ void Dash::stopStrobing()
 {
 	_strobing = false;
 }
+
+void Dash::test()
+{
+	for(unsigned index = 0; index < _gaugeCount; index++)
+	{
+		_gauges[index] -> test();
+	}
+
+	bool inTestMode = true;
+
+	while(inTestMode)
+	{
+		inTestMode = false;
+
+		strobe(1);
+
+		for(unsigned index = 0; index < _gaugeCount; index++)
+		{
+			inTestMode = inTestMode || (_gauges[index] -> inTestMode());
+		}
+	}
+}

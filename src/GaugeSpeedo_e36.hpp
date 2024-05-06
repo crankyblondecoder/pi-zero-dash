@@ -16,12 +16,16 @@ namespace piZeroDash
 
 			/**
 			 * @param maxSpeed Maximum speed displayed by speedo.
+			 * @param lineLength Marker line length. The line that marks the speed.
+			 * @param majorLineWidth Marker line width for major graduations.
+			 * @param minorLineWidth Marker line width for the minor graduations.
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
 			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeSpeedo_e36(unsigned maxSpeed, int globalPositionX, int globalPositionY, unsigned width, unsigned height);
+			GaugeSpeedo_e36(unsigned maxSpeed, double lineLength, double majorLineWidth, double minorLineWidth,
+				int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
 			void _drawBackground(CairoSurface& surface);
@@ -29,8 +33,11 @@ namespace piZeroDash
 			// Impl.
 			void _drawForeground(CairoSurface& surface);
 
-			/** Run a test cycle. */
+			// Impl.
 			void test();
+
+			// Impl.
+			bool inTestMode();
 
 		protected:
 
@@ -39,8 +46,14 @@ namespace piZeroDash
 			/** Generic speedo. */
 			InstrumentSpeedo _speedoInstr;
 
-			/** Maximum speed displayed by the speedo. */
-			unsigned _maxSpeed;
+			/** Speed marker line length. */
+			double _lineLength;
+
+			/** Major speed marker line width. */
+			double _majorLineWidth;
+
+			/** Minor speed marker line width. */
+			double _minorLineWidth;
 	};
 }
 

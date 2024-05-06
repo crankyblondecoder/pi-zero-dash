@@ -14,10 +14,11 @@ Dash_e36::Dash_e36(double speedoWidthPercent) : _speedo{0}
 	unsigned dashWidth = _getWidth();
 	unsigned dashHeight = _getHeight();
 
-	unsigned speedoWidth = dashWidth * speedoWidthPercent;
-	unsigned speedoHeight = dashHeight * (speedoWidthPercent / 1.9);
+	unsigned speedoWidth = dashWidth * (speedoWidthPercent / 100.0);
+	unsigned speedoHeight = (speedoWidth / 2.0) * 1.1;
 
-	_speedo = new GaugeSpeedo_e36(300, ((dashWidth - speedoWidth) / 2), dashHeight - speedoHeight, speedoWidth, speedoHeight);
+	_speedo = new GaugeSpeedo_e36(300, ((dashWidth - speedoWidth) / 2), 0.07 * (double) speedoWidth,
+		0.01 * (double) speedoWidth, 0.005 * (double) speedoWidth, dashHeight - speedoHeight, speedoWidth, speedoHeight);
 
 	_addGauge(_speedo);
 }
