@@ -15,6 +15,7 @@ export releaseExecName = piZeroDash
 
 .PHONY : debug
 debug :
+	@ mkdir -p debug
 	cd debug; $(MAKE) --makefile=../makefile_debug debug
 
 .PHONY : clean
@@ -27,8 +28,10 @@ clean :
 
 .PHONY : test
 test : debug
+	@ mkdir -p test
 	cd test; $(MAKE) --makefile=../makefile_test test
 
 .PHONY : release
 release :
+	@ mkdir -p release
 	cd release; $(MAKE) --makefile=../makefile_release release
