@@ -19,7 +19,7 @@ debug : $(objFiles)
 	@echo
 	@echo "*** Building - Debug ***"
 	@echo
-	$(cname) $(cflags) -o ../$(debugExecName) $(sourceLocn)piZeroDash.cpp $(objFiles) $(addprefix -l, $(libs)) $(adapsurfStaticLocnDebug)
+	$(cname) $(cflags) -o ../$(debugExecName) $(sourceLocn)piZeroDash.cpp $(objFiles) $(adapsurfStaticLocnDebug) $(addprefix -l, $(libs))
 	@echo
 	@echo
 

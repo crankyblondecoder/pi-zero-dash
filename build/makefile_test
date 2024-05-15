@@ -19,7 +19,7 @@ test : pzdTest.cpp
 	@echo
 	@echo "*** Building - Test ***"
 	@echo
-	$(cname) $(cflags) -o pzdTest $(sourceLocn)pzdTest.cpp $(addprefix ../debug/, $(objFiles)) $(addprefix -l, $(libs)) $(adapsurfStaticLocnDebug)
+	$(cname) $(cflags) -o pzdTest $(sourceLocn)pzdTest.cpp $(addprefix ../debug/, $(objFiles)) $(adapsurfStaticLocnDebug) $(addprefix -l, $(libs))
 	@echo
 	@echo
 

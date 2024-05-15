@@ -19,7 +19,7 @@ release : $(objFiles)
 	@echo
 	@echo "*** Building - Release ***"
 	@echo
-	$(cname) $(cflags) -o ../$(releaseExecName) $(sourceLocn)piZeroDash.cpp $(objFiles) $(addprefix -l, $(libs)) $(adapsurfStaticLocn)
+	$(cname) $(cflags) -o ../$(releaseExecName) $(sourceLocn)piZeroDash.cpp $(objFiles) $(adapsurfStaticLocn) $(addprefix -l, $(libs))
 	@echo
 	@echo
 
