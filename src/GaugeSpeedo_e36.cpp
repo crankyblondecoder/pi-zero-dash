@@ -48,11 +48,18 @@ void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 		// Cairo transforms appear to be post-multiplied together then pre-multiplied to the geometry to go from user to
 		// device coordinates.
 
+		// Debug.
+		cairo_matrix_t dmat;
+
 		// Rotate about the "dial centre".
 		cairo_identity_matrix(cr);
+cairo_get_matrix(cr, &dmat);
 		cairo_translate(cr, radius, radius);
+cairo_get_matrix(cr, &dmat);
 		cairo_rotate(cr, curGradAngle);
+cairo_get_matrix(cr, &dmat);
 		cairo_translate(cr, -radius, -radius);
+cairo_get_matrix(cr, &dmat);
 
 		// Debug.
 		double x = 0.0;
