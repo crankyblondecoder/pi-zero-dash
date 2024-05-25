@@ -32,7 +32,7 @@ void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 
 	for(unsigned gradIndex = 0; gradIndex < numGraduations; gradIndex++)
 	{
-		bool isMinor = gradIndex / 2;
+		bool isMinor = gradIndex % 2;
 
 		// For the moment pure white.
 		cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
