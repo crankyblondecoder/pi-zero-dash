@@ -21,7 +21,7 @@ void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 
 	double radius = (double)(_getWidth()) / 2.0;
 
-	unsigned numGraduations = _getMaxSpeed() / 10;
+	unsigned numGraduations = (_getMaxSpeed() - 20) / 10;
 
 	// The 0 and max speed lines are below the semicircle.
 	double stepAngle = M_PI / (double)(numGraduations - 2);
@@ -30,10 +30,13 @@ void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 
 	cairo_t* cr = surface.getContext();
 
-	// The number of lines is one more than the number of graduations because zero has a line.
-	for(unsigned gradIndex = 0; gradIndex <= numGraduations; gradIndex++)
+	// The number of lines is one more than the number of graduations because 20 has a line.
+	// Also a minor line goes below the horizontal before 20 and after max speed.
+	unsigned numLines = numGraduations + 3;
+
+	for(unsigned lineIndex = 0; lineIndex <= numLines; lineIndex++)
 	{
-		bool isMinor = gradIndex % 2;
+		bool isMinor = !(lineIndex % 2);
 
 		// For the moment pure white.
 		cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
