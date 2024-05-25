@@ -30,7 +30,8 @@ void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 
 	cairo_t* cr = surface.getContext();
 
-	for(unsigned gradIndex = 0; gradIndex < numGraduations; gradIndex++)
+	// The number of lines is one more than the number of graduations because zero has a line.
+	for(unsigned gradIndex = 0; gradIndex <= numGraduations; gradIndex++)
 	{
 		bool isMinor = gradIndex % 2;
 
