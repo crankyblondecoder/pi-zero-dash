@@ -21,11 +21,10 @@ void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 
 	double radius = (double)(_getWidth()) / 2.0;
 
-	unsigned numGraduations = _getMaxSpeed() / 20;
+	unsigned numGraduations = _getMaxSpeed() / 10;
 
 	// The 0 and max speed lines are below the semicircle.
 	double stepAngle = M_PI / (double)(numGraduations - 2);
-	double minorStepAngle = stepAngle / 2.0;
 
 	double curGradAngle = -stepAngle;
 
@@ -71,7 +70,7 @@ void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 		cairo_line_to(cr, _lineLength, radius);
 		cairo_stroke(cr);
 
-		curGradAngle += minorStepAngle;
+		curGradAngle += stepAngle;
 	}
 }
 
