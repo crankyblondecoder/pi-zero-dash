@@ -45,11 +45,19 @@ void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 			cairo_set_line_width(cr, _majorLineWidth);
 		}
 
+		// Cairo transforms appear to be post-multiplied together then pre-multiplied to the geometry to go from user to
+		// device coordinates.
+
 		// Rotate about the "dial centre".
 		cairo_identity_matrix(cr);
-		cairo_translate(cr, -radius, -radius);
-		cairo_rotate(cr, curGradAngle);
 		cairo_translate(cr, radius, radius);
+		cairo_rotate(cr, curGradAngle);
+		cairo_translate(cr, -radius, -radius);
+
+		// Debug.
+		double x = 0.0;
+		double y = radius;
+		cairo_user_to_device(cr, &x, &y);
 
 		// Define and draw line.
 		cairo_move_to(cr, 0.0, radius);
