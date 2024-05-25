@@ -17,12 +17,14 @@ GaugeSpeedo_e36::GaugeSpeedo_e36(unsigned maxSpeed, double lineLength, double ma
 
 void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 {
-	unsigned radius = _getWidth() / 2;
+	// The background surface is exclusive to this gauge.
+
+	double radius = (double)(_getWidth()) / 2.0;
 
 	unsigned numGraduations = _getMaxSpeed() / 20;
 
 	// The 0 and max speed lines are below the semicircle.
-	double stepAngle = M_PI / (numGraduations - 2);
+	double stepAngle = M_PI / (double)(numGraduations - 2);
 	double minorStepAngle = stepAngle / 2.0;
 
 	double curGradAngle = -stepAngle;
@@ -53,13 +55,11 @@ void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 
 		// Rotate about the "dial centre".
 		cairo_identity_matrix(cr);
-//cairo_get_matrix(cr, &dmat);
 		cairo_translate(cr, radius, radius);
-//cairo_get_matrix(cr, &dmat);
-		//cairo_rotate(cr, curGradAngle);
-//cairo_get_matrix(cr, &dmat);
+		cairo_rotate(cr, curGradAngle);
 		cairo_translate(cr, -radius, -radius);
-cairo_get_matrix(cr, &dmat);
+
+		cairo_get_matrix(cr, &dmat);
 
 		// Debug.
 		double x = 0.0;
