@@ -32,6 +32,9 @@ Visual::Visual(int globalPositionX, int globalPositionY, unsigned width, unsigne
 	{
 		_foregroundSurface = new CairoSurface(globalPositionX, globalPositionY, width, height);
 	}
+
+	_width = width;
+	_height = height;
 }
 
 bool Visual::bindToDrmDevice(unsigned cardNumber, int connectorIndex, int modeIndex)
