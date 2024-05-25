@@ -47,9 +47,9 @@ void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 
 		// Rotate about the "dial centre".
 		cairo_identity_matrix(cr);
-		cairo_translate(cr, radius, radius);
-		cairo_rotate(cr, curGradAngle);
 		cairo_translate(cr, -radius, -radius);
+		cairo_rotate(cr, curGradAngle);
+		cairo_translate(cr, radius, radius);
 
 		// Define and draw line.
 		cairo_move_to(cr, 0.0, radius);
