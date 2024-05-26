@@ -59,4 +59,8 @@ int main(int argc, char* argv[])
 	// Generate and put into a test cycle an E36 dash.
 	Dash_e36 e36Dash(78);
 	e36Dash.test();
+
+	// Wait for enter key.
+	string scratch;
+	cin >> scratch;
 }
