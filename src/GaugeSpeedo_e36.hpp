@@ -16,6 +16,7 @@ namespace piZeroDash
 
 			/**
 			 * @param maxSpeed Maximum speed displayed by speedo.
+			 * @param markedSpeedFontSize Size of marked speed font.
 			 * @param lineLength Marker line length. The line that marks the speed.
 			 * @param majorLineWidth Marker line width for major graduations.
 			 * @param minorLineWidth Marker line width for the minor graduations.
@@ -24,7 +25,7 @@ namespace piZeroDash
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeSpeedo_e36(unsigned maxSpeed, double lineLength, double majorLineWidth, double minorLineWidth,
+			GaugeSpeedo_e36(unsigned maxSpeed, double markedSpeedFontSize, double lineLength, double majorLineWidth, double minorLineWidth,
 				int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
@@ -45,6 +46,9 @@ namespace piZeroDash
 
 			/** Generic speedo. */
 			InstrumentSpeedo _speedoInstr;
+
+			/** Font size for speed markers. */
+			double _markedSpeedFontSize;
 
 			/** Speed marker line length. */
 			double _lineLength;
