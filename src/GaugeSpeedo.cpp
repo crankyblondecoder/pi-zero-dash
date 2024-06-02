@@ -78,21 +78,11 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 		// Cairo transforms appear to be post-multiplied together then pre-multiplied to the geometry to go from user to
 		// device coordinates.
 
-		// Debug.
-		cairo_matrix_t dmat;
-
 		// Rotate about the "dial centre".
 		cairo_identity_matrix(cr);
 		cairo_translate(cr, radius, radius);
 		cairo_rotate(cr, curGradAngle);
 		cairo_translate(cr, -radius, -radius);
-
-		cairo_get_matrix(cr, &dmat);
-
-		// Debug.
-		double x = 0.0;
-		double y = radius;
-		cairo_user_to_device(cr, &x, &y);
 
 		// Define and draw line.
 		cairo_move_to(cr, 0.0, radius);
@@ -156,4 +146,31 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 
 		curGradAngle += stepAngle;
 	}
+}
+
+void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth)
+{
+	cairo_t* cr = surface.getContext();
+
+	double radius = (double)(_getWidth()) / 2.0;
+
+	cairo_set_source_rgba(cr, 36.0/255.0, 109.0/255.0, 179.0/255.0, 0.75);
+
+	cairo_set_line_width(cr, indicatorLineWidth);
+
+	unsigned curSpeed = _speedoInstr.getSpeed();
+
+	// Indicator angle starts from 20 at 0 degrees and increases clockwise to max speed.
+	double indicatorAngle = M_PI * (double)(curSpeed - 20) / (double)(_maxSpeed - 20);
+
+	// Rotate about the "dial centre".
+	cairo_identity_matrix(cr);
+	cairo_translate(cr, radius, radius);
+	cairo_rotate(cr, indicatorAngle);
+	cairo_translate(cr, -radius, -radius);
+
+	// Define and draw line.
+	cairo_move_to(cr, 0.0, radius);
+	cairo_line_to(cr, indicatorLineLength, radius);
+	cairo_stroke(cr);
 }

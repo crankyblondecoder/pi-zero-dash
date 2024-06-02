@@ -43,9 +43,17 @@ namespace piZeroDash
 			void _drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, double lineLength,
 				double majorLineWidth, double minorLineWidth);
 
+			/**
+			 * Draw the default speedo forground.
+			 * @param surface Surface to draw to.
+			 * @param indicatorLineLength Length of speed indicator line.
+			 * @param indicatorLineWidth Width of speed indicator line.
+			 */
+			void _drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth);
+
 		private:
 
-			/** Generic speedo. */
+			/** Generic speedo instrument. */
 			InstrumentSpeedo _speedoInstr;
 
 			/** Maximum speed displayed by the speedo. */

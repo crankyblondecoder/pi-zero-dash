@@ -30,6 +30,7 @@ void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 
 void GaugeSpeedo_e36::_drawForeground(CairoSurface& surface)
 {
+	_drawDefaultForeground(surface, _lineLength * 1.2, _majorLineWidth * 2);
 }
 
 void GaugeSpeedo_e36::test()
