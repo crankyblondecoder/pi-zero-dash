@@ -32,6 +32,17 @@ namespace piZeroDash
 			/** Get the maximum speed displayed. */
 			unsigned _getMaxSpeed();
 
+			/**
+			 * Draw a default speedo background.
+			 * @param surface Surface to draw to.
+			 * @param markedSpeedFontSize The font size of the numbers that appear near the marked lines.
+			 * @param lineLength The length of the marked lines.
+			 * @param majorLineWidth Major marked line width.
+			 * @param minorLineWidth Minor marked line width.
+			 */
+			void _drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, double lineLength,
+				double majorLineWidth, double minorLineWidth);
+
 		private:
 
 			/** Generic speedo. */
