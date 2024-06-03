@@ -25,7 +25,11 @@ void Gauge::scan()
 		draw = draw || _instruments[index] -> latch();
 	}
 
-	if(draw) _drawForeground();
+	if(draw)
+	{
+		_drawForeground();
+		_composeForegroundToDisplay();
+	}
 }
 
 void Gauge::_addInstrument(Instrument* instrument)

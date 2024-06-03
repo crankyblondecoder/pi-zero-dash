@@ -42,7 +42,7 @@ namespace piZeroDash
 
 			/**
 			 * Add an instrument to this gauge that can be read to get the state to display.
-			 * @param instrument Instrument to add. Not owned by this.
+			 * @param instrument Instrument to add. _Not_ owned by this.
 			 */
 			void _addInstrument(Instrument* instrument);
 

@@ -32,13 +32,3 @@ void GaugeSpeedo_e36::_drawForeground(CairoSurface& surface)
 {
 	_drawDefaultForeground(surface, _lineLength * 1.2, _majorLineWidth * 2);
 }
-
-void GaugeSpeedo_e36::test()
-{
-	_speedoInstr.test(_getMaxSpeed());
-}
-
-bool GaugeSpeedo_e36::inTestMode()
-{
-	return _speedoInstr.inTestMode();
-}

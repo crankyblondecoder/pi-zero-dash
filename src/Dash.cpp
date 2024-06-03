@@ -64,7 +64,7 @@ void Dash::strobe(unsigned numberOfStrobes)
 		// Write the background to the displays back buffer.
 		_composeBackgroundToDisplay();
 
-		// Scan all the gauges. This should trigger the gauges to draw their foreground to the back buffer.
+		// Scan all the gauges. This should trigger the gauges to draw their foreground to their visual surfaces.
 		__scan();
 
 		// This will block until the buffer flips.

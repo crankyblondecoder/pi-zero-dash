@@ -34,18 +34,9 @@ namespace piZeroDash
 			// Impl.
 			void _drawForeground(CairoSurface& surface);
 
-			// Impl.
-			void test();
-
-			// Impl.
-			bool inTestMode();
-
 		protected:
 
 		private:
-
-			/** Generic speedo. */
-			InstrumentSpeedo _speedoInstr;
 
 			/** Font size for speed markers. */
 			double _markedSpeedFontSize;

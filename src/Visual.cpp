@@ -83,7 +83,11 @@ void Visual::drawForeground()
 
 void Visual::_drawForeground()
 {
-	if(_foregroundSurface) _drawForeground(*_foregroundSurface);
+	if(_foregroundSurface)
+	{
+		_foregroundSurface -> clear(0.0, 0.0, 0.0, 0.0);
+		_drawForeground(*_foregroundSurface);
+	}
 }
 
 void Visual::_composeBackground(Visual& visual)

@@ -16,6 +16,8 @@ GaugeSpeedo::GaugeSpeedo(unsigned maxSpeed, int globalPositionX, int globalPosit
 	: Gauge(globalPositionX, globalPositionY, width, height)
 {
 	_maxSpeed = maxSpeed;
+
+	_addInstrument(&_speedoInstr);
 }
 
 unsigned GaugeSpeedo::_getMaxSpeed()
@@ -25,7 +27,12 @@ unsigned GaugeSpeedo::_getMaxSpeed()
 
 void GaugeSpeedo::test()
 {
-	_speedoInstr.test(_maxSpeed);
+	_speedoInstr.test(_maxSpeed + 10);
+}
+
+bool GaugeSpeedo::inTestMode()
+{
+	return _speedoInstr.inTestMode();
 }
 
 void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, double lineLength,
@@ -161,7 +168,7 @@ void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicator
 	unsigned curSpeed = _speedoInstr.getSpeed();
 
 	// Indicator angle starts from 20 at 0 degrees and increases clockwise to max speed.
-	double indicatorAngle = M_PI * (double)(curSpeed - 20) / (double)(_maxSpeed - 20);
+	double indicatorAngle = M_PI * ((double)curSpeed - 20.0) / ((double)_maxSpeed - 20.0);
 
 	// Rotate about the "dial centre".
 	cairo_identity_matrix(cr);

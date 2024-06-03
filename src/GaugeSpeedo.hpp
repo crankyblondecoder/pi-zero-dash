@@ -27,6 +27,9 @@ namespace piZeroDash
 			// Impl.
 			void test();
 
+			// Impl.
+			bool inTestMode();
+
 		protected:
 
 			/** Get the maximum speed displayed. */
