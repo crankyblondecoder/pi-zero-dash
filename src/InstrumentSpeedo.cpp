@@ -1,3 +1,4 @@
+#include <iostream>
 #include "InstrumentSpeedo.hpp"
 
 using namespace piZeroDash;
@@ -8,25 +9,59 @@ InstrumentSpeedo::~InstrumentSpeedo()
 
 InstrumentSpeedo::InstrumentSpeedo() : _inTestMode{false}
 {
+	_curTestValue = 0;
 }
 
 bool InstrumentSpeedo::latch()
 {
 	if(_inTestMode)
 	{
+		struct timeval curTime;
+
+		gettimeofday(&curTime, 0);
+
+		long millis = (curTime.tv_sec - _testStartSec) * 1000 + (curTime.tv_usec - _testStartUSec)/1000;
+
+		std::cout << "millis: " << millis << "\n";
+
 		if(_curTestForwardDirection)
 		{
-			_latchedValue = _curTestValue++;
+			if(_curTestValue == 0.0)
+			{
+				_curTestValue = 10;
 
-			if(_curTestValue >= _curTestMaxSpeed) _curTestForwardDirection = false;
+				_testStartSec = curTime.tv_sec;
+				_testStartUSec = curTime.tv_usec;
+			}
+			else
+			{
+				_curTestValue = 10 + (millis / 50);
+			}
+
+			if(_curTestValue >= _curTestMaxSpeed)
+			{
+				_curTestForwardDirection = false;
+
+				_testStartSec = curTime.tv_sec;
+				_testStartUSec = curTime.tv_usec;
+			}
 		}
 		else if(_curTestValue > 0)
 		{
-			_latchedValue = _curTestValue--;
+			_curTestValue = _curTestMaxSpeed - (millis / 75);
 		}
 		else
 		{
 			_inTestMode = false;
+		}
+
+		if(_curTestValue >= 0)
+		{
+			_latchedValue = _curTestValue;
+		}
+		else
+		{
+			_latchedValue = 0;
 		}
 
 		return _inTestMode;

@@ -2,6 +2,7 @@
 #define PZD_INSTRUMENT_SPEEDO_H
 
 #include <cstdint>
+#include <sys/time.h>
 
 #include "Instrument.hpp"
 
@@ -46,7 +47,11 @@ namespace piZeroDash
 			bool _curTestForwardDirection;
 
 			/** Current test value. */
-			unsigned _curTestValue;
+			int _curTestValue;
+
+			/** The time at the beginning of the test cycle. */
+			long _testStartSec;
+			long _testStartUSec;
 	};
 }
 
