@@ -52,6 +52,13 @@ namespace piZeroDash
 			/** The time at the beginning of the test cycle. */
 			long _testStartSec;
 			long _testStartUSec;
+
+			/** The time of the last test latch. */
+			long _testLastSec;
+			long _testLastUSec;
+
+			/** Whether testing is in single step mode */
+			bool _testSingleStep;
 	};
 }
 

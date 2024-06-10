@@ -20,9 +20,23 @@ bool InstrumentSpeedo::latch()
 
 		gettimeofday(&curTime, 0);
 
+		long millisSinceLastLatch = (curTime.tv_sec - _testLastSec) * 1000 + (curTime.tv_usec - _testLastUSec)/1000;
+
+		_testLastSec = curTime.tv_sec;
+		_testLastUSec = curTime.tv_usec;
+
+		bool testSingleStep = millisSinceLastLatch > 500;
+
 		long millis = (curTime.tv_sec - _testStartSec) * 1000 + (curTime.tv_usec - _testStartUSec)/1000;
 
-		std::cout << "millis: " << millis << "\n";
+		if(testSingleStep)
+		{
+			std::cout << "single step\n";
+		}
+		else
+		{
+			std::cout << "millis: " << millis << "\n";
+		}
 
 		if(_curTestForwardDirection)
 		{
@@ -35,7 +49,14 @@ bool InstrumentSpeedo::latch()
 			}
 			else
 			{
-				_curTestValue = 10 + (millis / 50);
+				if(testSingleStep)
+				{
+					_curTestValue++;
+				}
+				else
+				{
+					_curTestValue = 10 + (millis / 50);
+				}
 			}
 
 			if(_curTestValue >= _curTestMaxSpeed)
@@ -48,7 +69,14 @@ bool InstrumentSpeedo::latch()
 		}
 		else if(_curTestValue > 0)
 		{
-			_curTestValue = _curTestMaxSpeed - (millis / 75);
+			if(testSingleStep)
+			{
+				_curTestValue--;
+			}
+			else
+			{
+				_curTestValue = _curTestMaxSpeed - (millis / 75);
+			}
 		}
 		else
 		{
@@ -81,6 +109,7 @@ void InstrumentSpeedo::test(unsigned maxSpeed)
 	_curTestMaxSpeed = maxSpeed;
 	_curTestValue = 0;
 	_curTestForwardDirection = true;
+	_testSingleStep = false;
 
 	_inTestMode = true;
 }
