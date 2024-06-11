@@ -42,9 +42,10 @@ namespace piZeroDash
 			 * @param lineLength The length of the marked lines.
 			 * @param majorLineWidth Major marked line width.
 			 * @param minorLineWidth Minor marked line width.
+			 * @param lineStartOffset Amount to move line back towards gauge centre.
 			 */
 			void _drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, double lineLength,
-				double majorLineWidth, double minorLineWidth);
+				double majorLineWidth, double minorLineWidth, double lineStartOffset);
 
 			/**
 			 * Draw the default speedo forground.

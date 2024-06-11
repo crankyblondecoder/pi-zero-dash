@@ -25,10 +25,11 @@ GaugeSpeedo_e36::GaugeSpeedo_e36(unsigned maxSpeed, double markedSpeedFontSize, 
 void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 {
 	// Used default gauge.
-	_drawDefaultBackground(surface, _markedSpeedFontSize, _lineLength, _majorLineWidth, _minorLineWidth);
+	_drawDefaultBackground(surface, _markedSpeedFontSize, _lineLength, _majorLineWidth, _minorLineWidth,
+		_lineLength * 0.1);
 }
 
 void GaugeSpeedo_e36::_drawForeground(CairoSurface& surface)
 {
-	_drawDefaultForeground(surface, _lineLength, _majorLineWidth * 2);
+	_drawDefaultForeground(surface, _lineLength * 1.2, _majorLineWidth * 2);
 }

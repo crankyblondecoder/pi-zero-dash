@@ -36,7 +36,7 @@ bool GaugeSpeedo::inTestMode()
 }
 
 void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, double lineLength,
-	double majorLineWidth, double minorLineWidth)
+	double majorLineWidth, double minorLineWidth, double lineStartOffset)
 {
 	// The background surface is exclusive to this gauge.
 
@@ -68,7 +68,7 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 	*/
 
 	// Distance from dial centre to number bounds box position.
-	double numberStartRadius = radius - lineLength - (lineLength / 4.0);
+	double numberStartRadius = radius - lineLength - (lineLength / 4.0) - lineStartOffset;
 
 	// The number of lines is one more than the number of graduations because 20 has a line.
 	// Also a minor line goes below the horizontal before 20 and after max speed.
@@ -102,8 +102,8 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 		cairo_translate(cr, -radius, -radius);
 
 		// Define and draw line.
-		cairo_move_to(cr, 0.0, radius);
-		cairo_line_to(cr, lineLength, radius);
+		cairo_move_to(cr, lineStartOffset, radius);
+		cairo_line_to(cr, lineLength + lineStartOffset, radius);
 		cairo_stroke(cr);
 
 		// Draw text.
