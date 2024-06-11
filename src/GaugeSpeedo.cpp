@@ -57,6 +57,14 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 	cairo_select_font_face(cr, "DejaVu Sans Condensed", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
 	cairo_set_font_size(cr, markedSpeedFontSize);
 
+	// Draw a test line in the top left corner so that it is easier to find in the surface data.
+	cairo_identity_matrix(cr);
+	cairo_set_line_width(cr, 10.0);
+	cairo_move_to(cr, 0.0, 5.0);
+	cairo_line_to(cr, 20.0, 5.0);
+	cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
+	cairo_stroke(cr);
+
 	// Distance from dial centre to number bounds box position.
 	double numberStartRadius = radius - lineLength - (lineLength / 4.0);
 
