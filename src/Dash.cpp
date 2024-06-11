@@ -13,6 +13,7 @@ Dash::Dash() : Visual(0, 0, (unsigned) Visual::adsDevice -> getDisplayResolution
 {
 	_gauges = new Gauge*[NUM_GAUGES];
 	_gaugeCount = 0;
+	_backgroundsGenerated = false;
 	_strobing = false;
 }
 
