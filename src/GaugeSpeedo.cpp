@@ -171,7 +171,10 @@ void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicator
 
 	double radius = (double)(_getWidth()) / 2.0;
 
-	cairo_set_source_rgba(cr, 36.0/255.0, 109.0/255.0, 179.0/255.0, 0.75);
+	// Darker blue: 21, 54, 214
+	cairo_set_source_rgba(cr, 21.0/255.0, 54.0/255.0, 214.0/255.0, 0.85);
+	// Lighter blue: 36, 109, 179
+	//cairo_set_source_rgba(cr, 36.0/255.0, 109.0/255.0, 179.0/255.0, 0.85);
 
 	cairo_set_line_width(cr, indicatorLineWidth);
 
