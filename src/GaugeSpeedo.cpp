@@ -35,8 +35,10 @@ bool GaugeSpeedo::inTestMode()
 	return _speedoInstr.inTestMode();
 }
 
-void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, double lineLength,
-	double majorLineWidth, double minorLineWidth, double lineStartOffset)
+void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, colour& markedSpeedFontColour,
+	double lineLength, double majorLineWidth, double minorLineWidth, double lineStartOffset, colour& majorLineColour,
+	colour& minorLineColour, colour& preciseSpeedBackgroundColour, double preciseSpeedBackgroundWidth,
+	double preciseSpeedBackgroundHeight)
 {
 	// The background surface is exclusive to this gauge.
 
@@ -57,16 +59,6 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 	cairo_select_font_face(cr, "DejaVu Sans Condensed", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
 	cairo_set_font_size(cr, markedSpeedFontSize);
 
-	// Draw a test line in the top left corner so that it is easier to find in the surface data.
-	/*
-	cairo_identity_matrix(cr);
-	cairo_set_line_width(cr, 10.0);
-	cairo_move_to(cr, 0.0, 5.0);
-	cairo_line_to(cr, 20.0, 5.0);
-	cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
-	cairo_stroke(cr);
-	*/
-
 	// Distance from dial centre to number bounds box position.
 	double numberStartRadius = radius - lineLength - (lineLength / 4.0) - lineStartOffset;
 
@@ -80,16 +72,15 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 
 		curSpeed += 10;
 
-		// For the moment pure white.
-		cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
-
 		if(isMinor)
 		{
 			cairo_set_line_width(cr, minorLineWidth);
+			cairo_set_source_rgba(cr, minorLineColour.r, minorLineColour.g, minorLineColour.b, minorLineColour.a);
 		}
 		else
 		{
 			cairo_set_line_width(cr, majorLineWidth);
+			cairo_set_source_rgba(cr, majorLineColour.r, majorLineColour.g, majorLineColour.b, majorLineColour.a);
 		}
 
 		// Cairo transforms appear to be post-multiplied together then pre-multiplied to the geometry to go from user to
@@ -157,12 +148,40 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 			double textPosnX = radius - (numberStartRadius + numberStartRadiusBump) * cos(curGradAngle) - boxEdgeX + textRefX;
 			double textPosnY = radius - (numberStartRadius + numberStartRadiusBump) * sin(curGradAngle) - boxEdgeY + textRefY;
 
+			cairo_set_source_rgba(cr, markedSpeedFontColour.r, markedSpeedFontColour.g, markedSpeedFontColour.b,
+				markedSpeedFontColour.a);
+
 			cairo_move_to(cr, textPosnX, textPosnY);
 			cairo_show_text(cr, numberText.c_str());
 		}
 
 		curGradAngle += stepAngle;
 	}
+
+	// Draw precise speed background.
+	cairo_identity_matrix(cr);
+
+	cairo_set_source_rgba(cr, preciseSpeedBackgroundColour.r, preciseSpeedBackgroundColour.g, preciseSpeedBackgroundColour.b,
+		preciseSpeedBackgroundColour.a);
+
+	double cornerRadius = preciseSpeedBackgroundHeight / 4.0;
+
+	double left = radius - preciseSpeedBackgroundWidth / 2.0;
+	double right = left + preciseSpeedBackgroundWidth;
+	double top = radius - preciseSpeedBackgroundHeight / 2.0;
+	double bottom = top + preciseSpeedBackgroundHeight;
+
+	cairo_new_sub_path(cr);
+	cairo_arc(cr, left + cornerRadius, top + cornerRadius, cornerRadius, M_PI, 1.5 * M_PI);
+	cairo_line_to(cr, right - cornerRadius, top);
+	cairo_arc(cr, right - cornerRadius, top + cornerRadius, cornerRadius, 1.5 * M_PI, 2.0 * M_PI);
+	cairo_line_to(cr, right, bottom - cornerRadius);
+	cairo_arc(cr, right - cornerRadius, bottom - cornerRadius, cornerRadius, 0.0, 0.5 * M_PI);
+	cairo_line_to(cr, left - cornerRadius, bottom);
+	cairo_arc(cr, left + cornerRadius, bottom - cornerRadius, cornerRadius, 0.5 * M_PI, M_PI);
+	cairo_close_path(cr);
+
+	cairo_fill(cr);
 }
 
 void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth)

@@ -13,6 +13,21 @@ using namespace adapsurf;
 namespace piZeroDash
 {
 	/**
+	 * Basic colour.
+	 */
+	struct colour
+	{
+		/** Red */
+		double r;
+		/** Green */
+		double g;
+		/** Blue */
+		double b;
+		/** Alpha */
+		double a;
+	};
+
+	/**
 	 * Instruments read and interpret data from one or more physical sources.
 	 */
 	class Visual

@@ -47,7 +47,7 @@ namespace piZeroDash
 			bool _curTestForwardDirection;
 
 			/** Current test value. */
-			int _curTestValue;
+			unsigned _curTestValue;
 
 			/** The time at the beginning of the test cycle. */
 			long _testStartSec;

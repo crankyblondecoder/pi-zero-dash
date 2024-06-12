@@ -39,13 +39,21 @@ namespace piZeroDash
 			 * Draw a default speedo background.
 			 * @param surface Surface to draw to.
 			 * @param markedSpeedFontSize The font size of the numbers that appear near the marked lines.
+			 * @param markedSpeedFontColour Colour of the numbers under the marked lines.
 			 * @param lineLength The length of the marked lines.
 			 * @param majorLineWidth Major marked line width.
 			 * @param minorLineWidth Minor marked line width.
 			 * @param lineStartOffset Amount to move line back towards gauge centre.
+			 * @param majorLineColour Colour of the major marked lines.
+			 * @param minorLineColour Colour of the minor marked lines.
+			 * @param preciseSpeedBackgroundColour Colour of the precise speed background.
+			 * @param preciseSpeedBackgroundWidth Width of precise speed background box.
+			 * @param preciseSpeedBackgroundHeight Height of precise speed background box.
 			 */
-			void _drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, double lineLength,
-				double majorLineWidth, double minorLineWidth, double lineStartOffset);
+			void _drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, colour& markedSpeedFontColour,
+				double lineLength, double majorLineWidth, double minorLineWidth, double lineStartOffset,
+				colour& majorLineColour, colour& minorLineColour, colour& preciseSpeedBackgroundColour,
+				double preciseSpeedBackgroundWidth, double preciseSpeedBackgroundHeight);
 
 			/**
 			 * Draw the default speedo forground.
