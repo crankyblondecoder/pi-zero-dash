@@ -184,16 +184,16 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 	cairo_fill(cr);
 }
 
-void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth)
+void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth,
+	colour& indicatorLineColour, double preciseSpeedFontSize, colour& preciseSpeedFontColour)
 {
 	cairo_t* cr = surface.getContext();
 
 	double radius = (double)(_getWidth()) / 2.0;
 
-	// Darker blue: 21, 54, 214
-	cairo_set_source_rgba(cr, 21.0/255.0, 54.0/255.0, 214.0/255.0, 0.85);
-	// Lighter blue: 36, 109, 179
-	//cairo_set_source_rgba(cr, 36.0/255.0, 109.0/255.0, 179.0/255.0, 0.85);
+	// Draw indicator line.
+
+	cairo_set_source_rgba(cr, indicatorLineColour.r, indicatorLineColour.g, indicatorLineColour.b, indicatorLineColour.a);
 
 	cairo_set_line_width(cr, indicatorLineWidth);
 
@@ -212,4 +212,41 @@ void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicator
 	cairo_move_to(cr, 0.0, radius);
 	cairo_line_to(cr, indicatorLineLength, radius);
 	cairo_stroke(cr);
+
+	// Write current speed to precise speed box.
+
+	cairo_identity_matrix(cr);
+
+	cairo_select_font_face(cr, "DejaVu Sans Condensed", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_set_font_size(cr, preciseSpeedFontSize);
+
+	cairo_text_extents_t textExtents;
+
+	string numberText = to_string(curSpeed);
+	string extentString;
+
+	// Use a fixed number string to get text extents. This is so the number doesn't jump around.
+	if(curSpeed < 10)
+	{
+		extentString = "5";
+	}
+	else if(curSpeed < 100)
+	{
+		extentString = "55";
+	}
+	else
+	{
+		extentString = "555";
+	}
+
+	cairo_text_extents(cr,  extentString.c_str(), &textExtents);
+
+	cairo_set_source_rgba(cr, preciseSpeedFontColour.r, preciseSpeedFontColour.g, preciseSpeedFontColour.b,
+		preciseSpeedFontColour.a);
+
+	double top = radius - textExtents.height / 2.0;
+	double left = radius - textExtents.width / 2.0;
+
+	cairo_move_to(cr, left - textExtents.x_bearing, top - textExtents.y_bearing);
+	cairo_show_text(cr, numberText.c_str());
 }

@@ -58,6 +58,12 @@ namespace piZeroDash
 			double _lineStartOffset;
 
 			/**
+			 * Colour of the speed indicator line.
+			 * Blue(ish): 21, 54, 214
+			 */
+			struct colour _indiactorLineColour = {21.0/255.0, 54.0/255.0, 214.0/255.0, 0.85};
+
+			/**
 			 * Colour of the precise speed background.
 			 * Blue(ish): 21, 54, 214
 			 */
@@ -68,6 +74,9 @@ namespace piZeroDash
 
 			/** Height of precise speed background box. */
 			double _preciseSpeedBackgroundHeight;
+
+			/** Precise speed font colour. */
+			struct colour _preciseSpeedFontColour = {1.0, 1.0, 1.0, 1.0};
 	};
 }
 

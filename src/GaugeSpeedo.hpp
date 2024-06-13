@@ -61,7 +61,8 @@ namespace piZeroDash
 			 * @param indicatorLineLength Length of speed indicator line.
 			 * @param indicatorLineWidth Width of speed indicator line.
 			 */
-			void _drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth);
+			void _drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth,
+				colour& indicatorLineColour, double preciseSpeedFontSize, colour& preciseSpeedFontColour);
 
 		private:
 
