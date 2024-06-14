@@ -20,6 +20,11 @@ Dash_e36::Dash_e36(double speedoWidthPercent) : _speedo{0}
 	_speedo = new GaugeSpeedo_e36(260, ((dashWidth - speedoWidth) / 2), dashHeight - speedoHeight, speedoWidth, speedoHeight);
 
 	_addGauge(_speedo);
+
+	unsigned tachoWidth = speedoWidth - 60;
+	unsigned tachoHeight = tachoWidth / 2;
+
+	_tacho = new GaugeTacho_e36(8000, ((dashWidth - tachoWidth) / 2), , tachoWidth, tachoHeight);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)

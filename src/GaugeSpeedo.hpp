@@ -51,8 +51,8 @@ namespace piZeroDash
 			 * @param preciseSpeedBackgroundHeight Height of precise speed background box.
 			 */
 			void _drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, colour& markedSpeedFontColour,
-				double lineLength, double majorLineWidth, double minorLineWidth, double lineStartOffset,
-				colour& majorLineColour, colour& minorLineColour, colour& preciseSpeedBackgroundColour,
+				unsigned markedSpeedFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
+				double lineStartOffset, colour& majorLineColour, colour& minorLineColour, colour& preciseSpeedBackgroundColour,
 				double preciseSpeedBackgroundWidth, double preciseSpeedBackgroundHeight);
 
 			/**

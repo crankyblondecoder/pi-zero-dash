@@ -2,7 +2,7 @@
 #define PZD_GAUGE_TACHO_H
 
 #include "Gauge.hpp"
-#include "InstrumentSpeedo.hpp"
+#include "InstrumentTacho.hpp"
 
 namespace piZeroDash
 {
@@ -36,16 +36,20 @@ namespace piZeroDash
 			unsigned _getMaxRpm();
 
 			/**
-			 * Draw the default tacho background.
+			 * Draw a default tacho background.
 			 * @param surface Surface to draw to.
-			 * @param markedRpmFontSize Size of font to indicate RPM.
-			 * @param markedRpmFontColour Colour of font to indicate RPM.
-			 * @param lineLength Length of radial line that delinates indicated RPM.
-			 * @param lineWidth Width of radial line.
-			 * @param lineColour Colour of radial line.
+			 * @param markedRpmFontSize The font size of the numbers that appear near the marked lines.
+			 * @param markedRpmFontColour Colour of the numbers under the marked lines.
+			 * @param lineLength The length of the marked lines.
+			 * @param majorLineWidth Major marked line width.
+			 * @param minorLineWidth Minor marked line width.
+			 * @param lineStartOffset Amount to move line back towards gauge centre.
+			 * @param majorLineColour Colour of the major marked lines.
+			 * @param minorLineColour Colour of the minor marked lines.
 			 */
 			void _drawDefaultBackground(CairoSurface& surface, double markedRpmFontSize, colour& markedRpmFontColour,
-				double lineLength, double lineWidth, colour& lineColour);
+				unsigned markedRpmFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
+				double lineStartOffset, colour& majorLineColour, colour& minorLineColour);
 
 			/**
 			 * Draw the default tacho forground.

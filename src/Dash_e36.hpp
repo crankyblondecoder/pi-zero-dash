@@ -5,6 +5,7 @@
 
 #include "Dash.hpp"
 #include "GaugeSpeedo_e36.hpp"
+#include "GaugeTacho_e36.hpp"
 
 namespace piZeroDash
 {
@@ -32,7 +33,11 @@ namespace piZeroDash
 
 		private:
 
+			/** Speedo gauge. */
 			GaugeSpeedo_e36* _speedo;
+
+			/** Tacho gauge. */
+			GaugeTacho_e36* _tacho;
 	};
 }
 
