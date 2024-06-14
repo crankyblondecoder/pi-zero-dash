@@ -13,7 +13,7 @@ GaugeSpeedo::~GaugeSpeedo()
 }
 
 GaugeSpeedo::GaugeSpeedo(unsigned maxSpeed, int globalPositionX, int globalPositionY, unsigned width, unsigned height)
-	: Gauge(globalPositionX, globalPositionY, width, height)
+	: GaugeDial(globalPositionX, globalPositionY, width, height)
 {
 	_maxSpeed = maxSpeed;
 

@@ -13,7 +13,7 @@ GaugeTacho::~GaugeTacho()
 }
 
 GaugeTacho::GaugeTacho(unsigned maxRpm, int globalPositionX, int globalPositionY, unsigned width, unsigned height)
-	: Gauge(globalPositionX, globalPositionY, width, height)
+	: GaugeDial(globalPositionX, globalPositionY, width, height)
 {
 	_maxRpm = maxRpm;
 
@@ -39,11 +39,7 @@ void GaugeTacho::_drawDefaultBackground(CairoSurface& surface, double markedRpmF
 	unsigned markedRpmFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
 	double lineStartOffset, colour& majorLineColour, colour& minorLineColour)
 {
-	cairo_t* cr = surface.getContext();
-
-	double radius = (double)(_getWidth()) / 2.0;
-
-	_drawDefaultDialIndicatorBackground(surface, 0, _getMaxRpm(), 1, true, true, true, markedRpmFontSize,
+	_drawDefaultDialIndicatorBackground(surface, 0, _getMaxRpm() / 1000, 1, true, true, true, markedRpmFontSize,
 		markedRpmFontColour, 0, lineLength, majorLineWidth, minorLineWidth, lineStartOffset, majorLineColour, minorLineColour);
 }
 

@@ -5,9 +5,10 @@ using namespace piZeroDash;
 Dash_e36::~Dash_e36()
 {
 	if(_speedo) delete _speedo;
+	if(_tacho) delete _tacho;
 }
 
-Dash_e36::Dash_e36(double speedoWidthPercent) : _speedo{0}
+Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent) : _speedo{0}
 {
 	Visual::setRootClearColour(0.0, 0.0, 0.0);
 
@@ -17,14 +18,22 @@ Dash_e36::Dash_e36(double speedoWidthPercent) : _speedo{0}
 	unsigned speedoWidth = dashWidth * (speedoWidthPercent / 100.0);
 	unsigned speedoHeight = (speedoWidth / 2.0) * 1.2;
 
-	_speedo = new GaugeSpeedo_e36(260, ((dashWidth - speedoWidth) / 2), dashHeight - speedoHeight, speedoWidth, speedoHeight);
+	unsigned speedoPosnX = ((dashWidth - speedoWidth) / 2);
+	unsigned speedoPosnY = dashHeight - speedoHeight;
+
+	_speedo = new GaugeSpeedo_e36(260, speedoPosnX, speedoPosnY, speedoWidth, speedoHeight);
 
 	_addGauge(_speedo);
 
-	unsigned tachoWidth = speedoWidth - 60;
+	unsigned tachoWidth = dashWidth * (tachoWidthPercent / 100.0);
 	unsigned tachoHeight = tachoWidth / 2;
 
-	_tacho = new GaugeTacho_e36(8000, ((dashWidth - tachoWidth) / 2), , tachoWidth, tachoHeight);
+	unsigned dialCentreX = speedoPosnX + speedoWidth / 2;
+	unsigned dialCentreY = speedoPosnY + speedoWidth / 2;
+
+	_tacho = new GaugeTacho_e36(8000, dialCentreX - (tachoWidth / 2), dialCentreY - tachoHeight, tachoWidth, tachoHeight);
+
+	_addGauge(_tacho);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)

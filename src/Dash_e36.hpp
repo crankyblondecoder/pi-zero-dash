@@ -20,8 +20,9 @@ namespace piZeroDash
 
 			/**
 			 * @param speedoWidthPercent Speedo width as a percentage of the width of the dash.
+			 * @param tachoWidthPercent Tacho width as a percentage of the width of the dash.
 			 */
-			Dash_e36(double speedoWidthPercent);
+			Dash_e36(double speedoWidthPercent, double tachoWidthPercent);
 
 		protected:
 

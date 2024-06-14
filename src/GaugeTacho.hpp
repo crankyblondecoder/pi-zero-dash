@@ -1,7 +1,7 @@
 #ifndef PZD_GAUGE_TACHO_H
 #define PZD_GAUGE_TACHO_H
 
-#include "Gauge.hpp"
+#include "GaugeDial.hpp"
 #include "InstrumentTacho.hpp"
 
 namespace piZeroDash
@@ -9,7 +9,7 @@ namespace piZeroDash
 	/**
 	 * Generic tachometer gauge.
 	 */
-	class GaugeTacho : public Gauge
+	class GaugeTacho : public GaugeDial
 	{
 		public:
 

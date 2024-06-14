@@ -1,7 +1,7 @@
 #ifndef PZD_GAUGE_SPEEDO_H
 #define PZD_GAUGE_SPEEDO_H
 
-#include "Gauge.hpp"
+#include "GaugeDial.hpp"
 #include "InstrumentSpeedo.hpp"
 
 namespace piZeroDash
@@ -9,7 +9,7 @@ namespace piZeroDash
 	/**
 	 * Generic speedo gauge.
 	 */
-	class GaugeSpeedo : public Gauge
+	class GaugeSpeedo : public GaugeDial
 	{
 		public:
 
