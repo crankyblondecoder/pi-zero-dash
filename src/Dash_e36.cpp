@@ -31,7 +31,8 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent) : _speed
 	unsigned dialCentreX = speedoPosnX + speedoWidth / 2;
 	unsigned dialCentreY = speedoPosnY + speedoWidth / 2;
 
-	_tacho = new GaugeTacho_e36(8000, dialCentreX - (tachoWidth / 2), dialCentreY - tachoHeight, tachoWidth, tachoHeight);
+	_tacho = new GaugeTacho_e36(8000, 7500, 7000, dialCentreX - (tachoWidth / 2), dialCentreY - tachoHeight, tachoWidth,
+		tachoHeight * 1.1);
 
 	_addGauge(_tacho);
 }

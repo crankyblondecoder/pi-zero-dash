@@ -55,7 +55,7 @@ bool InstrumentTacho::latch()
 				}
 				else
 				{
-					_curTestValue = 500 + (millis / 10);
+					_curTestValue = 500 + millis;
 				}
 			}
 
@@ -75,7 +75,7 @@ bool InstrumentTacho::latch()
 			}
 			else
 			{
-				_curTestValue = _curTestMaxRpm - (millis / 10);
+				_curTestValue = _curTestMaxRpm - millis;
 			}
 		}
 		else

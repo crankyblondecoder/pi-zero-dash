@@ -17,12 +17,15 @@ namespace piZeroDash
 
 			/**
 			 * @param maxSpeed Maximum RPM displayed by tacho.
+			 * @param redlineRpm RPM value of redline.
+			 * @param redlineWarningRpm RPM value of approaching redline warning.
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
 			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeTacho(unsigned maxRpm, int globalPositionX, int globalPositionY, unsigned width, unsigned height);
+			GaugeTacho(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, int globalPositionX,
+				int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
 			void test();
@@ -54,16 +57,13 @@ namespace piZeroDash
 			/**
 			 * Draw the default tacho forground.
 			 * @param surface Surface to draw to.
-			 * @param redlineWarningThreshold RPM after which redline warning is displayed.
-			 * @param redline RPM after which redline is displayed.
 			 * @param radialSectionLength Length of radial section that displays filled colour to indicate current RPM.
 			 * @param normalColour The normal below redline threshold colour.
 			 * @param redlineWarningThresholdColour Colour to display for redline threshold. ie Just prior to redline.
 			 * @param redlineColour Colour to display for redline reached and/or exceeded.
 			 */
-			void _drawDefaultForeground(CairoSurface& surface, double redlineWarningThreshold, double redline,
-				double radialSectionLength, colour& normalColour, colour& redlineWarningThresholdColour,
-				colour& redlineColour);
+			void _drawDefaultForeground(CairoSurface& surface, double radialSectionLength, colour& normalColour,
+				colour& redlineWarningThresholdColour, colour& redlineColour);
 
 		private:
 
@@ -72,6 +72,12 @@ namespace piZeroDash
 
 			/** Maximum RPM displayed by the tacho. */
 			unsigned _maxRpm;
+
+			/** Redline RPM value. */
+			unsigned _redlineRpm;
+
+			/** Redline warning threshold RPM */
+			unsigned _redlineWarningRpm;
 	};
 }
 

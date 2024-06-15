@@ -16,12 +16,15 @@ namespace piZeroDash
 
 			/**
 			 * @param maxRpm Maximum RPM displayed.
+			 * @param redlineRpm RPM value of redline.
+			 * @param redLineWarningRpm RPM value of approaching redline warning.
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
 			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeTacho_e36(unsigned maxRpm, int globalPositionX, int globalPositionY, unsigned width, unsigned height);
+			GaugeTacho_e36(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, int globalPositionX,
+				int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
 			void _drawBackground(CairoSurface& surface);
@@ -56,6 +59,15 @@ namespace piZeroDash
 
 			/** Amount to move line back towards gauge centre. */
 			double _lineStartOffset;
+
+			/** Colour for "normal" pie section of RPM range. */
+			struct colour _normalRpmIndictatorColour = {20.0/255.0, 196.0/255.0, 58.0/255.0, 0.95};
+
+			/** Colour for "redline warning" pie section of RPM range. */
+			struct colour _redlineWarningRpmIndictatorColour = {227.0/255.0, 186.0/255.0, 75.0/255.0, 0.95};
+
+			/** Colour for "redline" pie section of RPM range. */
+			struct colour _redlineRpmIndictatorColour = {245.0/255.0, 15.0/255.0, 15.0/255.0, 0.95};
 	};
 }
 

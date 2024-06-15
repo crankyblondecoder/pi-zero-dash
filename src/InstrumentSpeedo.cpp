@@ -29,6 +29,7 @@ bool InstrumentSpeedo::latch()
 
 		long millis = (curTime.tv_sec - _testStartSec) * 1000 + (curTime.tv_usec - _testStartUSec)/1000;
 
+		/*
 		if(testSingleStep)
 		{
 			std::cout << "single step\n";
@@ -37,6 +38,7 @@ bool InstrumentSpeedo::latch()
 		{
 			std::cout << "millis: " << millis << "\n";
 		}
+		*/
 
 		if(_curTestForwardDirection)
 		{
@@ -55,7 +57,7 @@ bool InstrumentSpeedo::latch()
 				}
 				else
 				{
-					_curTestValue = 10 + (millis / 50);
+					_curTestValue = 10 + (millis / 30);
 				}
 			}
 
@@ -75,7 +77,7 @@ bool InstrumentSpeedo::latch()
 			}
 			else
 			{
-				_curTestValue = _curTestMaxSpeed - (millis / 75);
+				_curTestValue = _curTestMaxSpeed - (millis / 30);
 			}
 		}
 		else

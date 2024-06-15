@@ -12,10 +12,12 @@ GaugeTacho::~GaugeTacho()
 {
 }
 
-GaugeTacho::GaugeTacho(unsigned maxRpm, int globalPositionX, int globalPositionY, unsigned width, unsigned height)
-	: GaugeDial(globalPositionX, globalPositionY, width, height)
+GaugeTacho::GaugeTacho(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, int globalPositionX,
+	int globalPositionY, unsigned width, unsigned height) : GaugeDial(globalPositionX, globalPositionY, width, height)
 {
 	_maxRpm = maxRpm;
+	_redlineRpm = redlineRpm;
+	_redlineWarningRpm = redlineWarningRpm;
 
 	_addInstrument(&_tachoInstr);
 }
@@ -27,7 +29,7 @@ unsigned GaugeTacho::_getMaxRpm()
 
 void GaugeTacho::test()
 {
-	_tachoInstr.test(_maxRpm + 500);
+	_tachoInstr.test(_maxRpm);
 }
 
 bool GaugeTacho::inTestMode()
@@ -43,34 +45,77 @@ void GaugeTacho::_drawDefaultBackground(CairoSurface& surface, double markedRpmF
 		markedRpmFontColour, 0, lineLength, majorLineWidth, minorLineWidth, lineStartOffset, majorLineColour, minorLineColour);
 }
 
-void GaugeTacho::_drawDefaultForeground(CairoSurface& surface, double redlineWarningThreshold, double redline,
-	double radialSectionLength, colour& normalColour, colour& redlineWarningThresholdColour, colour& redlineColour)
+void GaugeTacho::_drawDefaultForeground(CairoSurface& surface, double radialSectionLength, colour& normalColour,
+	colour& redlineWarningThresholdColour, colour& redlineColour)
 {
 	cairo_t* cr = surface.getContext();
 
-	double radius = (double)(_getWidth()) / 2.0;
+	double width = _getWidth();
+	double radius = width / 2.0;
 
-/*
-	// Draw indicator line.
+	unsigned curRpm = _tachoInstr.getRpm();
 
-	cairo_set_source_rgba(cr, indicatorLineColour.r, indicatorLineColour.g, indicatorLineColour.b, indicatorLineColour.a);
+	double degreesPerRpm = (M_PI / (double) _maxRpm);
 
-	cairo_set_line_width(cr, indicatorLineWidth);
+	// Draw normal rpm range.
 
-	unsigned curSpeed = _speedoInstr.getSpeed();
+	unsigned normalEnd = curRpm > _redlineWarningRpm ? _redlineWarningRpm : curRpm;
 
-	// Indicator angle starts from 20 at 0 degrees and increases clockwise to max speed.
-	double indicatorAngle = M_PI * ((double)curSpeed - 20.0) / ((double)_maxSpeed - 20.0);
+	double normalArcAngle = degreesPerRpm * (double) normalEnd;
 
-	// Rotate about the "dial centre".
 	cairo_identity_matrix(cr);
-	cairo_translate(cr, radius, radius);
-	cairo_rotate(cr, indicatorAngle);
-	cairo_translate(cr, -radius, -radius);
 
-	// Define and draw line.
+	cairo_set_source_rgba(cr, normalColour.r, normalColour.g, normalColour.b, normalColour.a);
 	cairo_move_to(cr, 0.0, radius);
-	cairo_line_to(cr, indicatorLineLength, radius);
-	cairo_stroke(cr);
-*/
+	cairo_line_to(cr, radialSectionLength, radius);
+	cairo_arc(cr, radius, radius, radius - radialSectionLength, M_PI, M_PI + normalArcAngle);
+	cairo_rel_line_to(cr, -radialSectionLength * cos(normalArcAngle), -radialSectionLength * sin(normalArcAngle));
+	cairo_arc_negative(cr, radius, radius, radius, M_PI + normalArcAngle, M_PI);
+
+	cairo_close_path(cr);
+	cairo_fill(cr);
+
+	if(curRpm > _redlineWarningRpm)
+	{
+		// Draw the redline warning rpm range.
+
+		unsigned redlineWarningRpmSpan = (curRpm < _redlineRpm ? curRpm : _redlineRpm)- _redlineWarningRpm;
+
+		double redlineWarningArcAngle = degreesPerRpm * (double) redlineWarningRpmSpan;
+		double absRedlineWarningArcAngle = normalArcAngle + redlineWarningArcAngle;
+
+		cairo_set_source_rgba(cr, redlineWarningThresholdColour.r, redlineWarningThresholdColour.g,
+			redlineWarningThresholdColour.b, redlineWarningThresholdColour.a);
+
+		cairo_new_sub_path(cr);
+		cairo_arc(cr, radius, radius, radius - radialSectionLength, M_PI + normalArcAngle, M_PI + absRedlineWarningArcAngle);
+		cairo_rel_line_to(cr, -radialSectionLength * cos(absRedlineWarningArcAngle),
+			-radialSectionLength * sin(absRedlineWarningArcAngle));
+		cairo_arc_negative(cr, radius, radius, radius, M_PI + absRedlineWarningArcAngle, M_PI + normalArcAngle);
+
+		cairo_close_path(cr);
+		cairo_fill(cr);
+	}
+
+	if(curRpm > _redlineRpm)
+	{
+		// Draw the redline rpm range.
+
+		unsigned redlineRpmSpan = curRpm - _redlineRpm;
+
+		double redlineArcAngle = degreesPerRpm * (double) redlineRpmSpan;
+		double absRedlineArcStartAngle = degreesPerRpm * (double) _redlineRpm;
+		double absRedlineArcAngle = absRedlineArcStartAngle + redlineArcAngle;
+
+		cairo_set_source_rgba(cr, redlineColour.r, redlineColour.g, redlineColour.b, redlineColour.a);
+
+		cairo_new_sub_path(cr);
+		cairo_arc(cr, radius, radius, radius - radialSectionLength, M_PI + absRedlineArcStartAngle, M_PI + absRedlineArcAngle);
+		cairo_rel_line_to(cr, -radialSectionLength * cos(absRedlineArcAngle),
+			-radialSectionLength * sin(absRedlineArcAngle));
+		cairo_arc_negative(cr, radius, radius, radius, M_PI + absRedlineArcAngle, M_PI + absRedlineArcStartAngle);
+
+		cairo_close_path(cr);
+		cairo_fill(cr);
+	}
 }
