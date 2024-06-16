@@ -18,13 +18,14 @@ namespace piZeroDash
 			 * @param maxRpm Maximum RPM displayed.
 			 * @param redlineRpm RPM value of redline.
 			 * @param redLineWarningRpm RPM value of approaching redline warning.
+			 * @param flashRedline Whether to flash the tacho when redline is exceeded.
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
 			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeTacho_e36(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, int globalPositionX,
-				int globalPositionY, unsigned width, unsigned height);
+			GaugeTacho_e36(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, bool flashRedline,
+				int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
 			void _drawBackground(CairoSurface& surface);

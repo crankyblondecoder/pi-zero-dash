@@ -1,6 +1,7 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+#include <sys/time.h>
 
 using namespace std;
 
@@ -12,12 +13,13 @@ GaugeTacho::~GaugeTacho()
 {
 }
 
-GaugeTacho::GaugeTacho(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, int globalPositionX,
+GaugeTacho::GaugeTacho(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, bool flashRedline, int globalPositionX,
 	int globalPositionY, unsigned width, unsigned height) : GaugeDial(globalPositionX, globalPositionY, width, height)
 {
 	_maxRpm = maxRpm;
 	_redlineRpm = redlineRpm;
 	_redlineWarningRpm = redlineWarningRpm;
+	_flashRedline = flashRedline;
 
 	_addInstrument(&_tachoInstr);
 }
@@ -48,12 +50,43 @@ void GaugeTacho::_drawDefaultBackground(CairoSurface& surface, double markedRpmF
 void GaugeTacho::_drawDefaultForeground(CairoSurface& surface, double radialSectionLength, colour& normalColour,
 	colour& redlineWarningThresholdColour, colour& redlineColour)
 {
+	bool draw = true;
+
+	unsigned curRpm = _tachoInstr.getRpm();
+
+	if(_flashRedline)
+	{
+		if(curRpm > _redlineRpm)
+		{
+			struct timeval curTime;
+
+			gettimeofday(&curTime, 0);
+
+			long millis = (curTime.tv_sec - _redlineLastShowSec) * 1000 + (curTime.tv_usec - _redlineLastShowUSec) / 1000;
+
+			if(!_redlineSectionActive || millis > _redlineSectionFlashPeriod * 2)
+			{
+				_redlineLastShowSec = curTime.tv_sec;
+				_redlineLastShowUSec = curTime.tv_usec;
+			}
+
+			draw = !_redlineSectionActive || millis < _redlineSectionFlashPeriod;
+
+			_redlineSectionActive = true;
+		}
+		else
+		{
+			_redlineSectionActive = false;
+		}
+	}
+
+	// Flashing is active.
+	if(!draw) return;
+
 	cairo_t* cr = surface.getContext();
 
 	double width = _getWidth();
 	double radius = width / 2.0;
-
-	unsigned curRpm = _tachoInstr.getRpm();
 
 	double degreesPerRpm = (M_PI / (double) _maxRpm);
 

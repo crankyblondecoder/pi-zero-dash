@@ -19,12 +19,13 @@ namespace piZeroDash
 			 * @param maxSpeed Maximum RPM displayed by tacho.
 			 * @param redlineRpm RPM value of redline.
 			 * @param redlineWarningRpm RPM value of approaching redline warning.
+			 * @param flashRedline Whether to flash the tacho when redline is exceeded.
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
 			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeTacho(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, int globalPositionX,
+			GaugeTacho(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, bool flashRedline, int globalPositionX,
 				int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
@@ -78,6 +79,17 @@ namespace piZeroDash
 
 			/** Redline warning threshold RPM */
 			unsigned _redlineWarningRpm;
+
+			/** The last time the red line section was shown. */
+			long _redlineLastShowSec;
+			long _redlineLastShowUSec;
+
+			bool _redlineSectionActive = false;
+
+			bool _flashRedline;
+
+			/** The length of the flash, if active, in milliseconds. */
+			long _redlineSectionFlashPeriod = 100;
 	};
 }
 
