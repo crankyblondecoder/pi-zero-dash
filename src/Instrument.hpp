@@ -2,6 +2,7 @@
 #define PZD_INSTRUMENT_H
 
 #include <cstdint>
+#include <sys/time.h>
 
 namespace piZeroDash
 {
@@ -22,9 +23,57 @@ namespace piZeroDash
 			 */
 			virtual bool latch() = 0;
 
+			/** Get whether this instrument is currently in test mode. */
+			bool inTestMode();
+
 		protected:
 
+			/** Get whether this instrument is currently in test mode. */
+			bool _getInTestMode();
+
+			/**
+			 * Start numerical test output cycle.
+			 * @param min Minimum test value.
+			 * @param max Maximum test value.
+			 * @param testStepPerMillis Test step per millisecond.
+			 */
+			void _testNumerical(double min, double max, double testStepPerMillis);
+
+			/**
+			 * Get a numerical test value.
+			 */
+			double _getNumericalTestValue();
+
 		private:
+
+			/** Whether this instrument is in test mode. */
+			bool _inTestMode = false;
+
+			/** The minimum numerical value allowed during test mode. */
+			double _numTestMin;
+
+			/** The maximum numerical value allowed during test mode. */
+			double _numTestMax;
+
+			/** Numerical test step per millisecond. */
+			double _numTestStep;
+
+			/** If true the numerical test value is increasing. Otherwise it is decreasing. */
+			bool _numTestForwardDirection;
+
+			/** Current numerical test value. */
+			double _curNumTestValue;
+
+			/** The time at the beginning of the test cycle. */
+			long _testStartSec;
+			long _testStartUSec;
+
+			/** The time of the last test latch. */
+			long _testLastSec;
+			long _testLastUSec;
+
+			/** Whether testing is in single step mode */
+			bool _testSingleStep;
 	};
 }
 
