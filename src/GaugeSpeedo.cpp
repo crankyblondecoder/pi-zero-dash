@@ -44,7 +44,7 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 
 	double radius = (double)(_getWidth()) / 2.0;
 
-	_drawDefaultDialIndicatorBackground(surface, 20, _getMaxSpeed(), 10, true, true, true, markedSpeedFontSize,
+	GaugeDial::_drawDefaultBackground(surface, 20, _getMaxSpeed(), 10, true, true, true, markedSpeedFontSize,
 		markedSpeedFontColour, markedSpeedFontDecimalPlaces, lineLength, majorLineWidth, minorLineWidth, lineStartOffset,
 		majorLineColour, minorLineColour);
 

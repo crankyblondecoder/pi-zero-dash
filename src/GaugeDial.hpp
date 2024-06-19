@@ -4,9 +4,6 @@
 #include <cstdint>
 
 #include "Gauge.hpp"
-#include "Visual.hpp"
-
-#define NUM_INSTRUMENTS 16
 
 namespace piZeroDash
 {
@@ -30,7 +27,7 @@ namespace piZeroDash
 		protected:
 
 			/**
-			 * Draw a default dial indicator background.
+			 * Draw a default dial gauge background.
 			 * @param surface Surface to draw to.
 			 * @param startNumber First number shown at the horizontal.
 			 * @param endNumber Last number shown at the horizontal.
@@ -48,7 +45,7 @@ namespace piZeroDash
 			 * @param majorLineColour Colour of the major marked lines.
 			 * @param minorLineColour Colour of the minor marked lines.
 			 */
-			void _drawDefaultDialIndicatorBackground(CairoSurface& surface, int startNumber, int endNumber,
+			void _drawDefaultBackground(CairoSurface& surface, int startNumber, int endNumber,
 				double markDistance, bool showMinor, bool showPriorMinor, bool showLaterMinor,
 				double markedFontSize, colour& markedFontColour, unsigned markedFontDecimalPlaces,
 				double lineLength, double majorLineWidth, double minorLineWidth, double lineStartOffset,

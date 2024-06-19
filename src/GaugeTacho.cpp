@@ -43,7 +43,7 @@ void GaugeTacho::_drawDefaultBackground(CairoSurface& surface, double markedRpmF
 	unsigned markedRpmFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
 	double lineStartOffset, colour& majorLineColour, colour& minorLineColour)
 {
-	_drawDefaultDialIndicatorBackground(surface, 0, _getMaxRpm() / 1000, 1, true, true, true, markedRpmFontSize,
+	GaugeDial::_drawDefaultBackground(surface, 0, _getMaxRpm() / 1000, 1, true, true, true, markedRpmFontSize,
 		markedRpmFontColour, 0, lineLength, majorLineWidth, minorLineWidth, lineStartOffset, majorLineColour, minorLineColour);
 }
 

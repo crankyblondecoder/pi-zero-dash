@@ -7,36 +7,38 @@ InstrumentIndicator::~InstrumentIndicator()
 {
 }
 
-InstrumentIndicator::InstrumentIndicator() : _inTestMode{false}
+InstrumentIndicator::InstrumentIndicator()
 {
 }
 
 bool InstrumentIndicator::latch()
 {
-	if(_inTestMode)
+	if(_getInTestMode())
 	{
-		if(_curTestCycleNumber > _curTestNumberCycles)
+		double testVal = _getNumericalTestValue();
+
+		if(testVal - (double)((int)testVal) > 0.5)
 		{
-			struct timeval curTime;
-
-			gettimeofday(&curTime, 0);
-
-			long millisSinceLastLatch = (curTime.tv_sec - _testLastSec) * 1000 + (curTime.tv_usec - _testLastUSec) / 1000;
-
-			if(millisSinceLastLatch > 2000)
-			{
-				_testLastSec = curTime.tv_sec;
-				_testLastUSec = curTime.tv_usec;
-
-				bool testSingleStep = millisSinceLastLatch > 500;
-			}
+			// Should be off half the time.
+			_latchedValue = InstrumentIndicator::NONE;
 		}
 		else
 		{
-			_inTestMode = false;
+			if(testVal < 5.0)
+			{
+				_latchedValue = InstrumentIndicator::LEFT;
+			}
+			else if(testVal < 10.0)
+			{
+				_latchedValue = InstrumentIndicator::RIGHT;
+			}
+			else
+			{
+				_latchedValue = InstrumentIndicator::BOTH;
+			}
 		}
 
-		return _inTestMode;
+		return true;
 	}
 
 	// TODO ... Get actual indicator data from pico.
@@ -48,17 +50,7 @@ InstrumentIndicator::IndicatorState InstrumentIndicator::getIndicatorState()
 	return _latchedValue;
 }
 
-void InstrumentIndicator::test(unsigned numberCycles)
+void InstrumentIndicator::test()
 {
-	_curTestNumberCycles = numberCycles;
-	_curTestCycleNumber = 0;
-	_curTestValue = InstrumentIndicator::IndicatorState::NONE;
-	_testSingleStep = false;
-
-	_inTestMode = true;
-}
-
-bool InstrumentIndicator::inTestMode()
-{
-	return _inTestMode;
+	_testNumerical(0.0, 15.0, 1.0 / 1000.0);
 }

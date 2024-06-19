@@ -19,7 +19,7 @@ GaugeDial::GaugeDial(int globalPositionX, int globalPositionY, unsigned width, u
 {
 }
 
-void GaugeDial::_drawDefaultDialIndicatorBackground(CairoSurface& surface, int startNumber, int endNumber, double markDistance,
+void GaugeDial::_drawDefaultBackground(CairoSurface& surface, int startNumber, int endNumber, double markDistance,
 	bool showMinor, bool showPriorMinor, bool showLaterMinor, double markedFontSize, colour& markedFontColour,
 	unsigned markedFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth, double lineStartOffset,
 	colour& majorLineColour, colour& minorLineColour)
