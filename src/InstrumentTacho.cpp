@@ -33,5 +33,5 @@ unsigned InstrumentTacho::getRpm()
 
 void InstrumentTacho::test(unsigned maxRpm)
 {
-	_testNumerical(0.0, maxRpm, 1.0);
+	_testNumerical(0.0, maxRpm, 1.0, false);
 }

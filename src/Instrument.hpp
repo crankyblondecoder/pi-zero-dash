@@ -36,8 +36,9 @@ namespace piZeroDash
 			 * @param min Minimum test value.
 			 * @param max Maximum test value.
 			 * @param testStepPerMillis Test step per millisecond.
+			 * @param forwardOnly If true only produce increasing values until the max is reached.
 			 */
-			void _testNumerical(double min, double max, double testStepPerMillis);
+			void _testNumerical(double min, double max, double testStepPerMillis, bool forwardOnly);
 
 			/**
 			 * Get a numerical test value.
@@ -58,7 +59,10 @@ namespace piZeroDash
 			/** Numerical test step per millisecond. */
 			double _numTestStep;
 
-			/** If true the numerical test value is increasing. Otherwise it is decreasing. */
+			/** Whether the numerical test only produces increasing values. */
+			bool _numTestForwardOnly;
+
+			/** If true the numerical test value is increasing. Otherwise it is (optionally) decreasing. */
 			bool _numTestForwardDirection;
 
 			/** Current numerical test value. */

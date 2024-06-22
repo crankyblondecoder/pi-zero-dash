@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Generate and put into a test cycle an E36 dash.
-	Dash_e36 e36Dash(78, 50);
+	Dash_e36 e36Dash(78, 50, 8);
 	e36Dash.test();
 
 	// Wait for 'q' then enter key.

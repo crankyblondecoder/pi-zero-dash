@@ -17,28 +17,36 @@ bool InstrumentIndicator::latch()
 	{
 		double testVal = _getNumericalTestValue();
 
+		InstrumentIndicator::IndicatorState nextLatchedValue;
+
 		if(testVal - (double)((int)testVal) > 0.5)
 		{
 			// Should be off half the time.
-			_latchedValue = InstrumentIndicator::NONE;
+			nextLatchedValue = InstrumentIndicator::NONE;
 		}
 		else
 		{
 			if(testVal < 5.0)
 			{
-				_latchedValue = InstrumentIndicator::LEFT;
+				nextLatchedValue = InstrumentIndicator::LEFT;
 			}
 			else if(testVal < 10.0)
 			{
-				_latchedValue = InstrumentIndicator::RIGHT;
+				nextLatchedValue = InstrumentIndicator::RIGHT;
 			}
 			else
 			{
-				_latchedValue = InstrumentIndicator::BOTH;
+				nextLatchedValue = InstrumentIndicator::BOTH;
 			}
 		}
 
-		return true;
+		if(_latchedValue != nextLatchedValue)
+		{
+			_latchedValue = nextLatchedValue;
+			return true;
+		}
+
+		return false;
 	}
 
 	// TODO ... Get actual indicator data from pico.
@@ -52,5 +60,5 @@ InstrumentIndicator::IndicatorState InstrumentIndicator::getIndicatorState()
 
 void InstrumentIndicator::test()
 {
-	_testNumerical(0.0, 15.0, 1.0 / 1000.0);
+	_testNumerical(0.0, 15.0, 1.0 / 1000.0, true);
 }

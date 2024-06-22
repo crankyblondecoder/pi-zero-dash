@@ -13,11 +13,21 @@ GaugeTurnIndicator::~GaugeTurnIndicator()
 {
 }
 
-GaugeTurnIndicator::GaugeTurnIndicator(int globalPositionX, int globalPositionY, unsigned width, unsigned height,
-	bool left) : Gauge(globalPositionX, globalPositionY, width, height)
+GaugeTurnIndicator::GaugeTurnIndicator(bool left, int globalPositionX, int globalPositionY, unsigned width, unsigned height)
+	: Gauge(globalPositionX, globalPositionY, width, height)
 {
 	_left = left;
 	_addInstrument(&_indicatorInstr);
+}
+
+void GaugeTurnIndicator::test()
+{
+	_indicatorInstr.test();
+}
+
+bool GaugeTurnIndicator::inTestMode()
+{
+	return _indicatorInstr.inTestMode();
 }
 
 void GaugeTurnIndicator::_drawDefaultBackground(CairoSurface& surface, colour& fillColour)
@@ -25,37 +35,44 @@ void GaugeTurnIndicator::_drawDefaultBackground(CairoSurface& surface, colour& f
 	cairo_t* cr = surface.getContext();
 
 	cairo_set_source_rgba(cr, fillColour.r, fillColour.g, fillColour.b, fillColour.a);
-	__drawPath(cr);
+	__drawDefaultPath(cr);
 	cairo_fill(cr);
 }
 
 void GaugeTurnIndicator::_drawDefaultForeground(CairoSurface& surface, colour& fillColour)
 {
-	cairo_t* cr = surface.getContext();
+	InstrumentIndicator::IndicatorState state = _indicatorInstr.getIndicatorState();
 
-	cairo_set_source_rgba(cr, fillColour.r, fillColour.g, fillColour.b, fillColour.a);
-	__drawPath(cr);
-	cairo_fill(cr);
+	if((state == InstrumentIndicator::IndicatorState::LEFT && _left) ||
+		(state == InstrumentIndicator::IndicatorState::RIGHT && !_left) ||
+		(state == InstrumentIndicator::IndicatorState::BOTH))
+	{
+		cairo_t* cr = surface.getContext();
+
+		cairo_set_source_rgba(cr, fillColour.r, fillColour.g, fillColour.b, fillColour.a);
+		__drawDefaultPath(cr);
+		cairo_fill(cr);
+	}
 }
 
-void GaugeTurnIndicator::__drawPath(cairo_t* cr)
+void GaugeTurnIndicator::__drawDefaultPath(cairo_t* cr)
 {
 	double width = _getWidth();
 	double height = _getHeight();
 
 	cairo_identity_matrix(cr);
 
-	if(left)
+	if(_left)
 	{
-		cairo_translate(cr, width, 0.0);
+		cairo_translate(cr, width, height);
 		cairo_rotate(cr, M_PI);
 	}
 
-	double noseRadius = height / 12.0;
+	double noseRadius = height / 14.0;
 	double noseDiameter = noseRadius * 2.0;
 
-	double shaftWidth = width * 0.3;
-	double shaftHeight = height * 0.6;
+	double shaftWidth = width * 0.35;
+	double shaftHeight = height * 0.55;
 
 	double distToShaftY = (height - shaftHeight) / 2.0;
 
@@ -93,6 +110,6 @@ void GaugeTurnIndicator::__drawPath(cairo_t* cr)
 
 	cairo_line_to(cr, curX, 0.0);
 	cairo_rel_line_to(cr, -noseDiameter, 0.0);
-	cairo_rel_line_to(cr, 0.0, -distToShaftY);
+	cairo_rel_line_to(cr, 0.0, distToShaftY);
 	cairo_close_path(cr);
 }

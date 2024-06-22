@@ -10,11 +10,12 @@ Instrument::Instrument()
 {
 }
 
-void Instrument::_testNumerical(double min, double max, double testStepPerMillis)
+void Instrument::_testNumerical(double min, double max, double testStepPerMillis, bool forwardOnly)
 {
 	_numTestMin = min;
 	_numTestMax = max;
 	_numTestStep = testStepPerMillis;
+	_numTestForwardOnly = forwardOnly;
 
 	_curNumTestValue = min;
 	_numTestForwardDirection = true;
@@ -79,7 +80,7 @@ double Instrument::_getNumericalTestValue()
 			_testStartUSec = curTime.tv_usec;
 		}
 	}
-	else if(_curNumTestValue > _numTestMin)
+	else if(!_numTestForwardOnly && _curNumTestValue > _numTestMin)
 	{
 		if(testSingleStep)
 		{

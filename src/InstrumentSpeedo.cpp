@@ -30,5 +30,5 @@ unsigned InstrumentSpeedo::getSpeed()
 
 void InstrumentSpeedo::test(unsigned maxSpeed)
 {
-	_testNumerical(0.0, maxSpeed, 1.0/30.0);
+	_testNumerical(0.0, maxSpeed, 1.0/30.0, false);
 }

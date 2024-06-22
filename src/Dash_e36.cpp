@@ -6,14 +6,19 @@ Dash_e36::~Dash_e36()
 {
 	if(_speedo) delete _speedo;
 	if(_tacho) delete _tacho;
+	if(_turnLeft) delete _turnLeft;
+	if(_turnRight) delete _turnRight;
 }
 
-Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent) : _speedo{0}
+Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent)
+	: _speedo{0}, _tacho{0}
 {
 	Visual::setRootClearColour(0.0, 0.0, 0.0);
 
 	unsigned dashWidth = _getWidth();
 	unsigned dashHeight = _getHeight();
+
+	// Speedo.
 
 	unsigned speedoWidth = dashWidth * (speedoWidthPercent / 100.0);
 	unsigned speedoHeight = (speedoWidth / 2.0) * 1.2;
@@ -25,6 +30,8 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent) : _speed
 
 	_addGauge(_speedo);
 
+	// Tacho.
+
 	unsigned tachoWidth = dashWidth * (tachoWidthPercent / 100.0);
 	unsigned tachoHeight = tachoWidth / 2;
 
@@ -35,6 +42,16 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent) : _speed
 		tachoHeight * 1.1);
 
 	_addGauge(_tacho);
+
+	// Turn indicators.
+
+	unsigned turnWidth = dashWidth * (turnIndicatorWidthPercent / 100.0);
+
+	_turnLeft = new GaugeTurnIndicator_e36(true, 5, 5, turnWidth, turnWidth);
+	_turnRight = new GaugeTurnIndicator_e36(false, dashWidth - turnWidth - 5, 5, turnWidth, turnWidth);
+
+	_addGauge(_turnLeft);
+	_addGauge(_turnRight);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)

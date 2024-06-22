@@ -19,21 +19,21 @@ namespace piZeroDash
 			virtual ~GaugeTurnIndicator();
 
 			/**
+			 * @param left Make a left hand pointing arrow. Default is right.
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
 			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
-			 * @param left Make a left hand pointing arrow. Default is right.
 			 */
-			GaugeTurnIndicator(int globalPositionX, int globalPositionY, unsigned width, unsigned height, bool left);
+			GaugeTurnIndicator(bool left, int globalPositionX, int globalPositionY, unsigned width, unsigned height);
+
+			// Impl.
+			void test();
+
+			// Impl.
+			bool inTestMode();
 
 		protected:
-
-			/** Set the turn indicator state to being on. */
-			void _setOn();
-
-			/** Set the turn indicator state to being off. */
-			void _setOff();
 
 			/**
 			 * Draw a default turn indicator background.
@@ -57,8 +57,8 @@ namespace piZeroDash
 			/** Generic turn indicator instrument. */
 			InstrumentIndicator _indicatorInstr;
 
-			/** Draw the path of the arrow to a cairo context */
-			void __drawPath(cairo_t* cr);
+			/** Draw the path of the default arrow to a cairo context */
+			void __drawDefaultPath(cairo_t* cr);
 	};
 }
 
