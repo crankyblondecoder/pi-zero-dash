@@ -26,10 +26,6 @@ void GaugeHeadlight_e36::_drawBackground(CairoSurface& surface)
 	cairo_set_source_rgba(cr, _backgroundColour.r, _backgroundColour.g, _backgroundColour.b, _backgroundColour.a);
 	_drawDefaultPath(cr);
 	cairo_fill(cr);
-
-	double width = _getWidth();
-
-	__drawHeadlightOutline(cr, width / 20.0, _backgroundOutlineColour, M_PI * 5.0 / 180.0);
 }
 
 void GaugeHeadlight_e36::_drawForeground(CairoSurface& surface)
@@ -50,7 +46,34 @@ void GaugeHeadlight_e36::_drawForeground(CairoSurface& surface)
 		highBeamState = _headLightHighBeamInstr.getOnOffState();
 	}
 
-	// TODO ...
+	cairo_t* cr = surface.getContext();
+
+	double width = _getWidth();
+
+	if(highBeamState)
+	{
+		cairo_set_source_rgba(cr, _highBeamForegroundColour.r, _highBeamForegroundColour.g, _highBeamForegroundColour.b,
+			_highBeamForegroundColour.a);
+
+		_drawDefaultPath(cr);
+		cairo_fill(cr);
+
+		__drawHeadlightOutline(cr, width / 20.0, , 0.0);
+	}
+	else if(lowBeamState)
+	{
+		cairo_set_source_rgba(cr, _lowBeamForegroundColour.r, _lowBeamForegroundColour.g, _lowBeamForegroundColour.b,
+			_lowBeamForegroundColour.a);
+
+		_drawDefaultPath(cr);
+		cairo_fill(cr);
+
+		__drawHeadlightOutline(cr, width / 20.0, , M_PI * 10.0 / 180.0);
+	}
+	else
+	{
+		__drawHeadlightOutline(cr, width / 20.0, _offForegroundColour, 0.0);
+	}
 }
 
 void GaugeHeadlight_e36::__drawHeadlightOutline(cairo_t* cr, double strokeWidth, colour& strokeColour,
@@ -97,9 +120,25 @@ void GaugeHeadlight_e36::__drawHeadlightOutline(cairo_t* cr, double strokeWidth,
 	cairo_curve_to(cr, lensPt1_x + halfWidth * 0.8, lensPt1_y, lensPt1_x + halfWidth * 0.8, lensPt5_y, lensPt5_x, lensPt5_y);
 
 	// Draw light beams.
-	// TODO ...
 
 	double lensToBeamGap = quarterWidth / 4.0;
+	double beamEndX = quarterWidth * 0.8;
+
+	cairo_move_to(cr, lensPt1_x - lensToBeamGap, lensPt1_y);
+	cairo_line_to(cr, beamEndX, lensPt1_y + beamDownDeltaY);
+
+
+	cairo_move_to(cr, lensPt2_x - lensToBeamGap, lensPt2_y);
+	cairo_line_to(cr, beamEndX, lensPt2_y + beamDownDeltaY);
+
+	cairo_move_to(cr, lensPt3_x - lensToBeamGap, lensPt3_y);
+	cairo_line_to(cr, beamEndX, lensPt3_y + beamDownDeltaY);
+
+	cairo_move_to(cr, lensPt4_x - lensToBeamGap, lensPt4_y);
+	cairo_line_to(cr, beamEndX, lensPt4_y + beamDownDeltaY);
+
+	cairo_move_to(cr, lensPt5_x - lensToBeamGap, lensPt5_y);
+	cairo_line_to(cr, beamEndX, lensPt5_y + beamDownDeltaY);
 
 	cairo_stroke(cr);
 }

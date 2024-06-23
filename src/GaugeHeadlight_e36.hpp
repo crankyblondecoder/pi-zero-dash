@@ -48,8 +48,8 @@ namespace piZeroDash
 			/** background colour. */
 			struct colour _backgroundColour = {0.5, 0.5, 0.5, 0.5};
 
-			/** background outline colour. */
-			struct colour _backgroundOutlineColour = {0.5, 0.5, 0.5, 0.5};
+			/** Lights off outline colour. */
+			struct colour _offForegroundColour = {0.5, 0.5, 0.5, 0.5};
 
 			/** Low beam foreground colour. */
 			// green: 20, 227, 48
