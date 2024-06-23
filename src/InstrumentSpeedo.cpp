@@ -15,8 +15,15 @@ bool InstrumentSpeedo::latch()
 {
 	if(_getInTestMode())
 	{
-		_latchedValue = _getNumericalTestValue();
-		return true;
+		double testVal = _getNumericalTestValue();
+
+		if(_latchedValue != testVal)
+		{
+			_latchedValue = testVal;
+			return true;
+		}
+
+		return false;
 	}
 
 	// TODO ... Get actual speedo data from pico.

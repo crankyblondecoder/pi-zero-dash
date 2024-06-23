@@ -10,8 +10,8 @@ Dash_e36::~Dash_e36()
 	if(_turnRight) delete _turnRight;
 }
 
-Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent)
-	: _speedo{0}, _tacho{0}
+Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent,
+	double lightHeightPercent) : _speedo{0}, _tacho{0}, _turnLeft{0}, _turnRight{0}, _headlight{0}
 {
 	Visual::setRootClearColour(0.0, 0.0, 0.0);
 
@@ -52,6 +52,15 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 
 	_addGauge(_turnLeft);
 	_addGauge(_turnRight);
+
+	// Headlight gauge.
+
+	unsigned lightHeight = dashHeight * (lightHeightPercent / 100.0);
+	unsigned lightWidth = lightHeight;
+
+	_headlight = new GaugeHeadlight_e36((dashWidth - lightWidth) / 2.0, 0.0, lightWidth, lightHeight);
+
+	_addGauge(_headlight);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)

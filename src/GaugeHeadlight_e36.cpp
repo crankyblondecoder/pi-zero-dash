@@ -24,10 +24,12 @@ void GaugeHeadlight_e36::_drawBackground(CairoSurface& surface)
 	cairo_t* cr = surface.getContext();
 
 	cairo_set_source_rgba(cr, _backgroundColour.r, _backgroundColour.g, _backgroundColour.b, _backgroundColour.a);
-
 	_drawDefaultPath(cr);
-
 	cairo_fill(cr);
+
+	double width = _getWidth();
+
+	__drawHeadlightOutline(cr, width / 20.0, _backgroundOutlineColour, M_PI * 5.0 / 180.0);
 }
 
 void GaugeHeadlight_e36::_drawForeground(CairoSurface& surface)
@@ -38,22 +40,74 @@ void GaugeHeadlight_e36::_drawForeground(CairoSurface& surface)
 
 	if(_headLightLowBeamInstr.inTestMode())
 	{
-		_testHighBeamActive = !_testHighBeamActive && _testLowBeamActive;
-		_testLowBeamActive =
+		if(lowBeamState) _testLowHighBeamState++;
 
-		lowBeamState = _testLowBeamActive;
-		highBeamState = _testHighBeamActive;
+		lowBeamState = _testLowHighBeamState & 1;
+		highBeamState = _testLowHighBeamState & 2;
 	}
 	else
 	{
 		highBeamState = _headLightHighBeamInstr.getOnOffState();
 	}
 
+	// TODO ...
+}
 
+void GaugeHeadlight_e36::__drawHeadlightOutline(cairo_t* cr, double strokeWidth, colour& strokeColour,
+	double beamDownSlantAngle)
+{
+	double width = _getWidth();
+	double height =_getHeight();
+
+	double halfHeight = height / 2.0;
+	double halfWidth = width / 2.0;
+	double quarterWidth = width / 4.0;
+
+	double lensHalfAngle = (15.0 / 180.0) * M_PI;
+	double lensRadius = width * 0.8;
+	double lensHalfHeight = lensRadius * sin(lensHalfAngle);
+	double lensDepthCurveDelta = lensRadius - lensRadius * cos(lensHalfAngle);
+
+	double beamDownDeltaY = quarterWidth * sin(beamDownSlantAngle);
+
+	// Setup common context.
+	cairo_set_source_rgba(cr, strokeColour.r, strokeColour.g, strokeColour.b, strokeColour.a);
+	cairo_set_line_width(cr, strokeWidth);
+
+	// Calculate 5 points on lense surface. From top to bottom.
+
+	double lensPt3_x = halfWidth;
+	double lensPt3_y = halfHeight;
+
+	double lensPt1_x = lensPt3_x + lensDepthCurveDelta;
+	double lensPt1_y = lensPt3_y - lensHalfHeight;
+
+	double lensPt2_x = lensPt3_x + lensDepthCurveDelta / 2.0;
+	double lensPt2_y = lensPt3_y - lensHalfHeight / 2.0;
+
+	double lensPt4_x = lensPt2_x;
+	double lensPt4_y = lensPt3_y + lensHalfHeight / 2.0;
+
+	double lensPt5_x = lensPt1_x;
+	double lensPt5_y = lensPt3_y + lensHalfHeight;
+
+	// Draw light outline.
+	cairo_move_to(cr, lensPt5_x, lensPt5_y);
+	cairo_arc(cr, halfWidth + lensRadius, halfHeight, lensRadius, M_PI - lensHalfAngle, M_PI + lensHalfAngle);
+	cairo_curve_to(cr, lensPt1_x + halfWidth * 0.8, lensPt1_y, lensPt1_x + halfWidth * 0.8, lensPt5_y, lensPt5_x, lensPt5_y);
+
+	// Draw light beams.
+	// TODO ...
+
+	double lensToBeamGap = quarterWidth / 4.0;
+
+	cairo_stroke(cr);
 }
 
 void GaugeHeadlight_e36::test()
 {
+	_testLowHighBeamState = 0;
+
 	// Just use the low beam intrument for all tests.
 	_headLightLowBeamInstr.test();
 }

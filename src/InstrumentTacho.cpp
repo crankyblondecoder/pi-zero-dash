@@ -18,8 +18,15 @@ bool InstrumentTacho::latch()
 {
 	if(inTestMode())
 	{
-		_latchedValue = _getNumericalTestValue();
-		return true;
+		double testVal = _getNumericalTestValue();
+
+		if(_latchedValue != testVal)
+		{
+			_latchedValue = testVal;
+			return true;
+		}
+
+		return false;
 	}
 
 	// TODO ... Get actual rpm data from pico.

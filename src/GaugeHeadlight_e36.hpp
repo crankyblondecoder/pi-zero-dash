@@ -48,17 +48,27 @@ namespace piZeroDash
 			/** background colour. */
 			struct colour _backgroundColour = {0.5, 0.5, 0.5, 0.5};
 
+			/** background outline colour. */
+			struct colour _backgroundOutlineColour = {0.5, 0.5, 0.5, 0.5};
+
 			/** Low beam foreground colour. */
 			// green: 20, 227, 48
 			struct colour _lowBeamForegroundColour = {20.0/255.0, 227.0/255, 48.0/255.0, 1.0};
 
 			/** High beam foreground colour. */
 			// 14, 14, 173
-			struct colour _lowBeamForegroundColour = {14.0/255.0, 14.0/255, 173.0/255.0, 1.0};
+			struct colour _highBeamForegroundColour = {14.0/255.0, 14.0/255, 173.0/255.0, 1.0};
 
 			// Keep track of the low/high beam active state for testing purposes.
-			bool _testLowBeamActive = false;
-			bool _testHighBeamActive = false;
+			unsigned _testLowHighBeamState;
+
+			/**
+			 * @param cr Cairo context to draw to.
+			 * @param strokeWidth Width of stroke lines.
+			 * @param strokeColour Colour of stroked lines.
+			 * @param beamDownSlantAngle Angle of beam lines (in radians). Front of line angles down.
+			*/
+			void __drawHeadlightOutline(cairo_t* cr, double strokeWidth, colour& strokeColour, double beamDownSlantAngle);
 	};
 }
 

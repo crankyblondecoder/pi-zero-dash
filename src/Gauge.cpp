@@ -35,8 +35,9 @@ void Gauge::scan()
 	if(draw)
 	{
 		_drawForeground();
-		_composeForegroundToDisplay();
 	}
+
+	_composeForegroundToDisplay();
 }
 
 void Gauge::_addInstrument(Instrument* instrument)
