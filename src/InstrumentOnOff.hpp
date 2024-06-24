@@ -33,6 +33,9 @@ namespace piZeroDash
 
 			/** Currently latched value. */
 			bool _latchedValue;
+
+			/** No value has been latched yet. */
+			bool _unlatched = true;
 	};
 }
 

@@ -58,7 +58,7 @@ void GaugeHeadlight_e36::_drawForeground(CairoSurface& surface)
 		_drawDefaultPath(cr);
 		cairo_fill(cr);
 
-		__drawHeadlightOutline(cr, width / 20.0, , 0.0);
+		__drawHeadlightOutline(cr, width / 20.0, _onStrokeColour, 0.0);
 	}
 	else if(lowBeamState)
 	{
@@ -68,11 +68,11 @@ void GaugeHeadlight_e36::_drawForeground(CairoSurface& surface)
 		_drawDefaultPath(cr);
 		cairo_fill(cr);
 
-		__drawHeadlightOutline(cr, width / 20.0, , M_PI * 10.0 / 180.0);
+		__drawHeadlightOutline(cr, width / 20.0, _onStrokeColour, M_PI * 10.0 / 180.0);
 	}
 	else
 	{
-		__drawHeadlightOutline(cr, width / 20.0, _offForegroundColour, 0.0);
+		__drawHeadlightOutline(cr, width / 20.0, _offStrokeColour, 0.0);
 	}
 }
 

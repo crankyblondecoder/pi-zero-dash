@@ -49,7 +49,10 @@ namespace piZeroDash
 			struct colour _backgroundColour = {0.5, 0.5, 0.5, 0.5};
 
 			/** Lights off outline colour. */
-			struct colour _offForegroundColour = {0.5, 0.5, 0.5, 0.5};
+			struct colour _offStrokeColour = {0.5, 0.5, 0.5, 0.5};
+
+			/** Lights on outline colour. */
+			struct colour _onStrokeColour = {1.0, 1.0, 1.0, 0.5};
 
 			/** Low beam foreground colour. */
 			// green: 20, 227, 48

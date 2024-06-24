@@ -13,6 +13,10 @@ InstrumentOnOff::InstrumentOnOff()
 
 bool InstrumentOnOff::latch()
 {
+	bool latched = _unlatched;
+
+	if(_unlatched) _unlatched = false;
+
 	if(_getInTestMode())
 	{
 		double testVal = _getNumericalTestValue();
@@ -22,14 +26,15 @@ bool InstrumentOnOff::latch()
 		if(_latchedValue != nextLatchedValue)
 		{
 			_latchedValue = nextLatchedValue;
-			return true;
+			latched = true;
 		}
-
-		return false;
+	}
+	else
+	{
+		// TODO ... Get actual data from pico based on some kind of switch selector?
 	}
 
-	// TODO ... Get actual data from pico based on some kind of switch selector?
-	return false;
+	return latched;
 }
 
 bool InstrumentOnOff::getOnOffState()
@@ -40,5 +45,5 @@ bool InstrumentOnOff::getOnOffState()
 void InstrumentOnOff::test()
 {
 	// This should latch once per second.
-	_testNumerical(0.0, 6.0, 1.0 / 1000.0, true);
+	_testNumerical(0.0, 16.0, 2.0 / 1000.0, false);
 }
