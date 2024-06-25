@@ -8,10 +8,12 @@ Dash_e36::~Dash_e36()
 	if(_tacho) delete _tacho;
 	if(_turnLeft) delete _turnLeft;
 	if(_turnRight) delete _turnRight;
+	if(_engineTemp) delete _engineTemp;
 }
 
 Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent,
-	double lightHeightPercent) : _speedo{0}, _tacho{0}, _turnLeft{0}, _turnRight{0}, _headlight{0}
+	double lightHeightPercent, double engineTempWidthPercent)
+	: _speedo{0}, _tacho{0}, _turnLeft{0}, _turnRight{0}, _headlight{0}, _engineTemp{0}
 {
 	Visual::setRootClearColour(0.0, 0.0, 0.0);
 
@@ -35,10 +37,10 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	unsigned tachoWidth = dashWidth * (tachoWidthPercent / 100.0);
 	unsigned tachoHeight = tachoWidth / 2;
 
-	unsigned dialCentreX = speedoPosnX + speedoWidth / 2;
-	unsigned dialCentreY = speedoPosnY + speedoWidth / 2;
+	unsigned tachoDialCentreX = speedoPosnX + speedoWidth / 2;
+	unsigned tachoDialCentreY = speedoPosnY + speedoWidth / 2;
 
-	_tacho = new GaugeTacho_e36(8000, 7500, 7000, true, dialCentreX - (tachoWidth / 2), dialCentreY - tachoHeight, tachoWidth,
+	_tacho = new GaugeTacho_e36(8000, 7500, 7000, true, tachoDialCentreX - (tachoWidth / 2), tachoDialCentreY - tachoHeight, tachoWidth,
 		tachoHeight * 1.1);
 
 	_addGauge(_tacho);
@@ -61,6 +63,16 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	_headlight = new GaugeHeadlight_e36((dashWidth - lightWidth) / 2.0, 0.0, lightWidth, lightHeight);
 
 	_addGauge(_headlight);
+
+	// Engine temperature gauge.
+
+	unsigned engineTempWidth = dashWidth * (engineTempWidthPercent / 100.0);
+	unsigned engineTempHeight = (double) engineTempWidth * 0.5;
+
+	_engineTemp = new GaugeEngineTemp_e36(-10, 110, 50, 96, (dashWidth - engineTempWidth) / 2.0,
+		tachoDialCentreY - (tachoHeight / 2) + 10, engineTempWidth, engineTempHeight);
+
+	_addGauge(_engineTemp);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)

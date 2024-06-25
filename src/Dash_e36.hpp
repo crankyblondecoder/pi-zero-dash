@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include "Dash.hpp"
+#include "GaugeEngineTemp_e36.hpp"
 #include "GaugeHeadlight_e36.hpp"
 #include "GaugeSpeedo_e36.hpp"
 #include "GaugeTacho_e36.hpp"
@@ -24,10 +25,11 @@ namespace piZeroDash
 			 * @param speedoWidthPercent Speedo width as a percentage of the width of the dash.
 			 * @param tachoWidthPercent Tacho width as a percentage of the width of the dash.
 			 * @param turnIndicatorWidthPercent Turn indicator width as a percentage of the width of the dash.
-			 * @param lightHeightPercent Height of any row of lights.
+			 * @param lightHeightPercent Height of any row of lights, as percentage of the dash height.
+			 * @param engineTempWidthPercent Width of engine temp box, as percentage of dash width.
 			 */
 			Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent,
-				double lightHeightPercent);
+				double lightHeightPercent, double engineTempWidthPercent);
 
 		protected:
 
@@ -53,6 +55,9 @@ namespace piZeroDash
 
 			/** Headlight off/low/high beam light. */
 			GaugeHeadlight_e36* _headlight;
+
+			/** Engine temperature. */
+			GaugeEngineTemp_e36* _engineTemp;
 	};
 }
 
