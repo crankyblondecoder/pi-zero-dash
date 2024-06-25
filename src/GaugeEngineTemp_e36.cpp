@@ -54,22 +54,7 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 		cairo_set_source_rgba(cr, _boxColourHot.r, _boxColourHot.g, _boxColourHot.b, _boxColourHot.a);
 	}
 
-	double cornerRadius = height / 4.0;
-
-	double left = 0.0;
-	double right = width;
-	double top = 0.0;
-	double bottom = height;
-
-	cairo_new_sub_path(cr);
-	cairo_arc(cr, left + cornerRadius, top + cornerRadius, cornerRadius, M_PI, 1.5 * M_PI);
-	cairo_line_to(cr, right - cornerRadius, top);
-	cairo_arc(cr, right - cornerRadius, top + cornerRadius, cornerRadius, 1.5 * M_PI, 2.0 * M_PI);
-	cairo_line_to(cr, right, bottom - cornerRadius);
-	cairo_arc(cr, right - cornerRadius, bottom - cornerRadius, cornerRadius, 0.0, 0.5 * M_PI);
-	cairo_line_to(cr, left - cornerRadius, bottom);
-	cairo_arc(cr, left + cornerRadius, bottom - cornerRadius, cornerRadius, 0.5 * M_PI, M_PI);
-	cairo_close_path(cr);
+	_drawDefaultBoxPath(cr, height / 4.0, 0.0, width, 0.0, height);
 
 	cairo_fill(cr);
 
@@ -103,8 +88,8 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 
 	cairo_set_source_rgba(cr, _fontColour.r, _fontColour.g, _fontColour.b, _fontColour.a);
 
-	top = textExtents.height / 2.0;
-	left = textExtents.width / 2.0;
+	double top = textExtents.height / 2.0;
+	double left = textExtents.width / 2.0;
 
 	cairo_move_to(cr, left - textExtents.x_bearing, top - textExtents.y_bearing);
 	cairo_show_text(cr, numberText.c_str());
