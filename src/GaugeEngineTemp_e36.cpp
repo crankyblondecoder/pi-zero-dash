@@ -71,7 +71,15 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 	string extentString;
 
 	// Use a fixed number string to get text extents. This is so the number doesn't jump around.
-	if(curTemp < 10)
+	if(curTemp <= -10)
+	{
+		extentString = "-55°C";
+	}
+	else if(curTemp < 0)
+	{
+		extentString = "-5°C";
+	}
+	else if(curTemp < 10)
 	{
 		extentString = "5°C";
 	}
@@ -88,8 +96,8 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 
 	cairo_set_source_rgba(cr, _fontColour.r, _fontColour.g, _fontColour.b, _fontColour.a);
 
-	double top = textExtents.height / 2.0;
-	double left = textExtents.width / 2.0;
+	double top = (height - textExtents.height) / 2.0;
+	double left = (width - textExtents.width) / 2.0;
 
 	cairo_move_to(cr, left - textExtents.x_bearing, top - textExtents.y_bearing);
 	cairo_show_text(cr, numberText.c_str());

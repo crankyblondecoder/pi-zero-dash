@@ -60,16 +60,16 @@ namespace piZeroDash
 			InstrumentEngineTemp _engineTempInstr;
 
 			/** Box colour - cold. */
-			struct colour _boxColourCold = {21.0/255.0, 54.0/255.0, 214.0/255.0, 0.75};
+			struct colour _boxColourCold = {21.0/255.0, 54.0/255.0, 214.0/255.0, 0.85};
 
 			/** Box colour - normal. */
-			struct colour _boxColourNormal = {20.0/255.0, 227.0/255, 48.0/255.0, 0.75};
+			struct colour _boxColourNormal = {20.0/255.0, 227.0/255, 48.0/255.0, 0.85};
 
 			/** Box colour - hot. */
 			struct colour _boxColourHot = {1.0, 0.0, 0.0, 1.0};
 
 			/** Font colour. */
-			struct colour _fontColour = {1.0, 1.0, 1.0, 1.0};
+			struct colour _fontColour = {1.0, 1.0, 1.0, 0.85};
 	};
 }
 
