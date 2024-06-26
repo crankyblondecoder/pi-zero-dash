@@ -13,10 +13,28 @@ GaugeDial::~GaugeDial()
 {
 }
 
-GaugeDial::GaugeDial(int globalPositionX, int globalPositionY, unsigned width, unsigned height)
-	: Gauge(globalPositionX, globalPositionY, width, height)
+GaugeDial::GaugeDial(double radius, double dialCentreX, double dialCentreY, int globalPositionX, int globalPositionY,
+	unsigned width, unsigned height) : Gauge(globalPositionX, globalPositionY, width, height)
 
 {
+	_radius = radius;
+	_dialCentreX = dialCentreX;
+	_dialCentreY = dialCentreY;
+}
+
+double GaugeDial::_getRadius()
+{
+	return _radius;
+}
+
+double GaugeDial::_getDialCentreX()
+{
+	return _dialCentreX;
+}
+
+double GaugeDial::_getDialCentreY()
+{
+	return _dialCentreY;
 }
 
 void GaugeDial::_drawDefaultBackground(CairoSurface& surface, int startNumber, int endNumber, double markDistance,
@@ -25,8 +43,6 @@ void GaugeDial::_drawDefaultBackground(CairoSurface& surface, int startNumber, i
 	colour& majorLineColour, colour& minorLineColour)
 {
 	// The background surface is exclusive to this gauge.
-
-	double radius = (double)(_getWidth()) / 2.0;
 
 	// A graduation is the "pie slice".
 	unsigned numGraduations = (double)(endNumber - startNumber) / markDistance;
@@ -54,7 +70,7 @@ void GaugeDial::_drawDefaultBackground(CairoSurface& surface, int startNumber, i
 	char textBuffer[16];
 
 	// Distance from dial centre to number bounds box position.
-	double numberStartRadius = radius - lineLength - (lineLength / 4.0) - lineStartOffset;
+	double numberStartRadius = _radius - lineLength - (lineLength / 4.0) - lineStartOffset;
 
 	// The number of lines is one more than the number of graduations.
 	unsigned numLines = numGraduations + 1;
@@ -95,13 +111,13 @@ void GaugeDial::_drawDefaultBackground(CairoSurface& surface, int startNumber, i
 		{
 			// Rotate about the "dial centre".
 			cairo_identity_matrix(cr);
-			cairo_translate(cr, radius, radius);
+			cairo_translate(cr, _dialCentreX, _dialCentreY);
 			cairo_rotate(cr, curGradAngle);
-			cairo_translate(cr, -radius, -radius);
+			cairo_translate(cr, -_dialCentreX, -_dialCentreY);
 
 			// Define and draw line.
-			cairo_move_to(cr, lineStartOffset, radius);
-			cairo_line_to(cr, lineLength + lineStartOffset, radius);
+			cairo_move_to(cr, _dialCentreX - _radius + lineStartOffset, _dialCentreY);
+			cairo_line_to(cr, _dialCentreX - _radius + lineLength + lineStartOffset, _dialCentreY);
 			cairo_stroke(cr);
 		}
 
@@ -154,8 +170,8 @@ void GaugeDial::_drawDefaultBackground(CairoSurface& surface, int startNumber, i
 				boxEdgeY = -b * tan(M_PI - curGradAngle);
 			}
 
-			double textPosnX = radius - (numberStartRadius + numberStartRadiusBump) * cos(curGradAngle) - boxEdgeX + textRefX;
-			double textPosnY = radius - (numberStartRadius + numberStartRadiusBump) * sin(curGradAngle) - boxEdgeY + textRefY;
+			double textPosnX = _dialCentreX - (numberStartRadius + numberStartRadiusBump) * cos(curGradAngle) - boxEdgeX + textRefX;
+			double textPosnY = _dialCentreY - (numberStartRadius + numberStartRadiusBump) * sin(curGradAngle) - boxEdgeY + textRefY;
 
 			cairo_set_source_rgba(cr, markedFontColour.r, markedFontColour.g, markedFontColour.b, markedFontColour.a);
 

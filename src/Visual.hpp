@@ -28,6 +28,21 @@ namespace piZeroDash
 	};
 
 	/**
+	 * Rectangular (box) bounds.
+	 */
+	struct bounds
+	{
+		/** Coordinate of left side of box. */
+		double left;
+		/** Coordinate of right side of box. */
+		double right;
+		/** Coordinate of top side of box. */
+		double top;
+		/** Coordinate of bottom side of box. */
+		double bottom;
+	};
+
+	/**
 	 * Instruments read and interpret data from one or more physical sources.
 	 */
 	class Visual

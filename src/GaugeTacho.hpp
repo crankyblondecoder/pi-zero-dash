@@ -20,13 +20,17 @@ namespace piZeroDash
 			 * @param redlineRpm RPM value of redline.
 			 * @param redlineWarningRpm RPM value of approaching redline warning.
 			 * @param flashRedline Whether to flash the tacho when redline is exceeded.
+			 * @param radius Radius of dial.
+			 * @param dialCentreX Centre of dial, x coordinate.
+			 * @param dialCentreY Centre of dial, y coordinate.
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
 			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeTacho(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, bool flashRedline, int globalPositionX,
-				int globalPositionY, unsigned width, unsigned height);
+			GaugeTacho(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, bool flashRedline, double radius,
+				double dialCentreX, double dialCentreY, int globalPositionX, int globalPositionY, unsigned width,
+				unsigned height);
 
 			// Impl.
 			void test();

@@ -17,12 +17,16 @@ namespace piZeroDash
 			virtual ~GaugeDial();
 
 			/**
+			 * @param radius Radius of dial.
+			 * @param dialCentreX Centre of dial, x coordinate.
+			 * @param dialCentreY Centre of dial, y coordinate.
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
 			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeDial(int globalPositionX, int globalPositionY, unsigned width, unsigned height);
+			GaugeDial(double radius, double dialCentreX, double dialCentreY, int globalPositionX, int globalPositionY,
+				unsigned width, unsigned height);
 
 		protected:
 
@@ -51,7 +55,25 @@ namespace piZeroDash
 				double lineLength, double majorLineWidth, double minorLineWidth, double lineStartOffset,
 				colour& majorLineColour, colour& minorLineColour);
 
+			/** Get dial's radius. */
+			double _getRadius();
+
+			/** Get the x coordinate of the centre of the dial.*/
+			double _getDialCentreX();
+
+			/** Get the y coordinate of the centre of the dial.*/
+			double _getDialCentreY();
+
 		private:
+
+			/** Radius of dial. */
+			double _radius;
+
+			/** Centre of dial, x coordinate. */
+			double _dialCentreX;
+
+			/** Centre of dial, y coordinate. */
+			double _dialCentreY;
 	};
 }
 

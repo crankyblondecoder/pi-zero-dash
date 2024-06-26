@@ -16,13 +16,17 @@ namespace piZeroDash
 			virtual ~GaugeSpeedo();
 
 			/**
+			 * @param radius Radius of dial.
+			 * @param dialCentreX Centre of dial, x coordinate.
+			 * @param dialCentreY Centre of dial, y coordinate.
 			 * @param maxSpeed Maximum speed displayed by speedo.
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
 			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeSpeedo(unsigned maxSpeed, int globalPositionX, int globalPositionY, unsigned width, unsigned height);
+			GaugeSpeedo(double radius, double dialCentreX, double dialCentreY, unsigned maxSpeed, int globalPositionX,
+				int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
 			void test();

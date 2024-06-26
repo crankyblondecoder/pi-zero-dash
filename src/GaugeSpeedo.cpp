@@ -12,8 +12,9 @@ GaugeSpeedo::~GaugeSpeedo()
 {
 }
 
-GaugeSpeedo::GaugeSpeedo(unsigned maxSpeed, int globalPositionX, int globalPositionY, unsigned width, unsigned height)
-	: GaugeDial(globalPositionX, globalPositionY, width, height)
+GaugeSpeedo::GaugeSpeedo(double radius, double dialCentreX, double dialCentreY, unsigned maxSpeed, int globalPositionX,
+	int globalPositionY, unsigned width, unsigned height)
+	: GaugeDial(radius, dialCentreX, dialCentreY, globalPositionX, globalPositionY, width, height)
 {
 	_maxSpeed = maxSpeed;
 
@@ -42,7 +43,8 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 {
 	cairo_t* cr = surface.getContext();
 
-	double radius = (double)(_getWidth()) / 2.0;
+	double dialCentreX = _getDialCentreX();
+	double dialCentreY = _getDialCentreY();
 
 	GaugeDial::_drawDefaultBackground(surface, 20, _getMaxSpeed(), 10, true, true, true, markedSpeedFontSize,
 		markedSpeedFontColour, markedSpeedFontDecimalPlaces, lineLength, majorLineWidth, minorLineWidth, lineStartOffset,
@@ -56,9 +58,9 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 
 	double cornerRadius = preciseSpeedBackgroundHeight / 4.0;
 
-	double left = radius - preciseSpeedBackgroundWidth / 2.0;
+	double left = dialCentreX - preciseSpeedBackgroundWidth / 2.0;
 	double right = left + preciseSpeedBackgroundWidth;
-	double top = radius - preciseSpeedBackgroundHeight / 2.0;
+	double top = dialCentreY - preciseSpeedBackgroundHeight / 2.0;
 	double bottom = top + preciseSpeedBackgroundHeight;
 
 	_drawDefaultBoxPath(cr, cornerRadius, left, right, top, bottom);
@@ -71,7 +73,10 @@ void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicator
 {
 	cairo_t* cr = surface.getContext();
 
-	double radius = (double)(_getWidth()) / 2.0;
+	double radius = _getRadius();
+
+	double dialCentreX = _getDialCentreX();
+	double dialCentreY = _getDialCentreY();
 
 	// Draw indicator line.
 
@@ -86,13 +91,13 @@ void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicator
 
 	// Rotate about the "dial centre".
 	cairo_identity_matrix(cr);
-	cairo_translate(cr, radius, radius);
+	cairo_translate(cr, dialCentreX, dialCentreY);
 	cairo_rotate(cr, indicatorAngle);
-	cairo_translate(cr, -radius, -radius);
+	cairo_translate(cr, -dialCentreX, -dialCentreY);
 
 	// Define and draw line.
-	cairo_move_to(cr, 0.0, radius);
-	cairo_line_to(cr, indicatorLineLength, radius);
+	cairo_move_to(cr, dialCentreX - radius, dialCentreY);
+	cairo_line_to(cr, dialCentreX - radius + indicatorLineLength, dialCentreY);
 	cairo_stroke(cr);
 
 	// Write current speed to precise speed box.
@@ -126,8 +131,8 @@ void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicator
 	cairo_set_source_rgba(cr, preciseSpeedFontColour.r, preciseSpeedFontColour.g, preciseSpeedFontColour.b,
 		preciseSpeedFontColour.a);
 
-	double top = radius - textExtents.height / 2.0;
-	double left = radius - textExtents.width / 2.0;
+	double top = dialCentreX - textExtents.height / 2.0;
+	double left = dialCentreY - textExtents.width / 2.0;
 
 	cairo_move_to(cr, left - textExtents.x_bearing, top - textExtents.y_bearing);
 	cairo_show_text(cr, numberText.c_str());

@@ -14,7 +14,8 @@ GaugeTacho_e36::~GaugeTacho_e36()
 
 GaugeTacho_e36::GaugeTacho_e36(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, bool flashRedline,
 	int globalPositionX, int globalPositionY, unsigned width, unsigned height)
-	: GaugeTacho(maxRpm, redlineRpm, redlineWarningRpm, flashRedline, globalPositionX, globalPositionY, width, height)
+	: GaugeTacho(maxRpm, redlineRpm, redlineWarningRpm, flashRedline, (double) width / 2.0, (double) width / 2.0,
+	(double) width / 2.0, globalPositionX, globalPositionY, width, height)
 {
 	_markedRpmFontSize = 0.07 * (double) width;
 	_lineLength = 0.1 * (double) width;

@@ -13,7 +13,8 @@ GaugeSpeedo_e36::~GaugeSpeedo_e36()
 }
 
 GaugeSpeedo_e36::GaugeSpeedo_e36(unsigned maxSpeed, int globalPositionX, int globalPositionY, unsigned width, unsigned height)
-	: GaugeSpeedo(maxSpeed, globalPositionX, globalPositionY, width, height)
+	: GaugeSpeedo((double) width / 2.0, (double) width / 2.0, (double) width / 2.0, maxSpeed, globalPositionX, globalPositionY,
+	width, height)
 {
 	_markedSpeedFontSize = 0.05 * (double) width;
 	_lineLength = 0.05 * (double) width;

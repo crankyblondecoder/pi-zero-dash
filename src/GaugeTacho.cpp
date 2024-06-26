@@ -13,8 +13,9 @@ GaugeTacho::~GaugeTacho()
 {
 }
 
-GaugeTacho::GaugeTacho(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, bool flashRedline, int globalPositionX,
-	int globalPositionY, unsigned width, unsigned height) : GaugeDial(globalPositionX, globalPositionY, width, height)
+GaugeTacho::GaugeTacho(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, bool flashRedline, double radius,
+	double dialCentreX, double dialCentreY, int globalPositionX, int globalPositionY, unsigned width, unsigned height)
+	: GaugeDial(radius, dialCentreX, dialCentreY, globalPositionX, globalPositionY, width, height)
 {
 	_maxRpm = maxRpm;
 	_redlineRpm = redlineRpm;
@@ -85,8 +86,9 @@ void GaugeTacho::_drawDefaultForeground(CairoSurface& surface, double radialSect
 
 	cairo_t* cr = surface.getContext();
 
-	double width = _getWidth();
-	double radius = width / 2.0;
+	double radius = _getRadius();
+	double dialCentreX = _getDialCentreX();
+	double dialCentreY = _getDialCentreY();
 
 	double degreesPerRpm = (M_PI / (double) _maxRpm);
 
@@ -99,11 +101,11 @@ void GaugeTacho::_drawDefaultForeground(CairoSurface& surface, double radialSect
 	cairo_identity_matrix(cr);
 
 	cairo_set_source_rgba(cr, normalColour.r, normalColour.g, normalColour.b, normalColour.a);
-	cairo_move_to(cr, 0.0, radius);
-	cairo_line_to(cr, radialSectionLength, radius);
-	cairo_arc(cr, radius, radius, radius - radialSectionLength, M_PI, M_PI + normalArcAngle);
+	cairo_move_to(cr, dialCentreX - radius, dialCentreY);
+	cairo_line_to(cr, dialCentreX - radius + radialSectionLength, dialCentreY);
+	cairo_arc(cr, dialCentreX, dialCentreY, radius - radialSectionLength, M_PI, M_PI + normalArcAngle);
 	cairo_rel_line_to(cr, -radialSectionLength * cos(normalArcAngle), -radialSectionLength * sin(normalArcAngle));
-	cairo_arc_negative(cr, radius, radius, radius, M_PI + normalArcAngle, M_PI);
+	cairo_arc_negative(cr, dialCentreX, dialCentreY, radius, M_PI + normalArcAngle, M_PI);
 
 	cairo_close_path(cr);
 	cairo_fill(cr);
@@ -121,10 +123,10 @@ void GaugeTacho::_drawDefaultForeground(CairoSurface& surface, double radialSect
 			redlineWarningThresholdColour.b, redlineWarningThresholdColour.a);
 
 		cairo_new_sub_path(cr);
-		cairo_arc(cr, radius, radius, radius - radialSectionLength, M_PI + normalArcAngle, M_PI + absRedlineWarningArcAngle);
+		cairo_arc(cr, dialCentreX, dialCentreY, radius - radialSectionLength, M_PI + normalArcAngle, M_PI + absRedlineWarningArcAngle);
 		cairo_rel_line_to(cr, -radialSectionLength * cos(absRedlineWarningArcAngle),
 			-radialSectionLength * sin(absRedlineWarningArcAngle));
-		cairo_arc_negative(cr, radius, radius, radius, M_PI + absRedlineWarningArcAngle, M_PI + normalArcAngle);
+		cairo_arc_negative(cr, dialCentreX, dialCentreY, radius, M_PI + absRedlineWarningArcAngle, M_PI + normalArcAngle);
 
 		cairo_close_path(cr);
 		cairo_fill(cr);
@@ -143,10 +145,10 @@ void GaugeTacho::_drawDefaultForeground(CairoSurface& surface, double radialSect
 		cairo_set_source_rgba(cr, redlineColour.r, redlineColour.g, redlineColour.b, redlineColour.a);
 
 		cairo_new_sub_path(cr);
-		cairo_arc(cr, radius, radius, radius - radialSectionLength, M_PI + absRedlineArcStartAngle, M_PI + absRedlineArcAngle);
+		cairo_arc(cr, dialCentreX, dialCentreY, radius - radialSectionLength, M_PI + absRedlineArcStartAngle, M_PI + absRedlineArcAngle);
 		cairo_rel_line_to(cr, -radialSectionLength * cos(absRedlineArcAngle),
 			-radialSectionLength * sin(absRedlineArcAngle));
-		cairo_arc_negative(cr, radius, radius, radius, M_PI + absRedlineArcAngle, M_PI + absRedlineArcStartAngle);
+		cairo_arc_negative(cr, dialCentreX, dialCentreY, radius, M_PI + absRedlineArcAngle, M_PI + absRedlineArcStartAngle);
 
 		cairo_close_path(cr);
 		cairo_fill(cr);
