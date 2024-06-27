@@ -36,15 +36,32 @@ bool GaugeSpeedo::inTestMode()
 	return _speedoInstr.inTestMode();
 }
 
+bounds GaugeSpeedo::__calcPreciseSpeedBoxBounds(double width, double height)
+{
+	double dialCentreX = _getDialCentreX();
+	double dialCentreY = _getDialCentreY();
+
+	struct bounds retBounds;
+
+	retBounds.left = dialCentreX - width / 2.0;
+	retBounds.right = retBounds.left + width;
+	retBounds.top = dialCentreY - height / 2.0;
+	retBounds.bottom = retBounds.top + height;
+
+	return retBounds;
+}
+
+bounds GaugeSpeedo::_calcPreciseSpeedBoxBounds(double width, double height)
+{
+	return __calcPreciseSpeedBoxBounds(width, height);
+}
+
 void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, colour& markedSpeedFontColour,
 	unsigned markedSpeedFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
 	double lineStartOffset, colour& majorLineColour, colour& minorLineColour, colour& preciseSpeedBackgroundColour,
 	double preciseSpeedBackgroundWidth, double preciseSpeedBackgroundHeight)
 {
 	cairo_t* cr = surface.getContext();
-
-	double dialCentreX = _getDialCentreX();
-	double dialCentreY = _getDialCentreY();
 
 	GaugeDial::_drawDefaultBackground(surface, 20, _getMaxSpeed(), 10, true, true, true, markedSpeedFontSize,
 		markedSpeedFontColour, markedSpeedFontDecimalPlaces, lineLength, majorLineWidth, minorLineWidth, lineStartOffset,
@@ -58,12 +75,9 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 
 	double cornerRadius = preciseSpeedBackgroundHeight / 4.0;
 
-	double left = dialCentreX - preciseSpeedBackgroundWidth / 2.0;
-	double right = left + preciseSpeedBackgroundWidth;
-	double top = dialCentreY - preciseSpeedBackgroundHeight / 2.0;
-	double bottom = top + preciseSpeedBackgroundHeight;
+	struct bounds precSpeedBox = __calcPreciseSpeedBoxBounds(preciseSpeedBackgroundWidth, preciseSpeedBackgroundHeight);
 
-	_drawDefaultBoxPath(cr, cornerRadius, left, right, top, bottom);
+	_drawDefaultBoxPath(cr, cornerRadius, precSpeedBox.left, precSpeedBox.right, precSpeedBox.top, precSpeedBox.bottom);
 
 	cairo_fill(cr);
 }

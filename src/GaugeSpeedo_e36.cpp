@@ -38,3 +38,18 @@ void GaugeSpeedo_e36::_drawForeground(CairoSurface& surface)
 	_drawDefaultForeground(surface, _lineLength * 1.2, _majorLineWidth * 2, _indiactorLineColour,
 		_preciseSpeedBackgroundHeight / 2.0, _preciseSpeedFontColour);
 }
+
+bounds GaugeSpeedo_e36::getPreciseSpeedBoxBounds()
+{
+	struct bounds precSpeedBox = _calcPreciseSpeedBoxBounds(_preciseSpeedBackgroundWidth, _preciseSpeedBackgroundHeight);
+
+	double globalPosnX = _getGlobalPositionX();
+	double globalPosnY = _getGlobalPositionY();
+
+	precSpeedBox.left += globalPosnX;
+	precSpeedBox.right += globalPosnX;
+	precSpeedBox.top += globalPosnY;
+	precSpeedBox.bottom += globalPosnY;
+
+	return precSpeedBox;
+}

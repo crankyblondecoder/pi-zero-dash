@@ -141,6 +141,12 @@ namespace piZeroDash
 			*/
 			void _commitToDisplay();
 
+			/** Get the x coordinate of the global position. */
+			double _getGlobalPositionX();
+
+			/** Get the y coordinate of the global position. */
+			double _getGlobalPositionY();
+
 		private:
 
 			/** Background surface. */
@@ -154,6 +160,12 @@ namespace piZeroDash
 
 			/** Height of visual in pixels. */
 			unsigned _height;
+
+			/** Global position, x coordinate. */
+			double _globalPosnX;
+
+			/** Global position, y coordinate. */
+			double _globalPosnY;
 	};
 }
 

@@ -29,6 +29,11 @@ namespace piZeroDash
 			// Impl.
 			void _drawForeground(CairoSurface& surface);
 
+			/**
+			 * Get the precise speed box bounds in global coordinates.
+			 */
+			bounds getPreciseSpeedBoxBounds();
+
 		protected:
 
 		private:

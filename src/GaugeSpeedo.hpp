@@ -68,6 +68,13 @@ namespace piZeroDash
 			void _drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth,
 				colour& indicatorLineColour, double preciseSpeedFontSize, colour& preciseSpeedFontColour);
 
+			/**
+			 * Calculate the precise speed box bounds in local coordintes.
+			 * @param width Width of box.
+			 * @param height Height of box.
+			 */
+			bounds _calcPreciseSpeedBoxBounds(double width, double height);
+
 		private:
 
 			/** Generic speedo instrument. */
@@ -75,6 +82,13 @@ namespace piZeroDash
 
 			/** Maximum speed displayed by the speedo. */
 			unsigned _maxSpeed;
+
+			/**
+			 * Calculate the precise speed box bounds in local coordinates.
+			 * @param width Width of box.
+			 * @param height Height of box.
+			 */
+			bounds __calcPreciseSpeedBoxBounds(double width, double height);
 	};
 }
 

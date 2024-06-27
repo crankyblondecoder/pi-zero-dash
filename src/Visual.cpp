@@ -23,6 +23,9 @@ Visual::Visual(int globalPositionX, int globalPositionY, unsigned width, unsigne
 {
 	// At this stage, visuals are only positioned globally.
 
+	_globalPosnX = globalPositionX;
+	_globalPosnY = globalPositionY;
+
 	if(hasBackground)
 	{
 		_backgroundSurface = new CairoSurface(globalPositionX, globalPositionY, width, height);
@@ -152,4 +155,14 @@ unsigned Visual::_getWidth()
 unsigned Visual::_getHeight()
 {
 	return _height;
+}
+
+double Visual::_getGlobalPositionX()
+{
+	return _globalPosnX;
+}
+
+double Visual::_getGlobalPositionY()
+{
+	return _globalPosnY;
 }
