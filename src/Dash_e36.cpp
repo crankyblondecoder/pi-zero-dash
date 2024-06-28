@@ -32,6 +32,8 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 
 	_addGauge(_speedo);
 
+	struct bounds speedoPrecBoxBounds =  _speedo -> getPreciseSpeedBoxBounds();
+
 	// Tacho.
 
 	unsigned tachoWidth = dashWidth * (tachoWidthPercent / 100.0);
@@ -69,8 +71,10 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	unsigned engineTempWidth = dashWidth * (engineTempWidthPercent / 100.0);
 	unsigned engineTempHeight = (double) engineTempWidth * 0.5;
 
-	_engineTemp = new GaugeEngineTemp_e36(-10, 110, 50, 96, (dashWidth - engineTempWidth) / 2.0,
-		tachoDialCentreY - (tachoHeight / 2) + 10, engineTempWidth, engineTempHeight);
+	double engTempBoxLeft = ((speedoPrecBoxBounds.left + speedoPrecBoxBounds.right) / 2.0) - (engineTempWidth / 2.0);
+	double engTempBoxTop = speedoPrecBoxBounds.top - engineTempHeight * 1.1;
+
+	_engineTemp = new GaugeEngineTemp_e36(-10, 110, 50, 96, engTempBoxLeft, engTempBoxTop, engineTempWidth, engineTempHeight);
 
 	_addGauge(_engineTemp);
 }
