@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 	e36Dash.test();
 
 	// Wait for 'q' then enter key.
-	cout << "Press 'q' then enter.";
+	cout << "Press any key, then enter.";
 	string scratch;
 	cin >> scratch;
 }

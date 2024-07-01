@@ -65,7 +65,7 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpe
 
 	GaugeDial::_drawDefaultBackground(surface, 20, _getMaxSpeed(), 10, true, true, true, markedSpeedFontSize,
 		markedSpeedFontColour, markedSpeedFontDecimalPlaces, lineLength, majorLineWidth, minorLineWidth, lineStartOffset,
-		majorLineColour, minorLineColour);
+		majorLineColour, minorLineColour, M_PI, 2.0 * M_PI);
 
 	// Draw precise speed background.
 	cairo_identity_matrix(cr);

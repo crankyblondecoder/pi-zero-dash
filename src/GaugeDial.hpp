@@ -33,9 +33,10 @@ namespace piZeroDash
 			/**
 			 * Draw a default dial gauge background.
 			 * @param surface Surface to draw to.
-			 * @param startNumber First number shown at the horizontal.
-			 * @param endNumber Last number shown at the horizontal.
-			 * @param markDistance Distance between marks (including minor marks).
+			 * @param startNumber First number shown at the start angle.
+			 * @param endNumber Last number shown at the end angle.
+			 * @param markDistance Numerical distance between marks (including minor marks). ie How much the marked number
+			 *        changes. e.g. 10 -> 20 -> 30 ...
 			 * @param showMinor Whether to show minor marks.
 			 * @param showPriorMinor Whether to show a minor mark prior to the first major indicator mark.
 			 * @param showLaterMinor Whether to show a minor mark after the last major indicator mark.
@@ -48,12 +49,15 @@ namespace piZeroDash
 			 * @param lineStartOffset Amount to move line back towards gauge centre.
 			 * @param majorLineColour Colour of the major marked lines.
 			 * @param minorLineColour Colour of the minor marked lines.
+			 * @param startAngle Start angle of the first major mark. Clockwise from x axis in radians.
+			 * @param endAngle End angle of the last major mark. Clockwise from x axis in radians. If this is less than the
+			 *        start angle the dial direction is "reversed".
 			 */
 			void _drawDefaultBackground(CairoSurface& surface, int startNumber, int endNumber,
 				double markDistance, bool showMinor, bool showPriorMinor, bool showLaterMinor,
 				double markedFontSize, colour& markedFontColour, unsigned markedFontDecimalPlaces,
 				double lineLength, double majorLineWidth, double minorLineWidth, double lineStartOffset,
-				colour& majorLineColour, colour& minorLineColour);
+				colour& majorLineColour, colour& minorLineColour, double startAngle, double endAngle);
 
 			/** Get dial's radius. */
 			double _getRadius();

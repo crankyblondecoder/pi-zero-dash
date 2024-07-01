@@ -45,7 +45,8 @@ void GaugeTacho::_drawDefaultBackground(CairoSurface& surface, double markedRpmF
 	double lineStartOffset, colour& majorLineColour, colour& minorLineColour)
 {
 	GaugeDial::_drawDefaultBackground(surface, 0, _getMaxRpm() / 1000, 1, true, true, true, markedRpmFontSize,
-		markedRpmFontColour, 0, lineLength, majorLineWidth, minorLineWidth, lineStartOffset, majorLineColour, minorLineColour);
+		markedRpmFontColour, 0, lineLength, majorLineWidth, minorLineWidth, lineStartOffset, majorLineColour, minorLineColour,
+		M_PI, 2.0 * M_PI);
 }
 
 void GaugeTacho::_drawDefaultForeground(CairoSurface& surface, double radialSectionLength, colour& normalColour,

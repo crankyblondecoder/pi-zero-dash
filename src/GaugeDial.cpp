@@ -40,7 +40,7 @@ double GaugeDial::_getDialCentreY()
 void GaugeDial::_drawDefaultBackground(CairoSurface& surface, int startNumber, int endNumber, double markDistance,
 	bool showMinor, bool showPriorMinor, bool showLaterMinor, double markedFontSize, colour& markedFontColour,
 	unsigned markedFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth, double lineStartOffset,
-	colour& majorLineColour, colour& minorLineColour)
+	colour& majorLineColour, colour& minorLineColour, double startAngle, double endAngle)
 {
 	// The background surface is exclusive to this gauge.
 
@@ -54,10 +54,13 @@ void GaugeDial::_drawDefaultBackground(CairoSurface& surface, int startNumber, i
 		curIndicatedNumber -= markDistance;
 	}
 
-	// Only the prior and later minor marks are below the horizontal.
-	double stepAngle = M_PI / (double)(numGraduations);
+	double totalAngle = endAngle - startAngle;
 
-	double curGradAngle = 0.0;
+	// Only the prior and later minor marks are below the horizontal.
+	double stepAngle = totalAngle / (double)(numGraduations);
+
+	// Note: A start angle of M_PI is an equivalent graduation angle of 0 because of how the markers are defined and rotated.
+	double curGradAngle = M_PI - startAngle;
 
 	if(showMinor && showPriorMinor) curGradAngle -= stepAngle;
 
