@@ -40,8 +40,13 @@ namespace piZeroDash
 			unsigned _getMaxSpeed();
 
 			/**
-			 * Draw a default speedo background.
+			 * Draw the default speedo background.
 			 * @param surface Surface to draw to.
+			 */
+			void _drawDefaultBackground(CairoSurface& surface);
+
+			/**
+			 * Set all speedo visual properties.
 			 * @param markedSpeedFontSize The font size of the numbers that appear near the marked lines.
 			 * @param markedSpeedFontColour Colour of the numbers under the marked lines.
 			 * @param lineLength The length of the marked lines.
@@ -54,7 +59,7 @@ namespace piZeroDash
 			 * @param preciseSpeedBackgroundWidth Width of precise speed background box.
 			 * @param preciseSpeedBackgroundHeight Height of precise speed background box.
 			 */
-			void _drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, colour& markedSpeedFontColour,
+			void _setProperties(double markedSpeedFontSize, colour& markedSpeedFontColour,
 				unsigned markedSpeedFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
 				double lineStartOffset, colour& majorLineColour, colour& minorLineColour, colour& preciseSpeedBackgroundColour,
 				double preciseSpeedBackgroundWidth, double preciseSpeedBackgroundHeight);
@@ -82,6 +87,15 @@ namespace piZeroDash
 
 			/** Maximum speed displayed by the speedo. */
 			unsigned _maxSpeed;
+
+			/** Colour of the precise speed background. */
+			colour _preciseSpeedBackgroundColour;
+
+			/** Width of precise speed background box. */
+			double _preciseSpeedBackgroundWidth;
+
+			/** Height of precise speed background box. */
+			double _preciseSpeedBackgroundHeight;
 
 			/**
 			 * Calculate the precise speed box bounds in local coordinates.

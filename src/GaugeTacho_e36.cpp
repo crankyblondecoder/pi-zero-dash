@@ -22,12 +22,14 @@ GaugeTacho_e36::GaugeTacho_e36(unsigned maxRpm, unsigned redlineRpm, unsigned re
 	_majorLineWidth = 0.01 * (double) width;
 	_minorLineWidth = 0.005 * (double) width;
 	_lineStartOffset = _lineLength * 0.1;
+
+	_setProperties(_markedRpmFontSize, _markedRpmFontColour, 0, _lineLength, _majorLineWidth, _minorLineWidth,
+		_lineStartOffset, _majorLineColour, _minorLineColour);
 }
 
 void GaugeTacho_e36::_drawBackground(CairoSurface& surface)
 {
-	_drawDefaultBackground(surface, _markedRpmFontSize, _markedRpmFontColour, 0, _lineLength, _majorLineWidth,
-		_minorLineWidth, _lineStartOffset, _majorLineColour, _minorLineColour);
+	_drawDefaultBackground(surface);
 }
 
 void GaugeTacho_e36::_drawForeground(CairoSurface& surface)

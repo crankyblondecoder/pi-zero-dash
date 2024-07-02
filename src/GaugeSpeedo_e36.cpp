@@ -24,13 +24,15 @@ GaugeSpeedo_e36::GaugeSpeedo_e36(unsigned maxSpeed, int globalPositionX, int glo
 
 	_preciseSpeedBackgroundWidth = 0.2 * (double) width;
 	_preciseSpeedBackgroundHeight = 0.1 * (double) width;
+
+	_setProperties(_markedSpeedFontSize, _markedSpeedFontColour, 0, _lineLength, _majorLineWidth, _minorLineWidth,
+		_lineStartOffset, _majorLineColour, _minorLineColour, _preciseSpeedBackgroundColour, _preciseSpeedBackgroundWidth,
+		_preciseSpeedBackgroundHeight);
 }
 
 void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)
 {
-	_drawDefaultBackground(surface, _markedSpeedFontSize, _markedSpeedFontColour, 0, _lineLength, _majorLineWidth,
-		_minorLineWidth, _lineStartOffset, _majorLineColour, _minorLineColour, _preciseSpeedBackgroundColour,
-		_preciseSpeedBackgroundWidth, _preciseSpeedBackgroundHeight);
+	_drawDefaultBackground(surface);
 }
 
 void GaugeSpeedo_e36::_drawForeground(CairoSurface& surface)

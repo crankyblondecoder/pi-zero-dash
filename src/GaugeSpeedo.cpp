@@ -56,26 +56,35 @@ bounds GaugeSpeedo::_calcPreciseSpeedBoxBounds(double width, double height)
 	return __calcPreciseSpeedBoxBounds(width, height);
 }
 
-void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface, double markedSpeedFontSize, colour& markedSpeedFontColour,
+void GaugeSpeedo::_setProperties(double markedSpeedFontSize, colour& markedSpeedFontColour,
 	unsigned markedSpeedFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
 	double lineStartOffset, colour& majorLineColour, colour& minorLineColour, colour& preciseSpeedBackgroundColour,
 	double preciseSpeedBackgroundWidth, double preciseSpeedBackgroundHeight)
 {
-	cairo_t* cr = surface.getContext();
-
-	GaugeDial::_drawDefaultBackground(surface, 20, _getMaxSpeed(), 10, true, true, true, markedSpeedFontSize,
+	_setStandardProperties(20, _getMaxSpeed(), 10, true, true, true, markedSpeedFontSize,
 		markedSpeedFontColour, markedSpeedFontDecimalPlaces, lineLength, majorLineWidth, minorLineWidth, lineStartOffset,
 		majorLineColour, minorLineColour, M_PI, 2.0 * M_PI);
+
+	_preciseSpeedBackgroundColour = preciseSpeedBackgroundColour;
+	_preciseSpeedBackgroundWidth = preciseSpeedBackgroundWidth;
+	_preciseSpeedBackgroundHeight = preciseSpeedBackgroundHeight;
+}
+
+void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface)
+{
+	cairo_t* cr = surface.getContext();
+
+	GaugeDial::_drawDefaultBackground(surface);
 
 	// Draw precise speed background.
 	cairo_identity_matrix(cr);
 
-	cairo_set_source_rgba(cr, preciseSpeedBackgroundColour.r, preciseSpeedBackgroundColour.g, preciseSpeedBackgroundColour.b,
-		preciseSpeedBackgroundColour.a);
+	cairo_set_source_rgba(cr, _preciseSpeedBackgroundColour.r, _preciseSpeedBackgroundColour.g, _preciseSpeedBackgroundColour.b,
+		_preciseSpeedBackgroundColour.a);
 
-	double cornerRadius = preciseSpeedBackgroundHeight / 4.0;
+	double cornerRadius = _preciseSpeedBackgroundHeight / 4.0;
 
-	struct bounds precSpeedBox = __calcPreciseSpeedBoxBounds(preciseSpeedBackgroundWidth, preciseSpeedBackgroundHeight);
+	struct bounds precSpeedBox = __calcPreciseSpeedBoxBounds(_preciseSpeedBackgroundWidth, _preciseSpeedBackgroundHeight);
 
 	_drawDefaultBoxPath(cr, cornerRadius, precSpeedBox.left, precSpeedBox.right, precSpeedBox.top, precSpeedBox.bottom);
 

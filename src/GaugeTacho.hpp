@@ -44,8 +44,7 @@ namespace piZeroDash
 			unsigned _getMaxRpm();
 
 			/**
-			 * Draw a default tacho background.
-			 * @param surface Surface to draw to.
+			 * Set all tacho visual properties.
 			 * @param markedRpmFontSize The font size of the numbers that appear near the marked lines.
 			 * @param markedRpmFontColour Colour of the numbers under the marked lines.
 			 * @param lineLength The length of the marked lines.
@@ -55,7 +54,7 @@ namespace piZeroDash
 			 * @param majorLineColour Colour of the major marked lines.
 			 * @param minorLineColour Colour of the minor marked lines.
 			 */
-			void _drawDefaultBackground(CairoSurface& surface, double markedRpmFontSize, colour& markedRpmFontColour,
+			void _setProperties(double markedRpmFontSize, colour& markedRpmFontColour,
 				unsigned markedRpmFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
 				double lineStartOffset, colour& majorLineColour, colour& minorLineColour);
 
