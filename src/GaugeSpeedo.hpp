@@ -96,13 +96,6 @@ namespace piZeroDash
 
 			/** Height of precise speed background box. */
 			double _preciseSpeedBackgroundHeight;
-
-			/**
-			 * Calculate the precise speed box bounds in local coordinates.
-			 * @param width Width of box.
-			 * @param height Height of box.
-			 */
-			bounds __calcPreciseSpeedBoxBounds(double width, double height);
 	};
 }
 

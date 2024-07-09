@@ -36,24 +36,9 @@ bool GaugeSpeedo::inTestMode()
 	return _speedoInstr.inTestMode();
 }
 
-bounds GaugeSpeedo::__calcPreciseSpeedBoxBounds(double width, double height)
-{
-	double dialCentreX = _getDialCentreX();
-	double dialCentreY = _getDialCentreY();
-
-	struct bounds retBounds;
-
-	retBounds.left = dialCentreX - width / 2.0;
-	retBounds.right = retBounds.left + width;
-	retBounds.top = dialCentreY - height / 2.0;
-	retBounds.bottom = retBounds.top + height;
-
-	return retBounds;
-}
-
 bounds GaugeSpeedo::_calcPreciseSpeedBoxBounds(double width, double height)
 {
-	return __calcPreciseSpeedBoxBounds(width, height);
+	return _calcPreciseValueBoxBounds(width, height);
 }
 
 void GaugeSpeedo::_setProperties(double markedSpeedFontSize, colour& markedSpeedFontColour,
@@ -72,91 +57,18 @@ void GaugeSpeedo::_setProperties(double markedSpeedFontSize, colour& markedSpeed
 
 void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface)
 {
-	cairo_t* cr = surface.getContext();
-
 	GaugeDial::_drawDefaultBackground(surface);
 
-	// Draw precise speed background.
-	cairo_identity_matrix(cr);
-
-	cairo_set_source_rgba(cr, _preciseSpeedBackgroundColour.r, _preciseSpeedBackgroundColour.g, _preciseSpeedBackgroundColour.b,
-		_preciseSpeedBackgroundColour.a);
-
-	double cornerRadius = _preciseSpeedBackgroundHeight / 4.0;
-
-	struct bounds precSpeedBox = __calcPreciseSpeedBoxBounds(_preciseSpeedBackgroundWidth, _preciseSpeedBackgroundHeight);
-
-	_drawDefaultBoxPath(cr, cornerRadius, precSpeedBox.left, precSpeedBox.right, precSpeedBox.top, precSpeedBox.bottom);
-
-	cairo_fill(cr);
+	_drawStandardPreciseBoxBackground(surface, _preciseSpeedBackgroundWidth, _preciseSpeedBackgroundHeight,
+		_preciseSpeedBackgroundColour);
 }
 
 void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth,
 	colour& indicatorLineColour, double preciseSpeedFontSize, colour& preciseSpeedFontColour)
 {
-	cairo_t* cr = surface.getContext();
-
-	double radius = _getRadius();
-
-	double dialCentreX = _getDialCentreX();
-	double dialCentreY = _getDialCentreY();
-
-	// Draw indicator line.
-
-	cairo_set_source_rgba(cr, indicatorLineColour.r, indicatorLineColour.g, indicatorLineColour.b, indicatorLineColour.a);
-
-	cairo_set_line_width(cr, indicatorLineWidth);
-
 	unsigned curSpeed = _speedoInstr.getSpeed();
 
-	// Indicator angle starts from 20 at 0 degrees and increases clockwise to max speed.
-	double indicatorAngle = M_PI * ((double)curSpeed - 20.0) / ((double)_maxSpeed - 20.0);
+	_drawStandardIndicatorLine(surface, (double) curSpeed, indicatorLineLength, indicatorLineWidth, indicatorLineColour);
 
-	// Rotate about the "dial centre".
-	cairo_identity_matrix(cr);
-	cairo_translate(cr, dialCentreX, dialCentreY);
-	cairo_rotate(cr, indicatorAngle);
-	cairo_translate(cr, -dialCentreX, -dialCentreY);
-
-	// Define and draw line.
-	cairo_move_to(cr, dialCentreX - radius, dialCentreY);
-	cairo_line_to(cr, dialCentreX - radius + indicatorLineLength, dialCentreY);
-	cairo_stroke(cr);
-
-	// Write current speed to precise speed box.
-
-	cairo_identity_matrix(cr);
-
-	cairo_select_font_face(cr, "DejaVu Sans Condensed", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-	cairo_set_font_size(cr, preciseSpeedFontSize);
-
-	cairo_text_extents_t textExtents;
-
-	string numberText = to_string(curSpeed);
-	string extentString;
-
-	// Use a fixed number string to get text extents. This is so the number doesn't jump around.
-	if(curSpeed < 10)
-	{
-		extentString = "5";
-	}
-	else if(curSpeed < 100)
-	{
-		extentString = "55";
-	}
-	else
-	{
-		extentString = "555";
-	}
-
-	cairo_text_extents(cr,  extentString.c_str(), &textExtents);
-
-	cairo_set_source_rgba(cr, preciseSpeedFontColour.r, preciseSpeedFontColour.g, preciseSpeedFontColour.b,
-		preciseSpeedFontColour.a);
-
-	double top = dialCentreX - textExtents.height / 2.0;
-	double left = dialCentreY - textExtents.width / 2.0;
-
-	cairo_move_to(cr, left - textExtents.x_bearing, top - textExtents.y_bearing);
-	cairo_show_text(cr, numberText.c_str());
+	_drawStandardPreciseBoxForeground(surface, curSpeed, 0, "", preciseSpeedFontSize, preciseSpeedFontColour);
 }

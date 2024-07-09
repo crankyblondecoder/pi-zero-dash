@@ -37,7 +37,7 @@ double GaugeDial::_getDialCentreY()
 	return _dialCentreY;
 }
 
-void GaugeDial::_setStandardProperties(int startNumber, int endNumber, double markDistance, bool showMinor,
+void GaugeDial::_setStandardProperties(double startNumber, double endNumber, double markDistance, bool showMinor,
 	bool showPriorMinor, bool showLaterMinor, double markedFontSize, colour& markedFontColour,
 	unsigned markedFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
 	double lineStartOffset, colour& majorLineColour, colour& minorLineColour, double startAngle, double endAngle)
@@ -66,7 +66,7 @@ void GaugeDial::_drawDefaultBackground(CairoSurface& surface)
 	// The background surface is exclusive to this gauge.
 
 	// A graduation is the "pie slice".
-	unsigned numGraduations = (double)(_endNumber - _startNumber) / _markDistance;
+	unsigned numGraduations = (_endNumber - _startNumber) / _markDistance;
 
 	double curIndicatedNumber = _startNumber;
 
@@ -91,8 +91,6 @@ void GaugeDial::_drawDefaultBackground(CairoSurface& surface)
 	cairo_select_font_face(cr, "DejaVu Sans Condensed", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
 	cairo_set_font_size(cr, _markedFontSize);
 
-	char textBuffer[16];
-
 	// Distance from dial centre to number bounds box position.
 	double numberStartRadius = _radius - _lineLength - (_lineLength / 4.0) - _lineStartOffset;
 
@@ -105,6 +103,8 @@ void GaugeDial::_drawDefaultBackground(CairoSurface& surface)
 		if(_showPriorMinor) numLines++;
 		if(_showLaterMinor) numLines++;
 	}
+
+	char textBuffer[16];
 
 	// Setup snprintf format.
 	string numberFormat = "%.";
@@ -207,4 +207,229 @@ void GaugeDial::_drawDefaultBackground(CairoSurface& surface)
 
 		curIndicatedNumber += _markDistance;
 	}
+}
+
+void GaugeDial::_drawStandardIndicatorLine(CairoSurface& surface, double valueToIndicate, double indicatorLineLength,
+	double indicatorLineWidth, colour& indicatorLineColour)
+{
+	cairo_t* cr = surface.getContext();
+
+	double radius = _getRadius();
+
+	double dialCentreX = _getDialCentreX();
+	double dialCentreY = _getDialCentreY();
+
+	// Draw indicator line.
+
+	cairo_set_source_rgba(cr, indicatorLineColour.r, indicatorLineColour.g, indicatorLineColour.b, indicatorLineColour.a);
+
+	cairo_set_line_width(cr, indicatorLineWidth);
+
+	double indicatorAngle = ((valueToIndicate - (double) _startNumber) / ((double) _endNumber - (double) _startNumber)) *
+		(_endAngle - _startAngle);
+
+	// Rotate about the "dial centre".
+	cairo_identity_matrix(cr);
+	cairo_translate(cr, dialCentreX, dialCentreY);
+	cairo_rotate(cr, indicatorAngle);
+	cairo_translate(cr, -dialCentreX, -dialCentreY);
+
+	// Define and draw line.
+	cairo_move_to(cr, dialCentreX - radius, dialCentreY);
+	cairo_line_to(cr, dialCentreX - radius + indicatorLineLength, dialCentreY);
+	cairo_stroke(cr);
+}
+
+void GaugeDial::_drawStandardIndicatorSections(CairoSurface& surface, double valueToIndicate, double sectionRadialLength,
+	IndicatorRadialSection* indicatorRadialSections, unsigned numIndicatorRadialSections, bool flashAll)
+{
+	bool flashActive = false;
+
+	// Get whether any sections flash.
+	for(unsigned index = 0; index < numIndicatorRadialSections; index++)
+	{
+		if(indicatorRadialSections[index].flash && valueToIndicate >= indicatorRadialSections[index].indicatedValueStart)
+		{
+			flashActive = true;
+			break;
+		}
+	}
+
+	bool flashDraw = true;
+
+	if(flashActive)
+	{
+		struct timeval curTime;
+
+		gettimeofday(&curTime, 0);
+
+		long millis = (curTime.tv_sec - _sectionsFlashLastShowSec) * 1000 +
+			(curTime.tv_usec - _sectionsFlashLastShowUSec) / 1000;
+
+		if(millis > _sectionsFlashPeriod * 2)
+		{
+			_sectionsFlashLastShowSec = curTime.tv_sec;
+			_sectionsFlashLastShowUSec = curTime.tv_usec;
+		}
+
+		flashDraw = millis < _sectionsFlashPeriod;
+	}
+
+	if(flashAll && !flashDraw) return;
+
+	cairo_t* cr = surface.getContext();
+
+	double totalAngle = _endAngle - _startAngle;
+	double valueRange = _endNumber - _startNumber;
+
+	double degPerValue = totalAngle / valueRange;
+
+	// Draw each section if required.
+
+	for(unsigned index = 0; index < numIndicatorRadialSections; index++)
+	{
+		IndicatorRadialSection& section = indicatorRadialSections[index];
+
+		if((!section.flash || (section.flash && flashDraw)) && valueToIndicate >= section.indicatedValueStart)
+		{
+			double sectionEndValue = valueToIndicate > section.indicatedValueEnd ? section.indicatedValueEnd :
+				valueToIndicate;
+
+			double startAngle = (section.indicatedValueStart - _startNumber) * degPerValue;
+			double endAngle = (sectionEndValue - _startNumber) * degPerValue;
+
+			if(endAngle < startAngle)
+			{
+				// Just makes drawing the section easier.
+				double swap = endAngle;
+				endAngle = startAngle;
+				startAngle = swap;
+			}
+
+			cairo_identity_matrix(cr);
+
+			cairo_set_source_rgba(cr, section.sectionColour.r, section.sectionColour.g, section.sectionColour.b,
+				section.sectionColour.a);
+
+			cairo_new_sub_path(cr);
+
+			cairo_arc(cr, _dialCentreX, _dialCentreY, _radius - sectionRadialLength, startAngle, endAngle);
+
+			cairo_rel_line_to(cr, -sectionRadialLength * cos(endAngle), -sectionRadialLength * sin(endAngle));
+
+			cairo_arc_negative(cr, _dialCentreX, _dialCentreY, _radius, endAngle, startAngle);
+
+			cairo_close_path(cr);
+			cairo_fill(cr);
+		}
+	}
+}
+
+void GaugeDial::_drawStandardPreciseBoxBackground(CairoSurface& surface, double preciseValueBoxWidth,
+	double preciseValueBoxHeight, colour& preciseValueBoxColour)
+{
+	cairo_t* cr = surface.getContext();
+
+	// Draw precise speed background.
+	cairo_identity_matrix(cr);
+
+	cairo_set_source_rgba(cr, preciseValueBoxColour.r, preciseValueBoxColour.g, preciseValueBoxColour.b,
+		preciseValueBoxColour.a);
+
+	double cornerRadius = preciseValueBoxHeight / 4.0;
+
+	struct bounds precSpeedBox = _calcPreciseValueBoxBounds(preciseValueBoxWidth, preciseValueBoxHeight);
+
+	_drawDefaultBoxPath(cr, cornerRadius, precSpeedBox.left, precSpeedBox.right, precSpeedBox.top, precSpeedBox.bottom);
+
+	cairo_fill(cr);
+}
+
+void GaugeDial::_drawStandardPreciseBoxForeground(CairoSurface& surface, double preciseValue, unsigned numDecimalPlaces,
+	string unitString, double preciseSpeedFontSize, colour& preciseSpeedFontColour)
+{
+	cairo_t* cr = surface.getContext();
+
+	cairo_identity_matrix(cr);
+
+	cairo_select_font_face(cr, "DejaVu Sans Condensed", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_set_font_size(cr, preciseSpeedFontSize);
+
+	cairo_text_extents_t textExtents;
+
+	char textBuffer[16];
+
+	// Setup snprintf format.
+	string numberFormat = "%.";
+	numberFormat += to_string(numDecimalPlaces) + "F";
+
+	snprintf(textBuffer, 16, numberFormat.c_str(), preciseValue);
+
+	string extentString = _generateExtentstring(preciseValue);
+	extentString += unitString;
+
+	cairo_text_extents(cr, extentString.c_str(), &textExtents);
+
+	cairo_set_source_rgba(cr, preciseSpeedFontColour.r, preciseSpeedFontColour.g, preciseSpeedFontColour.b,
+		preciseSpeedFontColour.a);
+
+	double top = _getDialCentreX() - textExtents.height / 2.0;
+	double left = _getDialCentreY() - textExtents.width / 2.0;
+
+	cairo_move_to(cr, left - textExtents.x_bearing, top - textExtents.y_bearing);
+	cairo_show_text(cr, textBuffer);
+}
+
+
+bounds GaugeDial::_calcPreciseValueBoxBounds(double width, double height)
+{
+	struct bounds retBounds;
+
+	retBounds.left = _dialCentreX - width / 2.0;
+	retBounds.right = retBounds.left + width;
+	retBounds.top = _dialCentreY - height / 2.0;
+	retBounds.bottom = retBounds.top + height;
+
+	return retBounds;
+}
+
+string GaugeDial::_generateExtentstring(double value)
+{
+	string extentString = "";
+
+	// Use a fixed number string to get text extents. This is so the number doesn't jump around.
+	if(value <= -1000)
+	{
+		extentString += "-5555";
+	}
+	else if(value <= -100)
+	{
+		extentString += "-555";
+	}
+	else if(value <= -10)
+	{
+		extentString += "-55";
+	}
+	else if(value < 0)
+	{
+		extentString = "-5";
+	}
+	else if(value < 10)
+	{
+		extentString = "5";
+	}
+	else if(value < 100)
+	{
+		extentString = "55";
+	}
+	else if(value < 1000)
+	{
+		extentString = "555";
+	}
+	else if(value < 10000)
+	{
+		extentString = "5555";
+	}
+
+	return extentString;
 }

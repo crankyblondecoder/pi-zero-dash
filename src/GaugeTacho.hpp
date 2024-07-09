@@ -53,20 +53,25 @@ namespace piZeroDash
 			 * @param lineStartOffset Amount to move line back towards gauge centre.
 			 * @param majorLineColour Colour of the major marked lines.
 			 * @param minorLineColour Colour of the minor marked lines.
-			 */
-			void _setProperties(double markedRpmFontSize, colour& markedRpmFontColour,
-				unsigned markedRpmFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
-				double lineStartOffset, colour& majorLineColour, colour& minorLineColour);
-
-			/**
-			 * Draw the default tacho forground.
-			 * @param surface Surface to draw to.
-			 * @param radialSectionLength Length of radial section that displays filled colour to indicate current RPM.
 			 * @param normalColour The normal below redline threshold colour.
 			 * @param redlineWarningThresholdColour Colour to display for redline threshold. ie Just prior to redline.
 			 * @param redlineColour Colour to display for redline reached and/or exceeded.
 			 */
-			void _drawDefaultForeground(CairoSurface& surface, double radialSectionLength, colour& normalColour,
+			void _setProperties(double markedRpmFontSize, colour& markedRpmFontColour,
+				unsigned markedRpmFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
+				double lineStartOffset, colour& majorLineColour, colour& minorLineColour, colour& normalColour,
+				colour& redlineWarningThresholdColour, colour& redlineColour);
+
+			/**
+			 * Draw the default tacho forground.
+			 * @param surface Surface to draw to.
+			 * @param sectionRadialLength Length of section, in radial direction, that displays filled colour to indicate
+			 *        current RPM.
+			 * @param normalColour The normal below redline threshold colour.
+			 * @param redlineWarningThresholdColour Colour to display for redline threshold. ie Just prior to redline.
+			 * @param redlineColour Colour to display for redline reached and/or exceeded.
+			 */
+			void _drawDefaultForeground(CairoSurface& surface, double sectionRadialLength, colour& normalColour,
 				colour& redlineWarningThresholdColour, colour& redlineColour);
 
 		private:
@@ -83,16 +88,11 @@ namespace piZeroDash
 			/** Redline warning threshold RPM */
 			unsigned _redlineWarningRpm;
 
-			/** The last time the red line section was shown. */
-			long _redlineLastShowSec;
-			long _redlineLastShowUSec;
-
-			bool _redlineSectionActive = false;
-
+			/** Whether to flash whole of indicated sections when current rpm enters redline section. */
 			bool _flashRedline;
 
-			/** The length of the flash, if active, in milliseconds. */
-			long _redlineSectionFlashPeriod = 100;
+			/** Predefined standard tacho radial sections to use for foreground. */
+			IndicatorRadialSection _standardRadialSections[3];
 	};
 }
 
