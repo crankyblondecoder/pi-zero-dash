@@ -67,12 +67,8 @@ namespace piZeroDash
 			 * @param surface Surface to draw to.
 			 * @param sectionRadialLength Length of section, in radial direction, that displays filled colour to indicate
 			 *        current RPM.
-			 * @param normalColour The normal below redline threshold colour.
-			 * @param redlineWarningThresholdColour Colour to display for redline threshold. ie Just prior to redline.
-			 * @param redlineColour Colour to display for redline reached and/or exceeded.
 			 */
-			void _drawDefaultForeground(CairoSurface& surface, double sectionRadialLength, colour& normalColour,
-				colour& redlineWarningThresholdColour, colour& redlineColour);
+			void _drawDefaultForeground(CairoSurface& surface, double sectionRadialLength);
 
 		private:
 

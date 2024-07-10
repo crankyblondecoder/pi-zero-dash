@@ -24,7 +24,8 @@ GaugeTacho_e36::GaugeTacho_e36(unsigned maxRpm, unsigned redlineRpm, unsigned re
 	_lineStartOffset = _lineLength * 0.1;
 
 	_setProperties(_markedRpmFontSize, _markedRpmFontColour, 0, _lineLength, _majorLineWidth, _minorLineWidth,
-		_lineStartOffset, _majorLineColour, _minorLineColour);
+		_lineStartOffset, _majorLineColour, _minorLineColour, _normalRpmIndictatorColour, _redlineWarningRpmIndictatorColour,
+		_redlineRpmIndictatorColour);
 }
 
 void GaugeTacho_e36::_drawBackground(CairoSurface& surface)
@@ -34,6 +35,5 @@ void GaugeTacho_e36::_drawBackground(CairoSurface& surface)
 
 void GaugeTacho_e36::_drawForeground(CairoSurface& surface)
 {
-	_drawDefaultForeground(surface, _lineLength * 1.2, _normalRpmIndictatorColour, _redlineWarningRpmIndictatorColour,
-		_redlineRpmIndictatorColour);
+	_drawDefaultForeground(surface, _lineLength * 1.2);
 }

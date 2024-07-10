@@ -295,15 +295,15 @@ void GaugeDial::_drawStandardIndicatorSections(CairoSurface& surface, double val
 			double sectionEndValue = valueToIndicate > section.indicatedValueEnd ? section.indicatedValueEnd :
 				valueToIndicate;
 
-			double startAngle = (section.indicatedValueStart - _startNumber) * degPerValue;
-			double endAngle = (sectionEndValue - _startNumber) * degPerValue;
+			double sectionStartAngle = (section.indicatedValueStart - _startNumber) * degPerValue + _startAngle;
+			double sectionEndAngle = (sectionEndValue - _startNumber) * degPerValue + _startAngle;
 
-			if(endAngle < startAngle)
+			if(sectionEndAngle < sectionStartAngle)
 			{
 				// Just makes drawing the section easier.
-				double swap = endAngle;
-				endAngle = startAngle;
-				startAngle = swap;
+				double swap = sectionEndAngle;
+				sectionEndAngle = sectionStartAngle;
+				sectionStartAngle = swap;
 			}
 
 			cairo_identity_matrix(cr);
@@ -313,11 +313,11 @@ void GaugeDial::_drawStandardIndicatorSections(CairoSurface& surface, double val
 
 			cairo_new_sub_path(cr);
 
-			cairo_arc(cr, _dialCentreX, _dialCentreY, _radius - sectionRadialLength, startAngle, endAngle);
+			cairo_arc(cr, _dialCentreX, _dialCentreY, _radius - sectionRadialLength, sectionStartAngle, sectionEndAngle);
 
-			cairo_rel_line_to(cr, -sectionRadialLength * cos(endAngle), -sectionRadialLength * sin(endAngle));
+			cairo_rel_line_to(cr, -sectionRadialLength * cos(sectionEndAngle), -sectionRadialLength * sin(sectionEndAngle));
 
-			cairo_arc_negative(cr, _dialCentreX, _dialCentreY, _radius, endAngle, startAngle);
+			cairo_arc_negative(cr, _dialCentreX, _dialCentreY, _radius, sectionEndAngle, sectionStartAngle);
 
 			cairo_close_path(cr);
 			cairo_fill(cr);
