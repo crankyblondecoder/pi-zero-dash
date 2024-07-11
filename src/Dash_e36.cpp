@@ -12,8 +12,8 @@ Dash_e36::~Dash_e36()
 }
 
 Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent,
-	double lightHeightPercent, double engineTempWidthPercent)
-	: _speedo{0}, _tacho{0}, _turnLeft{0}, _turnRight{0}, _headlight{0}, _engineTemp{0}
+	double lightHeightPercent, double engineTempWidthPercent, double boostWidthPercent)
+	: _speedo{0}, _tacho{0}, _turnLeft{0}, _turnRight{0}, _headlight{0}, _engineTemp{0}, _boost{0}
 {
 	Visual::setRootClearColour(0.0, 0.0, 0.0);
 
@@ -42,8 +42,8 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	unsigned tachoDialCentreX = speedoPosnX + speedoWidth / 2;
 	unsigned tachoDialCentreY = speedoPosnY + speedoWidth / 2;
 
-	_tacho = new GaugeTacho_e36(8000, 7500, 7000, true, tachoDialCentreX - (tachoWidth / 2), tachoDialCentreY - tachoHeight, tachoWidth,
-		tachoHeight * 1.1);
+	_tacho = new GaugeTacho_e36(8000, 7500, 7000, true, tachoDialCentreX - (tachoWidth / 2), tachoDialCentreY - tachoHeight,
+		tachoWidth, tachoHeight * 1.1);
 
 	_addGauge(_tacho);
 
@@ -77,6 +77,15 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	_engineTemp = new GaugeEngineTemp_e36(-10, 110, 50, 96, engTempBoxLeft, engTempBoxTop, engineTempWidth, engineTempHeight);
 
 	_addGauge(_engineTemp);
+
+	// Boost gauge.
+
+	double _boostGaugeWidth = dashWidth * (boostWidthPercent / 100.0);
+
+	_boost = new GaugeBoost_e36(-10, 30, 0, dashWidth - _boostGaugeWidth, dashHeight - speedoHeight,
+		_boostGaugeWidth, _boostGaugeWidth);
+
+	_addGauge(_boost);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)

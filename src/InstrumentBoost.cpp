@@ -29,7 +29,7 @@ bool InstrumentBoost::latch()
 		return false;
 	}
 
-	// TODO ... Get actual fuel level data from pico.
+	// TODO ... Get actual boost data from pico.
 	return false;
 }
 
