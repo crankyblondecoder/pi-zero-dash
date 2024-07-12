@@ -1,25 +1,22 @@
-#ifndef PZD_GAUGE_BOOST_H
-#define PZD_GAUGE_BOOST_H
+#ifndef PZD_GAUGE_FUEL_LEVEL_H
+#define PZD_GAUGE_FUEL_LEVEL_H
 
 #include "GaugeDial.hpp"
-#include "InstrumentBoost.hpp"
+#include "InstrumentFuelLevel.hpp"
 
 namespace piZeroDash
 {
 	/**
-	 * Generic forced induction boost gauge.
+	 * Generic fuel level gauge.
 	 */
-	class GaugeBoost : public GaugeDial
+	class GaugeFuelLevel : public GaugeDial
 	{
 		public:
 
-			virtual ~GaugeBoost();
+			virtual ~GaugeFuelLevel();
 
 			/**
-			 * @param minBoost Minimum boost displayed.
-			 * @param maxBoost Maximum boost displayed.
-			 * @param neutralBoost The boost value that is considered the changeover value from "not effective" to "effective"
-			 *        boost. Can be associated with a colour change.
+			 * @param maxFuelLevel Maximum fuel level displayed.
 			 * @param radius Radius of dial.
 			 * @param dialCentreX Centre of dial, x coordinate.
 			 * @param dialCentreY Centre of dial, y coordinate.
@@ -28,9 +25,8 @@ namespace piZeroDash
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeBoost(int minBoost, int maxBoost, int neutralBoost,
-				double radius, double dialCentreX, double dialCentreY, int globalPositionX, int globalPositionY,
-				unsigned width, unsigned height);
+			GaugeFuelLevel(int maxFuelLevel, double radius, double dialCentreX, double dialCentreY, int globalPositionX,
+				int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
 			void test();
@@ -51,51 +47,40 @@ namespace piZeroDash
 			 * @param lineStartOffset Amount to move line back towards gauge centre.
 			 * @param majorLineColour Colour of the major marked lines.
 			 * @param minorLineColour Colour of the minor marked lines.
-			 * @param preNeutralColour The below neutral boost colour for indicator sections.
-			 * @param postNeutralColour The above neutral boost colour for indicator sections.
 			 * @param startAngle Start angle of the first major mark. Clockwise from x axis in radians.
 			 * @param endAngle End angle of the last major mark. Clockwise from x axis in radians. If this is less than the
 			 *        start angle the dial direction is "reversed".
+			 * @param lowFuelLevel Fuel level below which triggers the low fuel indication.
+			 * @param lowFuelLevelIndicatorColour Colour displayed for indicator when low fuel level is reached.
 			 */
 			void _setStandardProperties(double markedFontSize, colour& markedFontColour,
 				unsigned markedFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
-				double lineStartOffset, colour& majorLineColour, colour& minorLineColour, colour& preNeutralColour,
-				colour& postNeutralColour, bool useIndicatorSections, double startAngle, double endAngle);
+				double lineStartOffset, colour& majorLineColour, colour& minorLineColour, double startAngle, double endAngle,
+				double lowFuelLevel, colour& lowFuelLevelIndicatorColour);
 
 			/**
 			 * Draw the default forground.
 			 * @param surface Surface to draw to.
-			 * @param sectionRadialLength Length of section, in radial direction, that displays filled colour to indicate
-			 *        current value.
 			 * @param indicatorLineLength Length of speed indicator line.
 			 * @param indicatorLineWidth Width of speed indicator line.
 			 * @param indicatorLineColour Colour of indicator line.
 			 */
-			void _drawDefaultForeground(CairoSurface& surface, double sectionRadialLength, double indicatorLineLength,
-				double indicatorLineWidth, colour& indicatorLineColour);
+			void _drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth,
+				colour& indicatorLineColour);
 
 		private:
 
-			/** Generic boost instrument. */
-			InstrumentBoost _boostInstr;
+			/** Generic fuel level instrument. */
+			InstrumentFuelLevel _fuelLevelInstr;
 
-			/** Minimum boost displayed. */
-			int _minBoost;
-
-			/** Maximum boost displayed. */
-			int _maxBoost;
-
-			/**
-			 * The boost value that is considered the changeover value from "not effective" to "effective" boost. Can be
-			 * associated with a colour change.
-			 */
-			int _neutralBoost;
+			/** Maximum fuel level displayed. */
+			int _maxFuelLevel;
 
 			/** Predefined standard radial sections to use for foreground. */
-			IndicatorRadialSection _standardRadialSections[2];
+			IndicatorRadialSection _standardRadialSections[1];
 
-			/** If true use radial sections for the foreground boost indication. */
-			bool _useIndicatorSections = false;
+			/** Length of the marked (background) lines. */
+			double _lineLength;
 	};
 }
 

@@ -47,6 +47,9 @@ namespace piZeroDash
 
 				/** Whether this section flashes. */
 				bool flash;
+
+				/** Only show the section if it is within the indicated start/end value range. */
+				bool onlyShowIfWithinRange;
 			};
 
 		protected:
@@ -56,7 +59,7 @@ namespace piZeroDash
 			 * @param startNumber First number shown at the start angle.
 			 * @param endNumber Last number shown at the end angle.
 			 * @param markDistance Numerical distance between marks (including minor marks). ie How much the marked number
-			 *        changes. e.g. 10 -> 20 -> 30 ...
+			 *        changes. e.g. 10 -> 20 -> 30.
 			 * @param showMinor Whether to show minor marks.
 			 * @param showPriorMinor Whether to show a minor mark prior to the first major indicator mark.
 			 * @param showLaterMinor Whether to show a minor mark after the last major indicator mark.

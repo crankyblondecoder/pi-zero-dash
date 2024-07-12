@@ -20,8 +20,8 @@ namespace piZeroDash
 			// Impl.
 			bool latch();
 
-			/** Get the currently latched amount of fuel in litres. */
-			unsigned getFuelLitres();
+			/** Get the currently latched volume of fuel. */
+			double getFuelVolume();
 
 			/** Run a test cycle. */
 			void test(unsigned maxFuelLitres);
@@ -31,7 +31,7 @@ namespace piZeroDash
 		private:
 
 			/** Currently latched value. */
-			unsigned _latchedValue;
+			double _latchedValue;
 	};
 }
 

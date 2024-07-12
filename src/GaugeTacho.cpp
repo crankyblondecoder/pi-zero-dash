@@ -45,7 +45,7 @@ void GaugeTacho::_setProperties(double markedRpmFontSize, colour& markedRpmFontC
 	double lineLength, double majorLineWidth, double minorLineWidth, double lineStartOffset, colour& majorLineColour,
 	colour& minorLineColour, colour& normalColour, colour& redlineWarningThresholdColour, colour& redlineColour)
 {
-	_setStandardProperties(0, (double) _maxRpm / 1000.0, 1, true, true, true, markedRpmFontSize,
+	_setStandardProperties(0, (double) _maxRpm / 1000.0, 1, true, false, false, markedRpmFontSize,
 		markedRpmFontColour, 0, lineLength, majorLineWidth, minorLineWidth, lineStartOffset, majorLineColour, minorLineColour,
 		M_PI, 2.0 * M_PI);
 
@@ -56,18 +56,21 @@ void GaugeTacho::_setProperties(double markedRpmFontSize, colour& markedRpmFontC
 	_standardRadialSections[0].sectionColour = normalColour;
 	_standardRadialSections[0].indicatedValueStart = 0.0;
 	_standardRadialSections[0].indicatedValueEnd = (double) _redlineWarningRpm / 1000.0;
+	_standardRadialSections[0].onlyShowIfWithinRange = false;
 
 	// Redline warning.
 	_standardRadialSections[1].flash = false;
 	_standardRadialSections[1].sectionColour = redlineWarningThresholdColour;
 	_standardRadialSections[1].indicatedValueStart = (double) _redlineWarningRpm / 1000.0;
 	_standardRadialSections[1].indicatedValueEnd = (double) _redlineRpm / 1000.0;
+	_standardRadialSections[1].onlyShowIfWithinRange = false;
 
 	// Redline.
 	_standardRadialSections[2].flash = _flashRedline;
 	_standardRadialSections[2].sectionColour = redlineColour;
 	_standardRadialSections[2].indicatedValueStart = (double) _redlineRpm / 1000.0;
 	_standardRadialSections[2].indicatedValueEnd = (double) _maxRpm / 1000.0;
+	_standardRadialSections[2].onlyShowIfWithinRange = false;
 }
 
 void GaugeTacho::_drawDefaultForeground(CairoSurface& surface, double sectionRadialLength)

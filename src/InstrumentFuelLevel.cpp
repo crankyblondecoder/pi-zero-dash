@@ -33,7 +33,7 @@ bool InstrumentFuelLevel::latch()
 	return false;
 }
 
-unsigned InstrumentFuelLevel::getFuelLitres()
+double InstrumentFuelLevel::getFuelVolume()
 {
 	return _latchedValue;
 }

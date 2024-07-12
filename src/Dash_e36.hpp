@@ -6,6 +6,7 @@
 #include "Dash.hpp"
 #include "GaugeBoost_e36.hpp"
 #include "GaugeEngineTemp_e36.hpp"
+#include "GaugeFuelLevel_e36.hpp"
 #include "GaugeHeadlight_e36.hpp"
 #include "GaugeSpeedo_e36.hpp"
 #include "GaugeTacho_e36.hpp"
@@ -63,6 +64,9 @@ namespace piZeroDash
 
 			/** Forced induction boost. */
 			GaugeBoost_e36* _boost;
+
+			/** Fuel level gauge. */
+			GaugeFuelLevel_e36* _fuelLevel;
 	};
 }
 

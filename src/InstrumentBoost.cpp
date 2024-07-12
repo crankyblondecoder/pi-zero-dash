@@ -40,5 +40,5 @@ double InstrumentBoost::getBoost()
 
 void InstrumentBoost::test(double minBoost, double maxBoost)
 {
-	_testNumerical(minBoost, maxBoost, (maxBoost - minBoost) / 8000.0, false);
+	_testNumerical(minBoost, maxBoost, (maxBoost - minBoost) / 6000.0, false);
 }

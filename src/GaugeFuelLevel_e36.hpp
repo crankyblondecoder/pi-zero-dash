@@ -1,30 +1,27 @@
-#ifndef PZD_GAUGE_BOOST_E36_H
-#define PZD_GAUGE_BOOST_E36_H
+#ifndef PZD_GAUGE_FUEL_LEVEL_E36_H
+#define PZD_GAUGE_FUEL_LEVEL_E36_H
 
-#include "GaugeBoost.hpp"
+#include "GaugeFuelLevel.hpp"
 
 namespace piZeroDash
 {
 	/**
-	 * E36 boost gauge.
+	 * E36 fuel level gauge.
 	 */
-	class GaugeBoost_e36 : public GaugeBoost
+	class GaugeFuelLevel_e36 : public GaugeFuelLevel
 	{
 		public:
 
-			virtual ~GaugeBoost_e36();
+			virtual ~GaugeFuelLevel_e36();
 
 			/**
-			 * @param minBoost Minimum boost displayed.
-			 * @param maxBoost Minimum boost displayed.
-			 * @param neutralBoost Neutral boost value.
+			 * @param maxFuelLevel Maximum fuel level displayed.
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
 			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeBoost_e36(int minBoost, int maxBoost, int neutralBoost, int globalPositionX,
-				int globalPositionY, unsigned width, unsigned height);
+			GaugeFuelLevel_e36(int maxFuelLevel, int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
 			void _drawBackground(CairoSurface& surface);
@@ -51,14 +48,11 @@ namespace piZeroDash
 			/** Colour of the minor marked lines. */
 			colour _minorLineColour = {1.0, 1.0, 1.0, 0.95};
 
-			/** Colour for below neutral pie section of range. */
-			colour _belowNeutralIndictatorColour = {227.0/255.0, 186.0/255.0, 75.0/255.0, 0.95};
-
-			/** Colour for above neutral pie section of range. */
-			colour _aboveNeutralIndictatorColour = {20.0/255.0, 196.0/255.0, 58.0/255.0, 0.95};
-
 			/** Indicator line colour if indicator section mode isn't being used. */
 			colour _indiactorLineColour = {21.0/255.0, 54.0/255.0, 214.0/255.0, 0.85};
+
+			/** Low fuel level indicator colour. */
+			colour _lowFuelLevelColour = {227.0/255.0, 186.0/255.0, 75.0/255.0, 0.95};
 	};
 }
 

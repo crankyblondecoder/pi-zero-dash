@@ -19,13 +19,13 @@ GaugeBoost_e36::GaugeBoost_e36(int minBoost, int maxBoost, int neutralBoost, int
 {
 	double markedFontSize = 0.07 * (double) width;
 	_lineLength = 0.1 * (double) width;
-	double majorLineWidth = 0.01 * (double) width;
+	_majorLineWidth = 0.01 * (double) width;
 	double minorLineWidth = 0.005 * (double) width;
 	double lineStartOffset = _lineLength * 0.1;
 
-	_setStandardProperties(markedFontSize, _markedFontColour, 0, _lineLength, majorLineWidth, minorLineWidth, lineStartOffset,
-		_majorLineColour, _minorLineColour, _belowNeutralIndictatorColour, _aboveNeutralIndictatorColour, 0,
-		-M_PI / 2.0);
+	// Just default to use indicator line for now.
+	_setStandardProperties(markedFontSize, _markedFontColour, 0, _lineLength, _majorLineWidth, minorLineWidth, lineStartOffset,
+		_majorLineColour, _minorLineColour, _belowNeutralIndictatorColour, _aboveNeutralIndictatorColour, false, 0, -M_PI / 2.0);
 }
 
 void GaugeBoost_e36::_drawBackground(CairoSurface& surface)
@@ -35,5 +35,5 @@ void GaugeBoost_e36::_drawBackground(CairoSurface& surface)
 
 void GaugeBoost_e36::_drawForeground(CairoSurface& surface)
 {
-	_drawDefaultForeground(surface, _lineLength * 1.2);
+	_drawDefaultForeground(surface, _lineLength * 1.2, _lineLength * 1.2, _majorLineWidth * 3.0, _indiactorLineColour);
 }

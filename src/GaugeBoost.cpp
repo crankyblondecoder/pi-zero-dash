@@ -27,7 +27,7 @@ GaugeBoost::GaugeBoost(int minBoost, int maxBoost, int neutralBoost, double radi
 void GaugeBoost::test()
 {
 	// Go slightly over max so that this likely edge case is tested.
-	_boostInstr.test(_minBoost, _maxBoost + 2);
+	_boostInstr.test(_minBoost - 5, _maxBoost + 5);
 }
 
 bool GaugeBoost::inTestMode()
@@ -37,30 +37,43 @@ bool GaugeBoost::inTestMode()
 
 void GaugeBoost::_setStandardProperties(double markedFontSize, colour& markedFontColour, unsigned markedFontDecimalPlaces,
 	double lineLength, double majorLineWidth, double minorLineWidth, double lineStartOffset, colour& majorLineColour,
-	colour& minorLineColour, colour& preNeutralColour, colour& postNeutralColour, double startAngle, double endAngle)
+	colour& minorLineColour, colour& preNeutralColour, colour& postNeutralColour, bool useIndicatorSections,
+	double startAngle, double endAngle)
 {
-	GaugeDial::_setStandardProperties(_minBoost, _maxBoost, 5, true, false, false, markedFontSize,
+	GaugeDial::_setStandardProperties(_minBoost, _maxBoost, 5, true, true, true, markedFontSize,
 		markedFontColour, 0, lineLength, majorLineWidth, minorLineWidth, lineStartOffset, majorLineColour, minorLineColour,
 		startAngle, endAngle);
 
-	// Generate standard radial sections
+	_useIndicatorSections = useIndicatorSections;
 
-	// Normal
+	// Generate standard radial sections for section mode.
+
+	// Below neutral boost.
 	_standardRadialSections[0].flash = false;
 	_standardRadialSections[0].sectionColour = preNeutralColour;
-	_standardRadialSections[0].indicatedValueStart = _minBoost;
+	_standardRadialSections[0].indicatedValueStart = _minBoost - 5;
 	_standardRadialSections[0].indicatedValueEnd = _neutralBoost;
+	_standardRadialSections[0].onlyShowIfWithinRange = false;
 
-	// Redline warning.
+	// Above neutral boost.
 	_standardRadialSections[1].flash = false;
 	_standardRadialSections[1].sectionColour = postNeutralColour;
 	_standardRadialSections[1].indicatedValueStart = _neutralBoost;
-	_standardRadialSections[1].indicatedValueEnd = _maxBoost;
+	_standardRadialSections[1].indicatedValueEnd = _maxBoost + 5;
+	_standardRadialSections[1].onlyShowIfWithinRange = false;
 }
 
-void GaugeBoost::_drawDefaultForeground(CairoSurface& surface, double sectionRadialLength)
+void GaugeBoost::_drawDefaultForeground(CairoSurface& surface, double sectionRadialLength, double indicatorLineLength,
+	double indicatorLineWidth, colour& indicatorLineColour)
 {
 	double curBoost = _boostInstr.getBoost();
 
-	_drawStandardIndicatorSections(surface, curBoost, sectionRadialLength, _standardRadialSections, 3, true);
+	if(_useIndicatorSections)
+	{
+		_drawStandardIndicatorSections(surface, curBoost, sectionRadialLength, _standardRadialSections, 2, true);
+	}
+	else
+	{
+		_drawStandardIndicatorLine(surface, curBoost, indicatorLineLength, indicatorLineWidth, indicatorLineColour);
+	}
 }

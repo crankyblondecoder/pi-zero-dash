@@ -21,6 +21,7 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	unsigned dashHeight = _getHeight();
 
 	// Speedo.
+	// -------
 
 	unsigned speedoWidth = dashWidth * (speedoWidthPercent / 100.0);
 	unsigned speedoHeight = (speedoWidth / 2.0) * 1.2;
@@ -35,6 +36,7 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	struct bounds speedoPrecBoxBounds =  _speedo -> getPreciseSpeedBoxBounds();
 
 	// Tacho.
+	// ------
 
 	unsigned tachoWidth = dashWidth * (tachoWidthPercent / 100.0);
 	unsigned tachoHeight = tachoWidth / 2;
@@ -48,6 +50,7 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	_addGauge(_tacho);
 
 	// Turn indicators.
+	// ----------------
 
 	unsigned turnWidth = dashWidth * (turnIndicatorWidthPercent / 100.0);
 
@@ -58,6 +61,7 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	_addGauge(_turnRight);
 
 	// Headlight gauge.
+	// ----------------
 
 	unsigned lightHeight = dashHeight * (lightHeightPercent / 100.0);
 	unsigned lightWidth = lightHeight;
@@ -67,6 +71,7 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	_addGauge(_headlight);
 
 	// Engine temperature gauge.
+	// -------------------------
 
 	unsigned engineTempWidth = dashWidth * (engineTempWidthPercent / 100.0);
 	unsigned engineTempHeight = (double) engineTempWidth * 0.5;
@@ -79,13 +84,24 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	_addGauge(_engineTemp);
 
 	// Boost gauge.
+	// ------------
 
 	double _boostGaugeWidth = dashWidth * (boostWidthPercent / 100.0);
 
-	_boost = new GaugeBoost_e36(-10, 30, 0, dashWidth - _boostGaugeWidth, dashHeight - speedoHeight,
+	_boost = new GaugeBoost_e36(0, 30, 0, dashWidth - _boostGaugeWidth * 1.1, dashHeight - speedoHeight,
 		_boostGaugeWidth, _boostGaugeWidth);
 
 	_addGauge(_boost);
+
+	// Fuel level gauge.
+	// -----------------
+
+	// For the sake of symmetry, use the same size as the boost gauge.
+
+	_fuelLevel = new GaugeFuelLevel_e36(60, _boostGaugeWidth * 0.1, dashHeight - speedoHeight, _boostGaugeWidth,
+		_boostGaugeWidth);
+
+	_addGauge(_fuelLevel);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)
