@@ -57,6 +57,21 @@ namespace piZeroDash
 			 */
 			void _drawDefaultBoxPath(cairo_t* cr, double cornerRadius, double left, double right, double top, double bottom);
 
+			/**
+			 * Draw the path of standard radiused default box to a cairo context
+			 * @param cr Cairo context to draw to.
+			 * @param topLeftRadius The radius of the top left box corner.
+			 * @param topRightRadius The radius of the top right box corner.
+			 * @param bottomLeftRadius The radius of the bottom left box corner.
+			 * @param bottomRightRadius The radius of the bottom right box corner.
+			 * @param left Coordinate of the left of the box.
+			 * @param right Coordinate of the right of the box.
+			 * @param top Coordinate of the top of the box.
+			 * @param bottom Coordinate of the bottom of the box.
+			 */
+			void _drawBoxPath(cairo_t* cr, double topLeftRadius, double topRightRadius, double bottomLeftRadius,
+				double bottomRightRadius, double left, double right, double top, double bottom);
+
 		private:
 
 			unsigned _instrumentCount;

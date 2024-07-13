@@ -57,3 +57,41 @@ void Gauge::_drawDefaultBoxPath(cairo_t* cr, double cornerRadius, double left, d
 	cairo_arc(cr, left + cornerRadius, bottom - cornerRadius, cornerRadius, 0.5 * M_PI, M_PI);
 	cairo_close_path(cr);
 }
+
+void Gauge::_drawBoxPath(cairo_t* cr, double topLeftRadius, double topRightRadius, double bottomLeftRadius,
+	double bottomRightRadius, double left, double right, double top, double bottom)
+{
+	cairo_new_sub_path(cr);
+
+	if(topLeftRadius == 0.0)
+	{
+		cairo_move_to(cr, left, top);
+	}
+	else
+	{
+		cairo_arc(cr, left + topLeftRadius, top + topLeftRadius, topLeftRadius, M_PI, 1.5 * M_PI);
+	}
+
+	cairo_line_to(cr, right - topRightRadius, top);
+
+	if(topRightRadius != 0.0)
+	{
+		cairo_arc(cr, right - topRightRadius, top + topRightRadius, topRightRadius, 1.5 * M_PI, 2.0 * M_PI);
+	}
+
+	cairo_line_to(cr, right, bottom - bottomRightRadius);
+
+	if(bottomRightRadius != 0.0)
+	{
+		cairo_arc(cr, right - bottomRightRadius, bottom - bottomRightRadius, bottomRightRadius, 0.0, 0.5 * M_PI);
+	}
+
+	cairo_line_to(cr, left - bottomLeftRadius, bottom);
+
+	if(bottomRightRadius != 0.0)
+	{
+		cairo_arc(cr, left + bottomRightRadius, bottom - bottomRightRadius, bottomLeftRadius, 0.5 * M_PI, M_PI);
+	}
+
+	cairo_close_path(cr);
+}

@@ -5,6 +5,7 @@
 
 #include "Dash.hpp"
 #include "GaugeBoost_e36.hpp"
+#include "GaugeDoorOpen_e36.hpp"
 #include "GaugeEngineTemp_e36.hpp"
 #include "GaugeFuelLevel_e36.hpp"
 #include "GaugeHeadlight_e36.hpp"
@@ -71,6 +72,9 @@ namespace piZeroDash
 
 			/** Park brake gauge. */
 			GaugeParkBrake_e36* _parkBrake;
+
+			/** Door open gauge. */
+			GaugeDoorOpen_e36* _doorOpen;
 	};
 }
 

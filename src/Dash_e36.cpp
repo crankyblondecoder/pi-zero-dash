@@ -12,6 +12,7 @@ Dash_e36::~Dash_e36()
 	if(_boost) delete _boost;
 	if(_fuelLevel) delete _fuelLevel;
 	if(_parkBrake) delete _parkBrake;
+	if(_doorOpen) delete _doorOpen;
 }
 
 Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent,
@@ -110,10 +111,20 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	// Park brake gauge.
 	// -----------------
 
+	double lightSeparationDist = lightWidth * 0.1;
+
 	// Sits to the right of the headlight gauge.
-	_parkBrake = new GaugeParkBrake_e36(headlightPosnX + lightWidth, 0.0, lightWidth, lightHeight);
+	_parkBrake = new GaugeParkBrake_e36(headlightPosnX + lightWidth + lightSeparationDist, 0.0, lightWidth, lightHeight);
 
 	_addGauge(_parkBrake);
+
+	// Door open gauge.
+	// ----------------
+
+	// Sits to the left of the headlight gauge.
+	_doorOpen = new GaugeDoorOpen_e36(headlightPosnX - lightWidth - lightSeparationDist, 0.0, lightWidth, lightHeight);
+
+	_addGauge(_doorOpen);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)
