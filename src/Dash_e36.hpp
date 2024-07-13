@@ -8,6 +8,7 @@
 #include "GaugeEngineTemp_e36.hpp"
 #include "GaugeFuelLevel_e36.hpp"
 #include "GaugeHeadlight_e36.hpp"
+#include "GaugeParkBrake_e36.hpp"
 #include "GaugeSpeedo_e36.hpp"
 #include "GaugeTacho_e36.hpp"
 #include "GaugeTurnIndicator_e36.hpp"
@@ -67,6 +68,9 @@ namespace piZeroDash
 
 			/** Fuel level gauge. */
 			GaugeFuelLevel_e36* _fuelLevel;
+
+			/** Park brake gauge. */
+			GaugeParkBrake_e36* _parkBrake;
 	};
 }
 

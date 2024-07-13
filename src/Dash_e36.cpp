@@ -9,6 +9,9 @@ Dash_e36::~Dash_e36()
 	if(_turnLeft) delete _turnLeft;
 	if(_turnRight) delete _turnRight;
 	if(_engineTemp) delete _engineTemp;
+	if(_boost) delete _boost;
+	if(_fuelLevel) delete _fuelLevel;
+	if(_parkBrake) delete _parkBrake;
 }
 
 Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent,
@@ -65,8 +68,9 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 
 	unsigned lightHeight = dashHeight * (lightHeightPercent / 100.0);
 	unsigned lightWidth = lightHeight;
+	unsigned headlightPosnX = (dashWidth - lightWidth) / 2.0;
 
-	_headlight = new GaugeHeadlight_e36((dashWidth - lightWidth) / 2.0, 0.0, lightWidth, lightHeight);
+	_headlight = new GaugeHeadlight_e36(headlightPosnX, 0.0, lightWidth, lightHeight);
 
 	_addGauge(_headlight);
 
@@ -102,6 +106,14 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 		_boostGaugeWidth);
 
 	_addGauge(_fuelLevel);
+
+	// Park brake gauge.
+	// -----------------
+
+	// Sits to the right of the headlight gauge.
+	_parkBrake = new GaugeParkBrake_e36(headlightPosnX + lightWidth, 0.0, lightWidth, lightHeight);
+
+	_addGauge(_parkBrake);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)
