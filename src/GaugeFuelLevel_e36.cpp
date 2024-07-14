@@ -26,7 +26,7 @@ GaugeFuelLevel_e36::GaugeFuelLevel_e36(int maxFuelLevel, int globalPositionX, in
 	// Just default to use indicator line for now.
 	_setStandardProperties(markedFontSize, _markedFontColour, 0, _lineLength, _majorLineWidth, minorLineWidth, lineStartOffset,
 		_majorLineColour, _minorLineColour, M_PI * (165.0 / 180.0), M_PI * (285.0 / 180.0),
-		(double) maxFuelLevel * (12.5 / 100.0), _lowFuelLevelColour);
+		(double) maxFuelLevel * (12.5 / 100.0), _lowFuelLevelColour, _belowZeroFuelLevelColour);
 }
 
 void GaugeFuelLevel_e36::_drawBackground(CairoSurface& surface)

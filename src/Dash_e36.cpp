@@ -13,6 +13,7 @@ Dash_e36::~Dash_e36()
 	if(_fuelLevel) delete _fuelLevel;
 	if(_parkBrake) delete _parkBrake;
 	if(_doorOpen) delete _doorOpen;
+	if(_lowVoltage) delete _lowVoltage;
 }
 
 Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent,
@@ -125,6 +126,14 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 	_doorOpen = new GaugeDoorOpen_e36(headlightPosnX - lightWidth - lightSeparationDist, 0.0, lightWidth, lightHeight);
 
 	_addGauge(_doorOpen);
+
+	// Low voltage gauge.
+	// ------------------
+
+	_lowVoltage = new GaugeLowVoltage_e36(headlightPosnX - lightWidth * 2.0 - lightSeparationDist * 2.0, 0.0, lightWidth,
+		lightHeight);
+
+	_addGauge(_lowVoltage);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)

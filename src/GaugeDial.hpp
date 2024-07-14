@@ -50,6 +50,9 @@ namespace piZeroDash
 
 				/** Only show the section if it is within the indicated start/end value range. */
 				bool onlyShowIfWithinRange;
+
+				/** Display the whole range if the indicated value is within the start/end value range. */
+				bool displayWholeRange;
 			};
 
 		protected:

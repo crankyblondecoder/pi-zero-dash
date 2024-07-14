@@ -41,6 +41,13 @@ namespace piZeroDash
 		protected:
 
 			/**
+			 * Whether the gauge requires a foreground redraw from an instruments latched value.
+			 * @param instrument Instrument that latched value.
+			 * @returns True if foreground requires drawing.
+			 */
+			virtual bool _requiresDrawForeground(Instrument* instrument) = 0;
+
+			/**
 			 * Add an instrument to this gauge that can be read to get the state to display.
 			 * @param instrument Instrument to add. _Not_ owned by this.
 			 */

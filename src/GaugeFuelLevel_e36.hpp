@@ -53,6 +53,9 @@ namespace piZeroDash
 
 			/** Low fuel level indicator colour. */
 			colour _lowFuelLevelColour = {227.0/255.0, 186.0/255.0, 75.0/255.0, 0.95};
+
+			/** Below zero fuel level indicator colour. */
+			colour _belowZeroFuelLevelColour = {245.0/255.0, 15.0/255.0, 15.0/255.0, 0.95};
 	};
 }
 

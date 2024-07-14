@@ -40,5 +40,5 @@ double InstrumentFuelLevel::getFuelVolume()
 
 void InstrumentFuelLevel::test(unsigned maxFuelLitres)
 {
-	_testNumerical(0.0, maxFuelLitres, (double) maxFuelLitres / 8000.0, false);
+	_testNumerical(-2.0, maxFuelLitres, (double) maxFuelLitres / 6000.0, false);
 }

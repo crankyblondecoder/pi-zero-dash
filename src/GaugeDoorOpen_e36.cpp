@@ -70,7 +70,7 @@ void GaugeDoorOpen_e36::__drawDoorOpenOutline(cairo_t* cr, double strokeWidth, c
 	double carBonnetBottom = carBoxTop + carHeight * 0.35;
 	double carBootTop = carBoxBottom - carHeight * 0.15;
 
-	double cornerRadius = carWidth * 0.15;
+	double cornerRadius = carWidth * 0.25;
 	double halfStrokeWidth = strokeWidth / 2.0;
 
 	double doorWidth = carWidth * 0.5;
@@ -97,7 +97,27 @@ void GaugeDoorOpen_e36::__drawDoorOpenOutline(cairo_t* cr, double strokeWidth, c
 	cairo_line_to(cr, carBoxRight + doorWidth, carBonnetBottom + doorWidth);
 	cairo_stroke(cr);
 
-	// TODO ...
+	// Draw roof.
+
+	double roofWidth = carWidth * 0.5;
+	double roofLeft = carBoxLeft + (carWidth - roofWidth) / 2.0;
+	double roofRight = roofLeft + roofWidth;
+	double roofTop = carBonnetBottom + (carBootTop - carBonnetBottom - roofWidth) / 2.0;
+	double roofBottom = roofTop + roofWidth;
+
+	_drawBoxPath(cr, 0.0, 0.0, 0.0, 0.0, roofLeft, roofRight, roofTop, roofBottom);
+	cairo_fill(cr);
+
+	// Draw pillars.
+	cairo_move_to(cr, carBoxLeft + halfStrokeWidth, carBonnetBottom);
+	cairo_line_to(cr, roofLeft, roofTop);
+	cairo_move_to(cr, carBoxRight - halfStrokeWidth, carBonnetBottom);
+	cairo_line_to(cr, roofRight, roofTop);
+	cairo_move_to(cr, carBoxLeft + halfStrokeWidth, carBootTop);
+	cairo_line_to(cr, roofLeft, roofBottom);
+	cairo_move_to(cr, carBoxRight - halfStrokeWidth, carBootTop);
+	cairo_line_to(cr, roofRight, roofBottom);
+	cairo_stroke(cr);
 }
 
 void GaugeDoorOpen_e36::test()

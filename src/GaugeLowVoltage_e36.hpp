@@ -1,19 +1,19 @@
-#ifndef PZD_GAUGE_DOOR_OPEN_E36_H
-#define PZD_GAUGE_DOOR_OPEN_E36_H
+#ifndef PZD_GAUGE_LOW_VOLTAGE_E36_H
+#define PZD_GAUGE_LOW_VOLTAGE_E36_H
 
 #include "GaugeStdLight.hpp"
-#include "InstrumentOnOff.hpp"
+#include "InstrumentVoltage.hpp"
 
 namespace piZeroDash
 {
 	/**
-	 * E36 door open gauge.
+	 * E36 low voltage gauge.
 	 */
-	class GaugeDoorOpen_e36 : public GaugeStdLight
+	class GaugeLowVoltage_e36 : public GaugeStdLight
 	{
 		public:
 
-			virtual ~GaugeDoorOpen_e36();
+			virtual ~GaugeLowVoltage_e36();
 
 			/**
 			 * @param globalPositionX X coordinate of position of gauge visual in global coordinates.
@@ -21,7 +21,7 @@ namespace piZeroDash
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
 			 */
-			GaugeDoorOpen_e36(int globalPositionX, int globalPositionY, unsigned width, unsigned height);
+			GaugeLowVoltage_e36(int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
 			void _drawBackground(CairoSurface& surface);
@@ -39,19 +39,21 @@ namespace piZeroDash
 
 		private:
 
-			/** Door opened/closed (on/off). */
-			InstrumentOnOff _doorOpenOnOffInstr;
+			/** Reads current voltage. */
+			InstrumentVoltage _voltageInstr;
+
+			double _lowVoltageThreshold = 12.7;
 
 			/** background colour. */
 			struct colour _backgroundColour = {0.5, 0.5, 0.5, 0.5};
 
-			/** Door closed outline colour. */
+			/** Voltage okay outline colour. */
 			struct colour _offStrokeColour = {0.3, 0.3, 0.3, 1.0};
 
-			/** Door open outline colour. */
+			/** Voltage not okay outline colour. */
 			struct colour _onStrokeColour = {1.0, 0.0, 0.0, 1.0};
 
-			/** Door open foreground colour. */
+			/** Park brake on foreground colour. */
 			struct colour _onForegroundColour = {227.0/255.0, 186.0/255.0, 75.0/255.0, 0.9};
 
 			/**
@@ -59,7 +61,7 @@ namespace piZeroDash
 			 * @param strokeWidth Width of stroke lines.
 			 * @param strokeColour Colour of stroked lines.
 			*/
-			void __drawDoorOpenOutline(cairo_t* cr, double strokeWidth, colour& strokeColour);
+			void __drawLowVoltageOutline(cairo_t* cr, double strokeWidth, colour& strokeColour);
 	};
 }
 

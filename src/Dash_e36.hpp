@@ -9,6 +9,7 @@
 #include "GaugeEngineTemp_e36.hpp"
 #include "GaugeFuelLevel_e36.hpp"
 #include "GaugeHeadlight_e36.hpp"
+#include "GaugeLowVoltage_e36.hpp"
 #include "GaugeParkBrake_e36.hpp"
 #include "GaugeSpeedo_e36.hpp"
 #include "GaugeTacho_e36.hpp"
@@ -75,6 +76,9 @@ namespace piZeroDash
 
 			/** Door open gauge. */
 			GaugeDoorOpen_e36* _doorOpen;
+
+			/** Low voltage gauge. */
+			GaugeLowVoltage_e36* _lowVoltage;
 	};
 }
 

@@ -29,7 +29,10 @@ void Gauge::scan()
 
 	for(unsigned index = 0; index < _instrumentCount; index++)
 	{
-		draw = draw || _instruments[index] -> latch();
+		// All instruments for a gauge need to be latched per scan.
+		bool drawForeground = _instruments[index] -> latch() && _requiresDrawForeground(_instruments[index]);
+
+		draw = draw || drawForeground;
 	}
 
 	if(draw)

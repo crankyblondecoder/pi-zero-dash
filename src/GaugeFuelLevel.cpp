@@ -35,7 +35,8 @@ bool GaugeFuelLevel::inTestMode()
 
 void GaugeFuelLevel::_setStandardProperties(double markedFontSize, colour& markedFontColour, unsigned markedFontDecimalPlaces,
 	double lineLength, double majorLineWidth, double minorLineWidth, double lineStartOffset, colour& majorLineColour,
-	colour& minorLineColour, double startAngle, double endAngle, double lowFuelLevel, colour& lowFuelLevelIndicatorColour)
+	colour& minorLineColour, double startAngle, double endAngle, double lowFuelLevel, colour& lowFuelLevelIndicatorColour,
+	colour& belowZeroFuelLevelIndicatorColour)
 {
 	GaugeDial::_setStandardProperties(0, _maxFuelLevel, 7.5, true, false, false, markedFontSize,
 		markedFontColour, 0, lineLength, majorLineWidth, minorLineWidth, lineStartOffset, majorLineColour, minorLineColour,
@@ -43,12 +44,19 @@ void GaugeFuelLevel::_setStandardProperties(double markedFontSize, colour& marke
 
 	_lineLength = lineLength;
 
-	// Low fuel light.
+	// Below zero fuel light.
 	_standardRadialSections[0].flash = false;
-	_standardRadialSections[0].sectionColour = lowFuelLevelIndicatorColour;
+	_standardRadialSections[0].sectionColour = belowZeroFuelLevelIndicatorColour;
 	_standardRadialSections[0].indicatedValueStart = -3.0;
-	_standardRadialSections[0].indicatedValueEnd = lowFuelLevel;
+	_standardRadialSections[0].indicatedValueEnd = 0.0;
 	_standardRadialSections[0].onlyShowIfWithinRange = true;
+
+	// Low fuel light.
+	_standardRadialSections[1].flash = false;
+	_standardRadialSections[1].sectionColour = lowFuelLevelIndicatorColour;
+	_standardRadialSections[1].indicatedValueStart = 0.0;
+	_standardRadialSections[1].indicatedValueEnd = lowFuelLevel;
+	_standardRadialSections[1].onlyShowIfWithinRange = true;
 }
 
 void GaugeFuelLevel::_drawDefaultForeground(CairoSurface& surface, double indicatorLineLength,
@@ -56,7 +64,7 @@ void GaugeFuelLevel::_drawDefaultForeground(CairoSurface& surface, double indica
 {
 	double curFuelLevel = _fuelLevelInstr.getFuelVolume();
 
-	_drawStandardIndicatorSections(surface, curFuelLevel, _lineLength, _standardRadialSections, 1, false);
+	_drawStandardIndicatorSections(surface, curFuelLevel, _lineLength, _standardRadialSections, 2, false);
 
 	_drawStandardIndicatorLine(surface, curFuelLevel, indicatorLineLength, indicatorLineWidth, indicatorLineColour);
 }

@@ -52,11 +52,12 @@ namespace piZeroDash
 			 *        start angle the dial direction is "reversed".
 			 * @param lowFuelLevel Fuel level below which triggers the low fuel indication.
 			 * @param lowFuelLevelIndicatorColour Colour displayed for indicator when low fuel level is reached.
+			 * @param belowZeroFuelLevelIndicatorColour The colour to use to indicate below zero fuel level.
 			 */
 			void _setStandardProperties(double markedFontSize, colour& markedFontColour,
 				unsigned markedFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
 				double lineStartOffset, colour& majorLineColour, colour& minorLineColour, double startAngle, double endAngle,
-				double lowFuelLevel, colour& lowFuelLevelIndicatorColour);
+				double lowFuelLevel, colour& lowFuelLevelIndicatorColour, colour& belowZeroFuelLevelIndicatorColour);
 
 			/**
 			 * Draw the default forground.
@@ -77,7 +78,7 @@ namespace piZeroDash
 			int _maxFuelLevel;
 
 			/** Predefined standard radial sections to use for foreground. */
-			IndicatorRadialSection _standardRadialSections[1];
+			IndicatorRadialSection _standardRadialSections[2];
 
 			/** Length of the marked (background) lines. */
 			double _lineLength;
