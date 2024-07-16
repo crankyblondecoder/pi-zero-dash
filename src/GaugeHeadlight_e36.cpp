@@ -30,8 +30,10 @@ void GaugeHeadlight_e36::_drawBackground(CairoSurface& surface)
 
 void GaugeHeadlight_e36::_drawForeground(CairoSurface& surface)
 {
-	bool lowBeamState = _headLightLowBeamInstr.getOnOffState();
+	_lastLowBeam = _headLightLowBeamInstr.getOnOffState();
+	_lastHighBeam = _headLightHighBeamInstr.getOnOffState();
 
+	bool lowBeamState = _lastLowBeam;
 	bool highBeamState;
 
 	if(_headLightLowBeamInstr.inTestMode())
@@ -74,6 +76,21 @@ void GaugeHeadlight_e36::_drawForeground(CairoSurface& surface)
 	{
 		__drawHeadlightOutline(cr, width / 20.0, _offStrokeColour, 0.0);
 	}
+}
+
+bool GaugeHeadlight_e36::_requiresDrawForeground(Instrument* instrument)
+{
+	if(instrument == &_headLightLowBeamInstr)
+	{
+		return _lastLowBeam != _headLightLowBeamInstr.getOnOffState();
+	}
+
+	if(instrument == &_headLightHighBeamInstr)
+	{
+		return _lastHighBeam != _headLightHighBeamInstr.getOnOffState();
+	}
+
+	return false;
 }
 
 void GaugeHeadlight_e36::__drawHeadlightOutline(cairo_t* cr, double strokeWidth, colour& strokeColour,

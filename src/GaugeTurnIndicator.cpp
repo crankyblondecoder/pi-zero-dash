@@ -41,11 +41,11 @@ void GaugeTurnIndicator::_drawDefaultBackground(CairoSurface& surface, colour& f
 
 void GaugeTurnIndicator::_drawDefaultForeground(CairoSurface& surface, colour& fillColour)
 {
-	InstrumentIndicator::IndicatorState state = _indicatorInstr.getIndicatorState();
+	_lastIndicatorState = _indicatorInstr.getIndicatorState();
 
-	if((state == InstrumentIndicator::IndicatorState::LEFT && _left) ||
-		(state == InstrumentIndicator::IndicatorState::RIGHT && !_left) ||
-		(state == InstrumentIndicator::IndicatorState::BOTH))
+	if((_lastIndicatorState == InstrumentIndicator::IndicatorState::LEFT && _left) ||
+		(_lastIndicatorState == InstrumentIndicator::IndicatorState::RIGHT && !_left) ||
+		(_lastIndicatorState == InstrumentIndicator::IndicatorState::BOTH))
 	{
 		cairo_t* cr = surface.getContext();
 
@@ -53,6 +53,16 @@ void GaugeTurnIndicator::_drawDefaultForeground(CairoSurface& surface, colour& f
 		__drawDefaultPath(cr);
 		cairo_fill(cr);
 	}
+}
+
+bool GaugeTurnIndicator::_requiresDrawForeground(Instrument* instrument)
+{
+	if(instrument == &_indicatorInstr)
+	{
+		return _lastIndicatorState != _indicatorInstr.getIndicatorState();
+	}
+
+	return false;
 }
 
 void GaugeTurnIndicator::__drawDefaultPath(cairo_t* cr)

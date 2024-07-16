@@ -24,12 +24,6 @@ namespace piZeroDash
 			GaugeParkBrake_e36(int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
-			void _drawBackground(CairoSurface& surface);
-
-			// Impl.
-			void _drawForeground(CairoSurface& surface);
-
-			// Impl.
 			void test();
 
 			// Impl.
@@ -37,10 +31,22 @@ namespace piZeroDash
 
 		protected:
 
+			// Impl.
+			void _drawBackground(CairoSurface& surface);
+
+			// Impl.
+			void _drawForeground(CairoSurface& surface);
+
+			// Impl.
+			bool _requiresDrawForeground(Instrument* instrument);
+
 		private:
 
 			/** Park brake on/off. */
 			InstrumentOnOff _parkBrakeOnOffInstr;
+
+			/** Last park brake on/off value that foreground was drawn for. */
+			bool _lastParkBrakeOnOff = false;
 
 			/** background colour. */
 			struct colour _backgroundColour = {0.5, 0.5, 0.5, 0.5};

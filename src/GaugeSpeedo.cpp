@@ -66,9 +66,19 @@ void GaugeSpeedo::_drawDefaultBackground(CairoSurface& surface)
 void GaugeSpeedo::_drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth,
 	colour& indicatorLineColour, double preciseSpeedFontSize, colour& preciseSpeedFontColour)
 {
-	unsigned curSpeed = _speedoInstr.getSpeed();
+	_lastSpeed = _speedoInstr.getSpeed();
 
-	_drawStandardIndicatorLine(surface, (double) curSpeed, indicatorLineLength, indicatorLineWidth, indicatorLineColour);
+	_drawStandardIndicatorLine(surface, (double) _lastSpeed, indicatorLineLength, indicatorLineWidth, indicatorLineColour);
 
-	_drawStandardPreciseBoxForeground(surface, curSpeed, 0, "", preciseSpeedFontSize, preciseSpeedFontColour);
+	_drawStandardPreciseBoxForeground(surface, _lastSpeed, 0, "", preciseSpeedFontSize, preciseSpeedFontColour);
+}
+
+bool GaugeSpeedo::_requiresDrawForeground(Instrument* instrument)
+{
+	if(instrument == &_speedoInstr)
+	{
+		return _lastSpeed != _speedoInstr.getSpeed();
+	}
+
+	return false;
 }

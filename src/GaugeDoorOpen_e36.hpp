@@ -24,12 +24,6 @@ namespace piZeroDash
 			GaugeDoorOpen_e36(int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
-			void _drawBackground(CairoSurface& surface);
-
-			// Impl.
-			void _drawForeground(CairoSurface& surface);
-
-			// Impl.
 			void test();
 
 			// Impl.
@@ -37,10 +31,22 @@ namespace piZeroDash
 
 		protected:
 
+			// Impl.
+			void _drawBackground(CairoSurface& surface);
+
+			// Impl.
+			void _drawForeground(CairoSurface& surface);
+
+			// Impl.
+			bool _requiresDrawForeground(Instrument* instrument);
+
 		private:
 
 			/** Door opened/closed (on/off). */
 			InstrumentOnOff _doorOpenOnOffInstr;
+
+			/** Last door open/closed value that foreground was drawn for. */
+			bool _lastDoorOpenClose = false;
 
 			/** background colour. */
 			struct colour _backgroundColour = {0.5, 0.5, 0.5, 0.5};

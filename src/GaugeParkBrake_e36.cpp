@@ -29,13 +29,13 @@ void GaugeParkBrake_e36::_drawBackground(CairoSurface& surface)
 
 void GaugeParkBrake_e36::_drawForeground(CairoSurface& surface)
 {
-	bool parkBrakeState = _parkBrakeOnOffInstr.getOnOffState();
+	_lastParkBrakeOnOff = _parkBrakeOnOffInstr.getOnOffState();
 
 	cairo_t* cr = surface.getContext();
 
 	double width = _getWidth();
 
-	if(parkBrakeState)
+	if(_lastParkBrakeOnOff)
 	{
 		cairo_set_source_rgba(cr, _onForegroundColour.r, _onForegroundColour.g, _onForegroundColour.b, _onForegroundColour.a);
 
@@ -97,6 +97,16 @@ void GaugeParkBrake_e36::__drawParkBrakeOutline(cairo_t* cr, double strokeWidth,
 
 	cairo_move_to(cr, left - textExtents.x_bearing, top - textExtents.y_bearing);
 	cairo_show_text(cr, text.c_str());
+}
+
+bool GaugeParkBrake_e36::_requiresDrawForeground(Instrument* instrument)
+{
+	if(instrument == &_parkBrakeOnOffInstr)
+	{
+		return _lastParkBrakeOnOff != _parkBrakeOnOffInstr.getOnOffState();
+	}
+
+	return false;
 }
 
 void GaugeParkBrake_e36::test()

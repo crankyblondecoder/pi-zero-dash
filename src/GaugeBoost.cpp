@@ -66,14 +66,28 @@ void GaugeBoost::_setStandardProperties(double markedFontSize, colour& markedFon
 void GaugeBoost::_drawDefaultForeground(CairoSurface& surface, double sectionRadialLength, double indicatorLineLength,
 	double indicatorLineWidth, colour& indicatorLineColour)
 {
-	double curBoost = _boostInstr.getBoost();
+	_lastBoost = _boostInstr.getBoost();
 
 	if(_useIndicatorSections)
 	{
-		_drawStandardIndicatorSections(surface, curBoost, sectionRadialLength, _standardRadialSections, 2, true);
+		_drawStandardIndicatorSections(surface, _lastBoost, sectionRadialLength, _standardRadialSections, 2, true);
 	}
 	else
 	{
-		_drawStandardIndicatorLine(surface, curBoost, indicatorLineLength, indicatorLineWidth, indicatorLineColour);
+		_drawStandardIndicatorLine(surface, _lastBoost, indicatorLineLength, indicatorLineWidth, indicatorLineColour);
 	}
+}
+
+bool GaugeBoost::_requiresDrawForeground(Instrument* instrument)
+{
+	if(instrument == &_boostInstr)
+	{
+		// To stop floating point flutter from constantly triggering a foreground draw. Limit comparison to 1 decimal place.
+
+		double curBoost = floor(_boostInstr.getBoost() * 10.0) / 10.0;
+
+		return curBoost != floor(_lastBoost * 10.0) / 10.0;
+	}
+
+	return false;
 }

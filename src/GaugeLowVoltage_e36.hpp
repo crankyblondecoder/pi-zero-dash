@@ -24,12 +24,6 @@ namespace piZeroDash
 			GaugeLowVoltage_e36(int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
-			void _drawBackground(CairoSurface& surface);
-
-			// Impl.
-			void _drawForeground(CairoSurface& surface);
-
-			// Impl.
 			void test();
 
 			// Impl.
@@ -37,10 +31,22 @@ namespace piZeroDash
 
 		protected:
 
+			// Impl.
+			void _drawBackground(CairoSurface& surface);
+
+			// Impl.
+			void _drawForeground(CairoSurface& surface);
+
+			// Impl.
+			bool _requiresDrawForeground(Instrument* instrument);
+
 		private:
 
 			/** Reads current voltage. */
 			InstrumentVoltage _voltageInstr;
+
+			/** Last voltage that foreground was drawn for. */
+			double _lastVoltage = 1 << 30;
 
 			double _lowVoltageThreshold = 12.7;
 

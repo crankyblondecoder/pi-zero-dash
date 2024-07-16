@@ -49,6 +49,9 @@ namespace piZeroDash
 			 */
 			void _drawDefaultForeground(CairoSurface& surface, colour& fillColour);
 
+			// Impl.
+			bool _requiresDrawForeground(Instrument* instrument);
+
 		private:
 
 			/** Whether a left hand pointing arrow is drawn. Default is right hand pointing. */
@@ -56,6 +59,9 @@ namespace piZeroDash
 
 			/** Generic turn indicator instrument. */
 			InstrumentIndicator _indicatorInstr;
+
+			/** Last RPM that foreground was drawn for. */
+			InstrumentIndicator::IndicatorState _lastIndicatorState = InstrumentIndicator::IndicatorState::NONE;
 
 			/** Draw the path of the default arrow to a cairo context */
 			void __drawDefaultPath(cairo_t* cr);

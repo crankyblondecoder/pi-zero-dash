@@ -74,10 +74,16 @@ namespace piZeroDash
 			void _drawDefaultForeground(CairoSurface& surface, double sectionRadialLength, double indicatorLineLength,
 				double indicatorLineWidth, colour& indicatorLineColour);
 
+			// Impl.
+			bool _requiresDrawForeground(Instrument* instrument);
+
 		private:
 
 			/** Generic boost instrument. */
 			InstrumentBoost _boostInstr;
+
+			/** Last boost value that foreground was drawn for. */
+			double _lastBoost = 1 << 30;
 
 			/** Minimum boost displayed. */
 			int _minBoost;

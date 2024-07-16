@@ -29,13 +29,13 @@ void GaugeDoorOpen_e36::_drawBackground(CairoSurface& surface)
 
 void GaugeDoorOpen_e36::_drawForeground(CairoSurface& surface)
 {
-	bool doorOpen = _doorOpenOnOffInstr.getOnOffState();
+	_lastDoorOpenClose = _doorOpenOnOffInstr.getOnOffState();
 
 	cairo_t* cr = surface.getContext();
 
 	double width = _getWidth();
 
-	if(doorOpen)
+	if(_lastDoorOpenClose)
 	{
 		cairo_set_source_rgba(cr, _onForegroundColour.r, _onForegroundColour.g, _onForegroundColour.b, _onForegroundColour.a);
 
@@ -48,6 +48,16 @@ void GaugeDoorOpen_e36::_drawForeground(CairoSurface& surface)
 	{
 		__drawDoorOpenOutline(cr, width / 20.0, _offStrokeColour);
 	}
+}
+
+bool GaugeDoorOpen_e36::_requiresDrawForeground(Instrument* instrument)
+{
+	if(instrument == &_doorOpenOnOffInstr)
+	{
+		return _lastDoorOpenClose != _doorOpenOnOffInstr.getOnOffState();
+	}
+
+	return false;
 }
 
 void GaugeDoorOpen_e36::__drawDoorOpenOutline(cairo_t* cr, double strokeWidth, colour& strokeColour)

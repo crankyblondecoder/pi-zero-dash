@@ -75,7 +75,17 @@ void GaugeTacho::_setProperties(double markedRpmFontSize, colour& markedRpmFontC
 
 void GaugeTacho::_drawDefaultForeground(CairoSurface& surface, double sectionRadialLength)
 {
-	double curRpm = _tachoInstr.getRpm();
+	_lastRpm = _tachoInstr.getRpm();
 
-	_drawStandardIndicatorSections(surface, curRpm / 1000.0, sectionRadialLength, _standardRadialSections, 3, true);
+	_drawStandardIndicatorSections(surface, _lastRpm / 1000.0, sectionRadialLength, _standardRadialSections, 3, true);
+}
+
+bool GaugeTacho::_requiresDrawForeground(Instrument* instrument)
+{
+	if(instrument == &_tachoInstr)
+	{
+		return _lastRpm != _tachoInstr.getRpm();
+	}
+
+	return false;
 }

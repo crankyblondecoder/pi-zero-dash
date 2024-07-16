@@ -30,7 +30,7 @@ void GaugeEngineTemp_e36::_drawBackground(CairoSurface& surface)
 
 void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 {
-	int curTemp = _engineTempInstr.getEngineTemp();
+	int _lastEngineTemp = _engineTempInstr.getEngineTemp();
 
 	cairo_t* cr = surface.getContext();
 
@@ -41,11 +41,11 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 
 	// Draw box.
 
-	if(curTemp <= _coldLimitTemp)
+	if(_lastEngineTemp <= _coldLimitTemp)
 	{
 		cairo_set_source_rgba(cr, _boxColourCold.r, _boxColourCold.g, _boxColourCold.b, _boxColourCold.a);
 	}
-	else if(curTemp <= _normalLimitTemp)
+	else if(_lastEngineTemp <= _normalLimitTemp)
 	{
 		cairo_set_source_rgba(cr, _boxColourNormal.r, _boxColourNormal.g, _boxColourNormal.b, _boxColourNormal.a);
 	}
@@ -67,23 +67,23 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 
 	cairo_text_extents_t textExtents;
 
-	string numberText = to_string(curTemp) + "°C";
+	string numberText = to_string(_lastEngineTemp) + "°C";
 	string extentString;
 
 	// Use a fixed number string to get text extents. This is so the number doesn't jump around.
-	if(curTemp <= -10)
+	if(_lastEngineTemp <= -10)
 	{
 		extentString = "-55";
 	}
-	else if(curTemp < 0)
+	else if(_lastEngineTemp < 0)
 	{
 		extentString = "-5";
 	}
-	else if(curTemp < 10)
+	else if(_lastEngineTemp < 10)
 	{
 		extentString = "5";
 	}
-	else if(curTemp < 100)
+	else if(_lastEngineTemp < 100)
 	{
 		extentString = "55";
 	}
@@ -103,6 +103,16 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 
 	cairo_move_to(cr, left - textExtents.x_bearing, top - textExtents.y_bearing);
 	cairo_show_text(cr, numberText.c_str());
+}
+
+bool GaugeEngineTemp_e36::_requiresDrawForeground(Instrument* instrument)
+{
+	if(instrument == &_engineTempInstr)
+	{
+		return _lastEngineTemp != _engineTempInstr.getEngineTemp();
+	}
+
+	return false;
 }
 
 void GaugeEngineTemp_e36::test()

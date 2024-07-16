@@ -84,6 +84,9 @@ namespace piZeroDash
 			unsigned _instrumentCount;
 
 			Instrument** _instruments;
+
+			/** Whether the first foreground has been drawn for this gauge. */
+			bool _firstForegroundDrawn = false;
 	};
 }
 

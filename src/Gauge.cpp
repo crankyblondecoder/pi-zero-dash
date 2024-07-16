@@ -35,9 +35,11 @@ void Gauge::scan()
 		draw = draw || drawForeground;
 	}
 
-	if(draw)
+	if(!_firstForegroundDrawn || draw)
 	{
 		_drawForeground();
+
+		_firstForegroundDrawn = true;
 	}
 
 	_composeForegroundToDisplay();

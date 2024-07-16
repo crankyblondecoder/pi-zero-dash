@@ -24,12 +24,6 @@ namespace piZeroDash
 			GaugeHeadlight_e36(int globalPositionX, int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
-			void _drawBackground(CairoSurface& surface);
-
-			// Impl.
-			void _drawForeground(CairoSurface& surface);
-
-			// Impl.
 			void test();
 
 			// Impl.
@@ -37,13 +31,28 @@ namespace piZeroDash
 
 		protected:
 
+			// Impl.
+			void _drawBackground(CairoSurface& surface);
+
+			// Impl.
+			void _drawForeground(CairoSurface& surface);
+
+			// Impl.
+			bool _requiresDrawForeground(Instrument* instrument);
+
 		private:
 
 			/** Headlight low beam. */
 			InstrumentOnOff _headLightLowBeamInstr;
 
+			/** Last low beam value that foreground was drawn for. */
+			bool _lastLowBeam = false;
+
 			/** Headlight high beam. */
 			InstrumentOnOff _headLightHighBeamInstr;
+
+			/** Last high beam value that foreground was drawn for. */
+			bool _lastHighBeam = false;
 
 			/** background colour. */
 			struct colour _backgroundColour = {0.5, 0.5, 0.5, 0.5};

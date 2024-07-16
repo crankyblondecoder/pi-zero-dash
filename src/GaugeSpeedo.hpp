@@ -81,7 +81,13 @@ namespace piZeroDash
 			 */
 			bounds _calcPreciseSpeedBoxBounds(double width, double height);
 
+			// Impl.
+			bool _requiresDrawForeground(Instrument* instrument);
+
 		private:
+
+			/** Last speed that foreground was drawn for. */
+			unsigned _lastSpeed = 1 << 30;
 
 			/** Generic speedo instrument. */
 			InstrumentSpeedo _speedoInstr;

@@ -62,9 +62,19 @@ void GaugeFuelLevel::_setStandardProperties(double markedFontSize, colour& marke
 void GaugeFuelLevel::_drawDefaultForeground(CairoSurface& surface, double indicatorLineLength,
 	double indicatorLineWidth, colour& indicatorLineColour)
 {
-	double curFuelLevel = _fuelLevelInstr.getFuelVolume();
+	_lastFuelLevel = _fuelLevelInstr.getFuelVolume();
 
-	_drawStandardIndicatorSections(surface, curFuelLevel, _lineLength, _standardRadialSections, 2, false);
+	_drawStandardIndicatorSections(surface, _lastFuelLevel, _lineLength, _standardRadialSections, 2, false);
 
-	_drawStandardIndicatorLine(surface, curFuelLevel, indicatorLineLength, indicatorLineWidth, indicatorLineColour);
+	_drawStandardIndicatorLine(surface, _lastFuelLevel, indicatorLineLength, indicatorLineWidth, indicatorLineColour);
+}
+
+bool GaugeFuelLevel::_requiresDrawForeground(Instrument* instrument)
+{
+	if(instrument == &_fuelLevelInstr)
+	{
+		return floor(_lastFuelLevel * 2.0) / 2.0 != floor(_fuelLevelInstr.getFuelVolume() * 2.0) / 2.0;
+	}
+
+	return false;
 }

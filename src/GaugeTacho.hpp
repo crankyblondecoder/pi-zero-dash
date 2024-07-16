@@ -70,10 +70,16 @@ namespace piZeroDash
 			 */
 			void _drawDefaultForeground(CairoSurface& surface, double sectionRadialLength);
 
+			// Impl.
+			bool _requiresDrawForeground(Instrument* instrument);
+
 		private:
 
 			/** Generic tacho instrument. */
 			InstrumentTacho _tachoInstr;
+
+			/** Last RPM that foreground was drawn for. */
+			unsigned _lastRpm = 1 << 30;
 
 			/** Maximum RPM displayed by the tacho. */
 			unsigned _maxRpm;

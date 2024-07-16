@@ -69,10 +69,16 @@ namespace piZeroDash
 			void _drawDefaultForeground(CairoSurface& surface, double indicatorLineLength, double indicatorLineWidth,
 				colour& indicatorLineColour);
 
+			// Impl.
+			bool _requiresDrawForeground(Instrument* instrument);
+
 		private:
 
 			/** Generic fuel level instrument. */
 			InstrumentFuelLevel _fuelLevelInstr;
+
+			/** Last Fuel level that foreground was drawn for. */
+			unsigned _lastFuelLevel = 1 << 30;
 
 			/** Maximum fuel level displayed. */
 			int _maxFuelLevel;

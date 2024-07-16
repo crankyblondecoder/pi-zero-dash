@@ -29,18 +29,21 @@ namespace piZeroDash
 				int globalPositionY, unsigned width, unsigned height);
 
 			// Impl.
-			void _drawBackground(CairoSurface& surface);
-
-			// Impl.
-			void _drawForeground(CairoSurface& surface);
-
-			// Impl.
 			void test();
 
 			// Impl.
 			bool inTestMode();
 
 		protected:
+
+			// Impl.
+			void _drawBackground(CairoSurface& surface);
+
+			// Impl.
+			void _drawForeground(CairoSurface& surface);
+
+			// Impl.
+			bool _requiresDrawForeground(Instrument* instrument);
 
 		private:
 
@@ -58,6 +61,9 @@ namespace piZeroDash
 
 			/** Engine temperature instrument. */
 			InstrumentEngineTemp _engineTempInstr;
+
+			/** Last engine temperature that foreground was drawn for. */
+			int _lastEngineTemp = 1 << 30;
 
 			/** Box colour - cold. */
 			struct colour _boxColourCold = {21.0/255.0, 54.0/255.0, 214.0/255.0, 0.85};

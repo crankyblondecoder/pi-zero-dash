@@ -50,6 +50,17 @@ void GaugeLowVoltage_e36::_drawForeground(CairoSurface& surface)
 	}
 }
 
+bool GaugeLowVoltage_e36::_requiresDrawForeground(Instrument* instrument)
+{
+	if(instrument == &_voltageInstr)
+	{
+		return (_lastVoltage < _lowVoltageThreshold) != (_voltageInstr.getVoltage() < _lowVoltageThreshold);
+	}
+
+	return false;
+}
+
+
 void GaugeLowVoltage_e36::__drawLowVoltageOutline(cairo_t* cr, double strokeWidth, colour& strokeColour)
 {
 	cairo_set_source_rgba(cr, strokeColour.r, strokeColour.g, strokeColour.b, strokeColour.a);
@@ -58,8 +69,8 @@ void GaugeLowVoltage_e36::__drawLowVoltageOutline(cairo_t* cr, double strokeWidt
 	double width = _getWidth();
 	double height =_getHeight();
 
-	double batteryWidth = width * 0.75;
-	double batteryHeight = batteryWidth * 0.75;
+	double batteryWidth = width * 0.72;
+	double batteryHeight = batteryWidth * 0.6;
 
 	double batteryLeft = (width - batteryWidth) / 2.0;
 	double batteryRight = batteryLeft + batteryWidth;
@@ -69,28 +80,30 @@ void GaugeLowVoltage_e36::__drawLowVoltageOutline(cairo_t* cr, double strokeWidt
 
 	// Draw battery main box.
 	_drawBoxPath(cr, 0.0, 0.0, 0.0, 0.0, batteryLeft, batteryRight, batteryTop, batteryBottom);
-	cairo_fill(cr);
+	cairo_stroke(cr);
 
 	// Draw terminal lines.
 
 	double terminalLineLength = width * 0.15;
-	double halfStrokeWidth = strokeWidth / 2.0;
+	double edgeDistToTerminal = terminalLineLength * 0.7;
 
-	cairo_move_to(cr, batteryLeft + terminalLineLength, batteryTop - strokeWidth);
+	cairo_move_to(cr, batteryLeft + edgeDistToTerminal, batteryTop - strokeWidth);
 	cairo_rel_line_to(cr, terminalLineLength, 0.0);
 
-	cairo_move_to(cr, batteryRight - terminalLineLength, batteryTop - strokeWidth);
+	cairo_move_to(cr, batteryRight - edgeDistToTerminal, batteryTop - strokeWidth);
 	cairo_rel_line_to(cr, -terminalLineLength, 0.0);
 
 	// Draw positive and negative symbols.
 
-	cairo_move_to(cr, batteryLeft + terminalLineLength, batteryTop + batteryHeight * 0.3);
+	cairo_move_to(cr, batteryLeft + edgeDistToTerminal, batteryTop + batteryHeight * 0.3);
 	cairo_rel_line_to(cr, terminalLineLength, 0.0);
 
-	cairo_move_to(cr, batteryRight - terminalLineLength, batteryTop + batteryHeight * 0.3);
+	cairo_move_to(cr, batteryRight - edgeDistToTerminal, batteryTop + batteryHeight * 0.3);
 	cairo_rel_line_to(cr, -terminalLineLength, 0.0);
 
-	cairo_move_to(cr, batteryRight - terminalLineLength * 1.5, batteryTop + batteryHeight * 0.3 - terminalLineLength * 0.5);
+	cairo_move_to(cr, batteryRight - edgeDistToTerminal - terminalLineLength * 0.5,
+		batteryTop + batteryHeight * 0.3 - terminalLineLength * 0.5);
+
 	cairo_rel_line_to(cr, 0.0, terminalLineLength);
 
 	cairo_stroke(cr);
