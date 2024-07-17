@@ -78,7 +78,7 @@ namespace piZeroDash
 			InstrumentFuelLevel _fuelLevelInstr;
 
 			/** Last Fuel level that foreground was drawn for. */
-			unsigned _lastFuelLevel = 1 << 30;
+			double _lastFuelLevel = 1 << 30;
 
 			/** Maximum fuel level displayed. */
 			int _maxFuelLevel;
