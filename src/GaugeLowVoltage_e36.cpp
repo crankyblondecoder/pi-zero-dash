@@ -29,13 +29,13 @@ void GaugeLowVoltage_e36::_drawBackground(CairoSurface& surface)
 
 void GaugeLowVoltage_e36::_drawForeground(CairoSurface& surface)
 {
-	bool voltage = _voltageInstr.getVoltage();
+	_lastVoltage = _voltageInstr.getVoltage();
 
 	cairo_t* cr = surface.getContext();
 
 	double width = _getWidth();
 
-	if(voltage < _lowVoltageThreshold)
+	if(_lastVoltage < _lowVoltageThreshold)
 	{
 		cairo_set_source_rgba(cr, _onForegroundColour.r, _onForegroundColour.g, _onForegroundColour.b, _onForegroundColour.a);
 
