@@ -9,6 +9,7 @@
 #include "GaugeEngineTemp_e36.hpp"
 #include "GaugeFuelLevel_e36.hpp"
 #include "GaugeHeadlight_e36.hpp"
+#include "GaugeLowOilPressure_e36.hpp"
 #include "GaugeLowVoltage_e36.hpp"
 #include "GaugeParkBrake_e36.hpp"
 #include "GaugeSpeedo_e36.hpp"
@@ -79,6 +80,9 @@ namespace piZeroDash
 
 			/** Low voltage gauge. */
 			GaugeLowVoltage_e36* _lowVoltage;
+
+			/** Low oil pressure gauge. */
+			GaugeLowOilPressure_e36* _lowOilPressure;
 	};
 }
 

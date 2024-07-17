@@ -14,6 +14,7 @@ Dash_e36::~Dash_e36()
 	if(_parkBrake) delete _parkBrake;
 	if(_doorOpen) delete _doorOpen;
 	if(_lowVoltage) delete _lowVoltage;
+	if(_lowOilPressure) delete _lowOilPressure;
 }
 
 Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent,
@@ -134,6 +135,14 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 		lightHeight);
 
 	_addGauge(_lowVoltage);
+
+	// Low oil pressure gauge.
+	// -----------------------
+
+	_lowOilPressure = new GaugeLowOilPressure_e36(headlightPosnX + lightWidth * 2.0 + lightSeparationDist * 2.0, 0.0,
+		lightWidth, lightHeight);
+
+	_addGauge(_lowOilPressure);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)

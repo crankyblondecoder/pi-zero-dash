@@ -78,7 +78,11 @@ void GaugeLowOilPressure_e36::__drawLowOilPressureOutline(cairo_t* cr, double st
 	double oilCanTop = (height - oilCanHeight) / 2.0;
 	double oilCanBottom = oilCanTop + oilCanHeight;
 
-	cairo_move_to(cr, oilCanLeft + oilCanWidth * 0.2, oilCanBottom);
+	// Draw oil can body and spout.
+
+	double bodyLeft = oilCanLeft + oilCanWidth * 0.2;
+
+	cairo_move_to(cr, bodyLeft, oilCanBottom);
 	cairo_rel_line_to(cr, oilCanWidth * 0.4, 0.0);
 	cairo_rel_line_to(cr, oilCanWidth * 0.3, -oilCanWidth * 0.3);
 
@@ -88,8 +92,26 @@ void GaugeLowOilPressure_e36::__drawLowOilPressureOutline(cairo_t* cr, double st
 
 	cairo_rel_line_to(cr, -oilCanWidth * 0.37, oilCanWidth * 0.15);
 	cairo_rel_line_to(cr, -oilCanWidth * 0.08, oilCanWidth * 0.08);
-	cairo_rel_line_to(cr, -oilCanWidth * 0.37, -oilCanWidth * 0.15);
 
+	double lidEndX;
+	double lidEndY;
+	cairo_get_current_point(cr, &lidEndX, &lidEndY);
+
+	cairo_line_to(cr, bodyLeft, lidEndY);
+	cairo_close_path(cr);
+
+	cairo_stroke(cr);
+
+	// Draw spout end kink.
+	cairo_move_to(cr, spoutKinkX, spoutKinkY);
+	cairo_rel_line_to(cr, oilCanWidth * 0.8, oilCanWidth * 0.8);
+	cairo_stroke(cr);
+
+	// Draw lid "T".
+	cairo_move_to(cr, (lidEndX + bodyLeft) / 2.0, lidEndY);
+	cairo_rel_line_to(cr, 0.0, oilCanWidth * 0.08);
+	cairo_rel_line_to(cr, -oilCanWidth * 0.15, 0.0);
+	cairo_rel_line_to(cr, oilCanWidth * 0.3, 0.0);
 	cairo_stroke(cr);
 }
 
