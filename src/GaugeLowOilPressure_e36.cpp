@@ -70,48 +70,61 @@ void GaugeLowOilPressure_e36::__drawLowOilPressureOutline(cairo_t* cr, double st
 	double height =_getHeight();
 
 	double oilCanWidth = width * 0.72;
-	double oilCanHeight = oilCanWidth * 0.6;
 
 	double oilCanLeft = (width - oilCanWidth) / 2.0;
 	double oilCanRight = oilCanLeft + oilCanWidth;
 
-	double oilCanTop = (height - oilCanHeight) / 2.0;
-	double oilCanBottom = oilCanTop + oilCanHeight;
+	double oilCanBottom = (height / 2.0) + oilCanWidth * 0.2;
 
 	// Draw oil can body and spout.
 
 	double bodyLeft = oilCanLeft + oilCanWidth * 0.2;
 
 	cairo_move_to(cr, bodyLeft, oilCanBottom);
-	cairo_rel_line_to(cr, oilCanWidth * 0.4, 0.0);
-	cairo_rel_line_to(cr, oilCanWidth * 0.3, -oilCanWidth * 0.3);
+	cairo_rel_line_to(cr, oilCanWidth * 0.45, 0.0);
+	cairo_rel_line_to(cr, oilCanWidth * 0.3, -oilCanWidth * 0.4);
 
 	double spoutKinkX;
 	double spoutKinkY;
 	cairo_get_current_point(cr, &spoutKinkX, &spoutKinkY);
 
-	cairo_rel_line_to(cr, -oilCanWidth * 0.37, oilCanWidth * 0.15);
-	cairo_rel_line_to(cr, -oilCanWidth * 0.08, oilCanWidth * 0.08);
+	// Don't want the spout end to be a line join.
+	cairo_stroke(cr);
+
+	cairo_move_to(cr, spoutKinkX, spoutKinkY);
+	cairo_rel_line_to(cr, -oilCanWidth * 0.37, oilCanWidth * 0.2);
+	cairo_rel_line_to(cr, -oilCanWidth * 0.06, -oilCanWidth * 0.06);
 
 	double lidEndX;
 	double lidEndY;
 	cairo_get_current_point(cr, &lidEndX, &lidEndY);
 
 	cairo_line_to(cr, bodyLeft, lidEndY);
-	cairo_close_path(cr);
+	cairo_line_to(cr, bodyLeft, oilCanBottom);
 
 	cairo_stroke(cr);
 
-	// Draw spout end kink.
+	// Draw spout end kink and drip.
 	cairo_move_to(cr, spoutKinkX, spoutKinkY);
-	cairo_rel_line_to(cr, oilCanWidth * 0.8, oilCanWidth * 0.8);
+	cairo_rel_line_to(cr, oilCanWidth * 0.09, oilCanWidth * 0.07);
+	cairo_rel_move_to(cr, 0.0, oilCanWidth * 0.09);
+	cairo_rel_line_to(cr, 0.0, oilCanWidth * 0.11);
+
 	cairo_stroke(cr);
 
 	// Draw lid "T".
 	cairo_move_to(cr, (lidEndX + bodyLeft) / 2.0, lidEndY);
-	cairo_rel_line_to(cr, 0.0, oilCanWidth * 0.08);
-	cairo_rel_line_to(cr, -oilCanWidth * 0.15, 0.0);
-	cairo_rel_line_to(cr, oilCanWidth * 0.3, 0.0);
+	cairo_rel_line_to(cr, 0.0, -oilCanWidth * 0.12);
+	cairo_rel_line_to(cr, -oilCanWidth * 0.1, 0.0);
+	cairo_rel_line_to(cr, oilCanWidth * 0.2, 0.0);
+	cairo_stroke(cr);
+
+	// Draw handle.
+	cairo_move_to(cr, bodyLeft, oilCanBottom - oilCanWidth * 0.14);
+	cairo_rel_line_to(cr, 0.0, -oilCanWidth * 0.18);
+	cairo_rel_line_to(cr, -oilCanWidth * 0.2, -oilCanWidth * 0.05);
+	cairo_rel_line_to(cr, -oilCanWidth * 0.03, oilCanWidth * 0.12);
+	cairo_close_path(cr);
 	cairo_stroke(cr);
 }
 
