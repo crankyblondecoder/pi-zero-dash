@@ -15,6 +15,7 @@ Dash_e36::~Dash_e36()
 	if(_doorOpen) delete _doorOpen;
 	if(_lowVoltage) delete _lowVoltage;
 	if(_lowOilPressure) delete _lowOilPressure;
+	if(_ecuWarning) delete _ecuWarning;
 }
 
 Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent,
@@ -143,6 +144,14 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 		lightWidth, lightHeight);
 
 	_addGauge(_lowOilPressure);
+
+	// ECU Warning gauge.
+	// ------------------
+
+	_ecuWarning = new GaugeEcuWarning_e36(headlightPosnX - lightWidth * 3.0 - lightSeparationDist * 3.0, 0.0, lightWidth,
+		lightHeight);
+
+	_addGauge(_ecuWarning);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)

@@ -6,6 +6,7 @@
 #include "Dash.hpp"
 #include "GaugeBoost_e36.hpp"
 #include "GaugeDoorOpen_e36.hpp"
+#include "GaugeEcuWarning_e36.hpp"
 #include "GaugeEngineTemp_e36.hpp"
 #include "GaugeFuelLevel_e36.hpp"
 #include "GaugeHeadlight_e36.hpp"
@@ -83,6 +84,9 @@ namespace piZeroDash
 
 			/** Low oil pressure gauge. */
 			GaugeLowOilPressure_e36* _lowOilPressure;
+
+			/** ECU Warning gauge. */
+			GaugeEcuWarning_e36* _ecuWarning;
 	};
 }
 
