@@ -100,3 +100,36 @@ void Gauge::_drawBoxPath(cairo_t* cr, double topLeftRadius, double topRightRadiu
 
 	cairo_close_path(cr);
 }
+
+void Gauge::_drawThermometerPath(cairo_t* cr, double left, double right, double top, double bottom)
+{
+	double quarterWidth = (right - left) / 4.0;
+
+	// Draw bulb at bottom
+
+	double bulbRadius = quarterWidth * 1.5;
+
+	double cutoutAngle = atan((quarterWidth / 2) / bulbRadius);
+
+	cairo_new_sub_path(cr);
+
+	cairo_arc(cr, left + bulbRadius, bottom - bulbRadius, bulbRadius, (-M_PI / 2.0) + cutoutAngle, (M_PI * 1.5) - cutoutAngle);
+
+	// Draw rest of body.
+
+	// The radius of the body section ends.
+	double bodyRadius = quarterWidth / 2.0;
+
+	double curX;
+	double curY;
+	cairo_get_current_point(cr, &curX, &curY);
+
+	// Left line to top.
+	cairo_line_to(cr, curX, top - bodyRadius);
+
+	// Arc at top.
+	cairo_arc(cr, 1.5 * quarterWidth, top + bodyRadius, bodyRadius, M_PI, 2.0 * M_PI);
+
+	// TODO ...
+
+}

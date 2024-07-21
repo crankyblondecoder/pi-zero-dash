@@ -79,6 +79,15 @@ namespace piZeroDash
 			void _drawBoxPath(cairo_t* cr, double topLeftRadius, double topRightRadius, double bottomLeftRadius,
 				double bottomRightRadius, double left, double right, double top, double bottom);
 
+			/**
+			 * Draw the standard thermometer symbol path.
+			 * @param left Coordinate of the left of the geometry bounding box.
+			 * @param right Coordinate of the right of the geometry bounding box.
+			 * @param top Coordinate of the top of the geometry bounding box.
+			 * @param bottom Coordinate of the bottom of the geometry bounding box.
+			 */
+			void _drawThermometerPath(cairo_t* cr, double left, double right, double top, double bottom);
+
 		private:
 
 			unsigned _instrumentCount;
