@@ -58,9 +58,19 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 
 	cairo_fill(cr);
 
+	// Draw temperature symbol.
+
+	double thermometerWidth = width * 0.1;
+	double thermometerRight = width * 0.25;
+
+	_drawThermometerPath(cr, thermometerRight - thermometerWidth, thermometerRight, height * 0.2, height * 0.7);
+
+	cairo_set_source_rgba(cr, _fontColour.r, _fontColour.g, _fontColour.b, _fontColour.a);
+	cairo_fill(cr);
+
 	// Draw text.
 
-	double fontSize = height / 2.0;
+	double fontSize = height / 2.7;
 
 	cairo_select_font_face(cr, "DejaVu Sans Condensed", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
 	cairo_set_font_size(cr, fontSize);
@@ -99,7 +109,7 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 	cairo_set_source_rgba(cr, _fontColour.r, _fontColour.g, _fontColour.b, _fontColour.a);
 
 	double top = (height - textExtents.height) / 2.0;
-	double left = (width - textExtents.width) / 2.0;
+	double left = thermometerRight + (width - thermometerRight - textExtents.width) / 2.0;
 
 	cairo_move_to(cr, left - textExtents.x_bearing, top - textExtents.y_bearing);
 	cairo_show_text(cr, numberText.c_str());

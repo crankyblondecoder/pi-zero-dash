@@ -103,7 +103,8 @@ void Gauge::_drawBoxPath(cairo_t* cr, double topLeftRadius, double topRightRadiu
 
 void Gauge::_drawThermometerPath(cairo_t* cr, double left, double right, double top, double bottom)
 {
-	double quarterWidth = (right - left) / 4.0;
+	double halfWidth = (right - left) / 2.0;
+	double quarterWidth = halfWidth / 2.0;
 
 	// Draw bulb at bottom
 
@@ -125,11 +126,44 @@ void Gauge::_drawThermometerPath(cairo_t* cr, double left, double right, double 
 	cairo_get_current_point(cr, &curX, &curY);
 
 	// Left line to top.
-	cairo_line_to(cr, curX, top - bodyRadius);
+	cairo_line_to(cr, curX, top + bodyRadius);
 
 	// Arc at top.
-	cairo_arc(cr, 1.5 * quarterWidth, top + bodyRadius, bodyRadius, M_PI, 2.0 * M_PI);
+	cairo_arc(cr, left + bulbRadius, top + bodyRadius, bodyRadius, M_PI, 2.0 * M_PI);
 
-	// TODO ...
+	// Right line first section.
+	cairo_rel_line_to(cr, 0.0, quarterWidth);
 
+	// First temp mark.
+	cairo_rel_line_to(cr, halfWidth - bodyRadius, 0.0);
+
+	cairo_get_current_point(cr, &curX, &curY);
+	cairo_arc(cr, curX, curY + bodyRadius, bodyRadius, -M_PI / 2.0, M_PI / 2.0);
+
+	cairo_rel_line_to(cr, -halfWidth + bodyRadius, 0.0);
+
+	// Right line second section.
+	cairo_rel_line_to(cr, 0.0, quarterWidth);
+
+	// Second temp mark.
+	cairo_rel_line_to(cr, halfWidth - bodyRadius, 0.0);
+
+	cairo_get_current_point(cr, &curX, &curY);
+	cairo_arc(cr, curX, curY + bodyRadius, bodyRadius, -M_PI / 2.0, M_PI / 2.0);
+
+	cairo_rel_line_to(cr, -halfWidth + bodyRadius, 0.0);
+
+	// Right line third section.
+	cairo_rel_line_to(cr, 0.0, quarterWidth);
+
+	// Third temp mark.
+	cairo_rel_line_to(cr, halfWidth - bodyRadius, 0.0);
+
+	cairo_get_current_point(cr, &curX, &curY);
+	cairo_arc(cr, curX, curY + bodyRadius, bodyRadius, -M_PI / 2.0, M_PI / 2.0);
+
+	cairo_rel_line_to(cr, -halfWidth + bodyRadius, 0.0);
+
+	// Final line section.
+	cairo_close_path(cr);
 }
