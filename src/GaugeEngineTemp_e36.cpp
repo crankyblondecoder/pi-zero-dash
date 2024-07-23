@@ -62,11 +62,28 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 
 	double thermometerWidth = width * 0.1;
 	double thermometerRight = width * 0.25;
+	double thermometerLeft = thermometerRight - thermometerWidth;
+	double thermometerBottom = height * 0.7;
 
-	_drawThermometerPath(cr, thermometerRight - thermometerWidth, thermometerRight, height * 0.2, height * 0.7);
+	_drawThermometerPath(cr, thermometerLeft, thermometerRight, height * 0.2, height * 0.7);
 
 	cairo_set_source_rgba(cr, _fontColour.r, _fontColour.g, _fontColour.b, _fontColour.a);
 	cairo_fill(cr);
+
+	double waveRadius = thermometerWidth * 0.65;
+	double sliceAngle = atan((thermometerWidth / 2.0) / waveRadius);
+	double arcStartAngle = (M_PI / 2.0) - sliceAngle;
+	double arcEndAngle = (M_PI / 2.0) + sliceAngle;
+
+	cairo_set_line_width(cr, thermometerWidth / 4.0);
+
+	double arcCentreX = thermometerLeft - thermometerWidth * 0.625;
+	double arcCentreY = thermometerBottom - height * 0.05;
+
+	cairo_arc_negative(cr, arcCentreX, arcCentreY, waveRadius, arcEndAngle, arcStartAngle);
+	cairo_arc_negative(cr, arcCentreX + thermometerWidth, arcCentreY, waveRadius, arcEndAngle, arcStartAngle);
+	cairo_arc_negative(cr, arcCentreX + thermometerWidth * 2.0, arcCentreY, waveRadius, arcEndAngle, arcStartAngle);
+	cairo_stroke(cr);
 
 	// Draw text.
 
