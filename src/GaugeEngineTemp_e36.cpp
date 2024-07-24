@@ -60,12 +60,15 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 
 	// Draw temperature symbol.
 
-	double thermometerWidth = width * 0.1;
+	double thermometerHeight = height * 0.35;
+	double thermometerWidth = thermometerHeight * 0.4;
+
 	double thermometerRight = width * 0.25;
 	double thermometerLeft = thermometerRight - thermometerWidth;
-	double thermometerBottom = height * 0.7;
+	double thermometerTop = (height - thermometerHeight) / 2.0;
+	double thermometerBottom = thermometerTop + thermometerHeight;
 
-	_drawThermometerPath(cr, thermometerLeft, thermometerRight, height * 0.2, height * 0.7);
+	_drawThermometerPath(cr, thermometerLeft, thermometerRight, thermometerTop, thermometerBottom);
 
 	cairo_set_source_rgba(cr, _fontColour.r, _fontColour.g, _fontColour.b, _fontColour.a);
 	cairo_fill(cr);
@@ -78,16 +81,24 @@ void GaugeEngineTemp_e36::_drawForeground(CairoSurface& surface)
 	cairo_set_line_width(cr, thermometerWidth / 4.0);
 
 	double arcCentreX = thermometerLeft - thermometerWidth * 0.625;
-	double arcCentreY = thermometerBottom - height * 0.05;
+	double arcCentreY = thermometerBottom - thermometerHeight * 0.15;
 
 	cairo_arc_negative(cr, arcCentreX, arcCentreY, waveRadius, arcEndAngle, arcStartAngle);
 	cairo_arc_negative(cr, arcCentreX + thermometerWidth, arcCentreY, waveRadius, arcEndAngle, arcStartAngle);
 	cairo_arc_negative(cr, arcCentreX + thermometerWidth * 2.0, arcCentreY, waveRadius, arcEndAngle, arcStartAngle);
 	cairo_stroke(cr);
 
+	cairo_arc(cr, arcCentreX, arcCentreY - thermometerHeight * 0.2, waveRadius, arcStartAngle, arcEndAngle);
+	cairo_stroke(cr);
+
+	cairo_arc(cr, arcCentreX + thermometerWidth * 2.0, arcCentreY - thermometerHeight * 0.2, waveRadius, arcStartAngle,
+		arcEndAngle);
+
+	cairo_stroke(cr);
+
 	// Draw text.
 
-	double fontSize = height / 2.7;
+	double fontSize = height / 2.8;
 
 	cairo_select_font_face(cr, "DejaVu Sans Condensed", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
 	cairo_set_font_size(cr, fontSize);
