@@ -58,11 +58,12 @@ namespace piZeroDash
 			 * @param preciseSpeedBackgroundColour Colour of the precise speed background.
 			 * @param preciseSpeedBackgroundWidth Width of precise speed background box.
 			 * @param preciseSpeedBackgroundHeight Height of precise speed background box.
+			 * @param unitsLableText The text to display to indicate the units of the dial.
 			 */
 			void _setProperties(double markedSpeedFontSize, colour& markedSpeedFontColour,
 				unsigned markedSpeedFontDecimalPlaces, double lineLength, double majorLineWidth, double minorLineWidth,
 				double lineStartOffset, colour& majorLineColour, colour& minorLineColour, colour& preciseSpeedBackgroundColour,
-				double preciseSpeedBackgroundWidth, double preciseSpeedBackgroundHeight);
+				double preciseSpeedBackgroundWidth, double preciseSpeedBackgroundHeight, string unitsLabelText);
 
 			/**
 			 * Draw the default speedo forground.
@@ -103,6 +104,21 @@ namespace piZeroDash
 
 			/** Height of precise speed background box. */
 			double _preciseSpeedBackgroundHeight;
+
+			/** The text to display that represents the units. */
+			string _unitsLabelText;
+
+			/** Indicated line length. */
+			double _lineLength;
+
+			/** Offset of the start of the indicated line back towards the dial centre. */
+			double _lineStartOffset;
+
+			/** Size of the marked speed text. */
+			double _markedSpeedFontSize;
+
+			/** Colour of the marked speed text. */
+			colour _markedSpeedFontColour;
 	};
 }
 

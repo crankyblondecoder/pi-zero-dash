@@ -27,7 +27,7 @@ GaugeSpeedo_e36::GaugeSpeedo_e36(unsigned maxSpeed, int globalPositionX, int glo
 
 	_setProperties(_markedSpeedFontSize, _markedSpeedFontColour, 0, _lineLength, _majorLineWidth, _minorLineWidth,
 		_lineStartOffset, _majorLineColour, _minorLineColour, _preciseSpeedBackgroundColour, _preciseSpeedBackgroundWidth,
-		_preciseSpeedBackgroundHeight);
+		_preciseSpeedBackgroundHeight, "km/h");
 }
 
 void GaugeSpeedo_e36::_drawBackground(CairoSurface& surface)

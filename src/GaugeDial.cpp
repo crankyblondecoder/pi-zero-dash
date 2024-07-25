@@ -400,8 +400,8 @@ void GaugeDial::_drawStandardPreciseBoxForeground(CairoSurface& surface, double 
 	cairo_set_source_rgba(cr, preciseSpeedFontColour.r, preciseSpeedFontColour.g, preciseSpeedFontColour.b,
 		preciseSpeedFontColour.a);
 
-	double top = _getDialCentreX() - textExtents.height / 2.0;
-	double left = _getDialCentreY() - textExtents.width / 2.0;
+	double top = _getDialCentreY() - textExtents.height / 2.0;
+	double left = _getDialCentreX() - textExtents.width / 2.0;
 
 	cairo_move_to(cr, left - textExtents.x_bearing, top - textExtents.y_bearing);
 	cairo_show_text(cr, textBuffer);

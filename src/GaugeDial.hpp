@@ -205,7 +205,7 @@ namespace piZeroDash
 			/** Major marked line width. */
 			double _minorLineWidth;
 
-			/** Minor marked line width. */
+			/** How much the marked lines are offset from the radius back towards the dial centre. */
 			double _lineStartOffset;
 
 			/** Colour of the major marked lines. */

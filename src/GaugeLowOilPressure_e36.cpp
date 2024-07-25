@@ -60,7 +60,6 @@ bool GaugeLowOilPressure_e36::_requiresDrawForeground(Instrument* instrument)
 	return false;
 }
 
-
 void GaugeLowOilPressure_e36::__drawLowOilPressureOutline(cairo_t* cr, double strokeWidth, colour& strokeColour)
 {
 	cairo_set_source_rgba(cr, strokeColour.r, strokeColour.g, strokeColour.b, strokeColour.a);
