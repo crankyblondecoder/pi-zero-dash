@@ -60,7 +60,7 @@ namespace piZeroDash
 			/** Oil pressure not okay outline colour. */
 			struct colour _onStrokeColour = {1.0, 0.0, 0.0, 1.0};
 
-			/** Park brake on foreground colour. */
+			/** Oil pressure not okay foreground colour. */
 			struct colour _onForegroundColour = {227.0/255.0, 186.0/255.0, 75.0/255.0, 0.9};
 
 			/**

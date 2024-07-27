@@ -167,3 +167,54 @@ void Gauge::_drawThermometerPath(cairo_t* cr, double left, double right, double 
 	// Final line section.
 	cairo_close_path(cr);
 }
+
+void Gauge::_drawOilCanPath(cairo_t* cr, double left, double right, double bottom, double strokeWidth, bool drawLidHandle)
+{
+	double oilCanWidth = right - left;
+
+	// Draw oil can body and spout.
+
+	double bodyLeft = left + oilCanWidth * 0.2;
+
+	cairo_move_to(cr, bodyLeft, bottom);
+	cairo_rel_line_to(cr, oilCanWidth * 0.45, 0.0);
+	cairo_rel_line_to(cr, oilCanWidth * 0.3, -oilCanWidth * 0.4);
+
+	double spoutKinkX;
+	double spoutKinkY;
+	cairo_get_current_point(cr, &spoutKinkX, &spoutKinkY);
+
+	// Start at the spout end kink.
+	cairo_move_to(cr, spoutKinkX + oilCanWidth * 0.09, spoutKinkY + oilCanWidth * 0.07);
+	cairo_line_to(cr, spoutKinkX, spoutKinkY);
+	cairo_rel_line_to(cr, -oilCanWidth * 0.37, oilCanWidth * 0.2);
+	cairo_rel_line_to(cr, -oilCanWidth * 0.06, -oilCanWidth * 0.06);
+
+	double lidEndX;
+	double lidEndY;
+	cairo_get_current_point(cr, &lidEndX, &lidEndY);
+
+	cairo_line_to(cr, bodyLeft, lidEndY);
+	cairo_line_to(cr, bodyLeft, bottom + strokeWidth / 2.0);
+
+	// Draw spout end drip.
+	cairo_move_to(cr, spoutKinkX + oilCanWidth * 0.09, spoutKinkY + oilCanWidth * 0.07);
+	cairo_rel_move_to(cr, 0.0, oilCanWidth * 0.09);
+	cairo_rel_line_to(cr, 0.0, oilCanWidth * 0.11);
+
+	if(drawLidHandle)
+	{
+		// Draw lid "T".
+		cairo_move_to(cr, (lidEndX + bodyLeft) / 2.0, lidEndY);
+		cairo_rel_line_to(cr, 0.0, -oilCanWidth * 0.12);
+		cairo_rel_line_to(cr, -oilCanWidth * 0.1, 0.0);
+		cairo_rel_line_to(cr, oilCanWidth * 0.2, 0.0);
+	}
+
+	// Draw handle.
+	cairo_move_to(cr, bodyLeft, bottom - oilCanWidth * 0.14);
+	cairo_rel_line_to(cr, 0.0, -oilCanWidth * 0.18);
+	cairo_rel_line_to(cr, -oilCanWidth * 0.2, -oilCanWidth * 0.05);
+	cairo_rel_line_to(cr, -oilCanWidth * 0.03, oilCanWidth * 0.12);
+	cairo_close_path(cr);
+}

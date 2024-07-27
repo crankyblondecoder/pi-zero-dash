@@ -88,6 +88,17 @@ namespace piZeroDash
 			 */
 			void _drawThermometerPath(cairo_t* cr, double left, double right, double top, double bottom);
 
+			/**
+			 * Draw the standard oil can symbol path.
+			 * @param cr Cairo context to draw to.
+			 * @param left Coordinate of the left of the geometry bounding box.
+			 * @param right Coordinate of the right of the geometry bounding box.
+			 * @param bottom Coordinate of the bottom of the geometry bounding box.
+			 * @param strokeWidth Stroke width that will be used to render the oil can.
+			 * @param drawLidHandle If true draw the handle of the oil can lid.
+			*/
+			void _drawOilCanPath(cairo_t* cr, double left, double right, double bottom, double strokeWidth, bool drawLidHandle);
+
 		private:
 
 			unsigned _instrumentCount;
