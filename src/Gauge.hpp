@@ -99,6 +99,19 @@ namespace piZeroDash
 			*/
 			void _drawOilCanPath(cairo_t* cr, double left, double right, double bottom, double strokeWidth, bool drawLidHandle);
 
+			/**
+			 * Draw the standard fuel level symbol path.
+			 * @param left Coordinate of the left of the geometry bounding box.
+			 * @param right Coordinate of the right of the geometry bounding box.
+			 * @param top Coordinate of the top of the geometry bounding box.
+			 * @param bottom Coordinate of the bottom of the geometry bounding box.
+			 * @param hoseStrokeWidth Width of stroke used to draw hose.
+			 * @param symbolColour The colour to draw the symbol with.
+			 * @note This will render this symbol.
+			 */
+			void _drawFuelLevelSymbol(cairo_t* cr, double left, double right, double top, double bottom, double strokeWidth,
+				colour symbolColour);
+
 		private:
 
 			unsigned _instrumentCount;

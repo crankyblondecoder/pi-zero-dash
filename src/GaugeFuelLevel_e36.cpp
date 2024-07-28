@@ -32,9 +32,24 @@ GaugeFuelLevel_e36::GaugeFuelLevel_e36(int maxFuelLevel, int globalPositionX, in
 void GaugeFuelLevel_e36::_drawBackground(CairoSurface& surface)
 {
 	_drawDefaultBackground(surface);
+
+	cairo_t* cr = surface.getContext();
+
+	double width = _getWidth();
+
+	double symbolWidth = width * 0.08;
+	double symbolHeight = symbolWidth * 1.1;
+
+	double dialCentreX = _getDialCentreX();
+	double dialCentreY = _getDialCentreY();
+
+	double dialCentreOffset = width * 0.05;
+
+	_drawFuelLevelSymbol(cr, dialCentreX - symbolWidth - dialCentreOffset, dialCentreX - dialCentreOffset,
+		dialCentreY - symbolHeight - dialCentreOffset, dialCentreY - dialCentreOffset, symbolWidth * 0.1, _majorLineColour);
 }
 
 void GaugeFuelLevel_e36::_drawForeground(CairoSurface& surface)
 {
-	_drawDefaultForeground(surface, _lineLength * 1.2, _majorLineWidth * 3.0, _indiactorLineColour);
+	_drawDefaultForeground(surface, _lineLength * 1.2, _majorLineWidth * 3.0, _indicatorLineColour);
 }

@@ -218,3 +218,63 @@ void Gauge::_drawOilCanPath(cairo_t* cr, double left, double right, double botto
 	cairo_rel_line_to(cr, -oilCanWidth * 0.03, oilCanWidth * 0.12);
 	cairo_close_path(cr);
 }
+
+void Gauge::_drawFuelLevelSymbol(cairo_t* cr, double left, double right, double top, double bottom, double strokeWidth,
+	colour symbolColour)
+{
+	cairo_set_source_rgba(cr, symbolColour.r, symbolColour.g, symbolColour.b, symbolColour.a);
+	cairo_set_line_width(cr, strokeWidth);
+
+	double width = right - left;
+	double height = bottom - top;
+
+	double bowserWidth = width * 0.66;
+	double bowserHeight = height;
+	double bowserRight = left + bowserWidth;
+	double bowserCornerRadius = bowserWidth * 0.1;
+
+	cairo_move_to(cr, left, top + bowserCornerRadius);
+	cairo_arc(cr, left + bowserCornerRadius, top + bowserCornerRadius, bowserCornerRadius, M_PI, M_PI * 1.5);
+	cairo_rel_line_to(cr, bowserWidth - bowserCornerRadius * 2.0, 0.0);
+	cairo_arc(cr, bowserRight - bowserCornerRadius, top + bowserCornerRadius, bowserCornerRadius, -M_PI / 2.0, 0.0);
+	cairo_rel_line_to(cr, 0.0, bowserHeight - bowserCornerRadius);
+	cairo_rel_line_to(cr, -bowserWidth, 0.0);
+	cairo_close_path(cr);
+
+	double bowserWindowOffset = bowserWidth * 0.1;
+	double bowserWindowWidth = bowserWidth * 0.8;
+	double bowserWindowHeight = bowserWindowWidth * 0.8;
+
+	cairo_move_to(cr, left + bowserWindowOffset, top + bowserWindowOffset);
+	cairo_rel_line_to(cr, 0.0, bowserWindowHeight);
+	cairo_rel_line_to(cr, bowserWindowWidth, 0.0);
+	cairo_rel_line_to(cr, 0.0, -bowserWindowHeight);
+	cairo_close_path(cr);
+
+	cairo_fill(cr);
+
+	// Draw the pipe and nozzle.
+
+	double hoseCurveRadius = (right - bowserRight - strokeWidth) / 3.0;
+	double hoseStartCurveCentreY = top + bowserWindowOffset + bowserWindowHeight * 1.1 + hoseCurveRadius;
+
+	cairo_arc(cr, bowserRight, hoseStartCurveCentreY, hoseCurveRadius, -M_PI / 2.0, 0.0);
+	cairo_rel_line_to(cr, 0.0, bowserHeight * 0.25);
+
+	double curX;
+	double curY;
+	cairo_get_current_point(cr, &curX, &curY);
+
+	cairo_arc_negative(cr, curX + hoseCurveRadius, curY, hoseCurveRadius, M_PI, 0.0);
+	cairo_rel_line_to(cr, 0.0, -bowserHeight * 0.55);
+	cairo_rel_line_to(cr, -hoseCurveRadius, -hoseCurveRadius * 2.5);
+
+	cairo_get_current_point(cr, &curX, &curY);
+
+	cairo_stroke(cr);
+
+	cairo_move_to(cr, curX, curY);
+	cairo_rel_line_to(cr, hoseCurveRadius * 2.0, hoseCurveRadius * 2.5);
+
+	cairo_stroke(cr);
+}

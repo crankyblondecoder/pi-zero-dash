@@ -49,7 +49,7 @@ namespace piZeroDash
 			colour _minorLineColour = {1.0, 1.0, 1.0, 0.95};
 
 			/** Indicator line colour if indicator section mode isn't being used. */
-			colour _indiactorLineColour = {21.0/255.0, 54.0/255.0, 214.0/255.0, 0.85};
+			colour _indicatorLineColour = {21.0/255.0, 54.0/255.0, 214.0/255.0, 0.85};
 
 			/** Low fuel level indicator colour. */
 			colour _lowFuelLevelColour = {227.0/255.0, 186.0/255.0, 75.0/255.0, 0.95};

@@ -77,7 +77,7 @@ void GaugeOilTemperature_e36::_drawForeground(CairoSurface& surface)
 	_drawOilCanPath(cr, oilCanLeft, oilCanRight, oilCanBottom, oilCanStrokeWidth, false);
 	cairo_stroke(cr);
 
-	_drawThermometerPath(cr, width * 0.37, width * 0.49, height * 0.1, height * 0.4);
+	_drawThermometerPath(cr, width * 0.37, width * 0.49, height * 0.2, height * 0.59);
 	cairo_fill(cr);
 }
 
