@@ -57,14 +57,14 @@ namespace piZeroDash
 			/** Default background colour. Basically this is light off. */
 			struct colour _backgroundColour = {0.5, 0.5, 0.5, 0.5};
 
+			/** Light off stroke colour. */
+			struct colour _offStrokeColour = {0.3, 0.3, 0.3, 1.0};
+
 			/** Oil temperature too cold outline colour. */
 			struct colour _tempColdStrokeColour = {1.0, 1.0, 1.0, 0.85};
 
 			/** Oil temperature too cold background colour. */
 			struct colour _tempColdBackgroundColour = {21.0/255.0, 54.0/255.0, 214.0/255.0, 0.85};
-
-			/** Oil temperature okay outline colour. */
-			struct colour _tempOkayStrokeColour = {20.0/255.0, 227.0/255, 48.0/255.0, 0.85};
 
 			/** Oil temperature too high outline colour. */
 			struct colour _tempHighStrokeColour = {1.0, 0.0, 0.0, 1.0};

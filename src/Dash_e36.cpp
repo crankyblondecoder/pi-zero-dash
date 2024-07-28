@@ -16,6 +16,7 @@ Dash_e36::~Dash_e36()
 	if(_lowVoltage) delete _lowVoltage;
 	if(_lowOilPressure) delete _lowOilPressure;
 	if(_ecuWarning) delete _ecuWarning;
+	if(_oilTemp) delete _oilTemp;
 }
 
 Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent,
@@ -152,6 +153,14 @@ Dash_e36::Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double t
 		lightHeight);
 
 	_addGauge(_ecuWarning);
+
+	// Engine oil temperature gauge.
+	// -----------------------------
+
+	_oilTemp = new GaugeOilTemperature_e36(headlightPosnX + lightWidth * 3.0 + lightSeparationDist * 3.0, 0.0, lightWidth,
+		lightHeight);
+
+	_addGauge(_oilTemp);
 }
 
 void Dash_e36::_drawBackground(CairoSurface& surface)

@@ -12,6 +12,7 @@
 #include "GaugeHeadlight_e36.hpp"
 #include "GaugeLowOilPressure_e36.hpp"
 #include "GaugeLowVoltage_e36.hpp"
+#include "GaugeOilTemperature_e36.hpp"
 #include "GaugeParkBrake_e36.hpp"
 #include "GaugeSpeedo_e36.hpp"
 #include "GaugeTacho_e36.hpp"
@@ -87,6 +88,9 @@ namespace piZeroDash
 
 			/** ECU Warning gauge. */
 			GaugeEcuWarning_e36* _ecuWarning;
+
+			/** Engine oil temperature. */
+			GaugeOilTemperature_e36* _oilTemp;
 	};
 }
 
