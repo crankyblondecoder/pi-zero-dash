@@ -112,6 +112,15 @@ namespace piZeroDash
 			void _drawFuelLevelSymbol(cairo_t* cr, double left, double right, double top, double bottom, double strokeWidth,
 				colour symbolColour);
 
+			/**
+			 * Draw the standard turbo symbol path.
+			 * @param left Coordinate of the left of the geometry bounding box.
+			 * @param right Coordinate of the right of the geometry bounding box.
+			 * @param top Coordinate of the top of the geometry bounding box.
+			 * @param bottom Coordinate of the bottom of the geometry bounding box.
+			 */
+			void _drawTurboPath(cairo_t* cr, double left, double right, double top, double bottom);
+
 		private:
 
 			unsigned _instrumentCount;

@@ -31,6 +31,28 @@ GaugeBoost_e36::GaugeBoost_e36(int minBoost, int maxBoost, int neutralBoost, int
 void GaugeBoost_e36::_drawBackground(CairoSurface& surface)
 {
 	_drawDefaultBackground(surface);
+
+	double width = _getWidth();
+
+	double symbolWidth = width * 0.12;
+	double symbolHeight = symbolWidth * 0.8;
+
+	double dialCentreX = _getDialCentreX();
+	double dialCentreY = _getDialCentreY();
+
+	double dialCentreOffset = width * 0.05;
+
+	cairo_t* cr = surface.getContext();
+
+	cairo_identity_matrix(cr);
+
+	_drawTurboPath(cr, dialCentreX + dialCentreOffset, dialCentreX + symbolWidth + dialCentreOffset,
+		dialCentreY - symbolHeight - dialCentreOffset, dialCentreY - dialCentreOffset);
+
+	cairo_set_source_rgba(cr, _majorLineColour.r, _majorLineColour.g, _majorLineColour.b, _majorLineColour.a);
+	cairo_set_line_width(cr, symbolHeight * 0.07);
+
+	cairo_stroke(cr);
 }
 
 void GaugeBoost_e36::_drawForeground(CairoSurface& surface)

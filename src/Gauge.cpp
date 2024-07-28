@@ -278,3 +278,62 @@ void Gauge::_drawFuelLevelSymbol(cairo_t* cr, double left, double right, double 
 
 	cairo_stroke(cr);
 }
+
+void Gauge::_drawTurboPath(cairo_t* cr, double left, double right, double top, double bottom)
+{
+	double width = right - left;
+	double height = bottom - top;
+
+	double centreX = left + width / 2.0;
+	double centreY = top + height / 2.0;
+
+	double outerRadius = height * 0.5;
+
+	double innerRadius = outerRadius * 0.5;
+
+	// Outer snail.
+
+	cairo_move_to(cr, right, top);
+	cairo_line_to(cr, centreX, top);
+	cairo_arc_negative(cr, centreX, centreY, outerRadius, M_PI * 1.5, 0.0);
+	cairo_rel_line_to(cr, 0.0, -height * 0.1);
+	cairo_rel_line_to(cr, -outerRadius * 0.2, 0.0);
+
+	double curX;
+	double curY;
+	cairo_get_current_point(cr, &curX, &curY);
+
+	cairo_line_to(cr, right, curY);
+	cairo_close_path(cr);
+
+	// Intake (inner).
+
+	cairo_new_sub_path(cr);
+	cairo_arc(cr, centreX, centreY, innerRadius, 0.0, M_PI * 2.0);
+
+	double deg45_comp = 0.70710678 * innerRadius;
+
+	cairo_move_to(cr, centreX, centreY);
+	cairo_rel_line_to(cr, 0.0, -innerRadius);
+
+	cairo_move_to(cr, centreX, centreY);
+	cairo_rel_line_to(cr, deg45_comp, -deg45_comp);
+
+	cairo_move_to(cr, centreX, centreY);
+	cairo_rel_line_to(cr, innerRadius, 0.0);
+
+	cairo_move_to(cr, centreX, centreY);
+	cairo_rel_line_to(cr, deg45_comp, deg45_comp);
+
+	cairo_move_to(cr, centreX, centreY);
+	cairo_rel_line_to(cr, 0.0, innerRadius);
+
+	cairo_move_to(cr, centreX, centreY);
+	cairo_rel_line_to(cr, -deg45_comp, deg45_comp);
+
+	cairo_move_to(cr, centreX, centreY);
+	cairo_rel_line_to(cr, -innerRadius, 0.0);
+
+	cairo_move_to(cr, centreX, centreY);
+	cairo_rel_line_to(cr, -deg45_comp, -deg45_comp);
+}
