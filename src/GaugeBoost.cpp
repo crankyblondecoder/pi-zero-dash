@@ -15,7 +15,7 @@ GaugeBoost::~GaugeBoost()
 
 GaugeBoost::GaugeBoost(int minBoost, int maxBoost, int neutralBoost, double radius, double dialCentreX,
 	double dialCentreY, int globalPositionX, int globalPositionY, unsigned width, unsigned height)
-	: GaugeDial(radius, dialCentreX, dialCentreY, globalPositionX, globalPositionY, width, height)
+	: GaugeDial(radius, dialCentreX, dialCentreY, globalPositionX, globalPositionY, width, height, false)
 {
 	_minBoost = minBoost;
 	_maxBoost = maxBoost;

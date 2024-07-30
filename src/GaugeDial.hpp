@@ -27,9 +27,10 @@ namespace piZeroDash
 			 * @param globalPositionY Y coordinate of position of gauge visual in global coordinates.
 			 * @param width Width of gauge visual.
 			 * @param height Height of gauge visual.
+			 * @param flashingEnabled If true then section flashing is enabled.
 			 */
 			GaugeDial(double radius, double dialCentreX, double dialCentreY, int globalPositionX, int globalPositionY,
-				unsigned width, unsigned height);
+				unsigned width, unsigned height, bool flashingEnabled);
 
 			struct IndicatorRadialSection
 			{
@@ -158,6 +159,9 @@ namespace piZeroDash
 			 */
 			string _generateExtentstring(double value);
 
+			// Impl.
+			bool _requiresDrawForeground(Instrument* instrument);
+
 		private:
 
 			/** Radius of dial. */
@@ -226,9 +230,15 @@ namespace piZeroDash
 			/** The length of any flash, if active, in milliseconds. */
 			long _sectionsFlashPeriod = 100;
 
-			/** The last time any flashing section was shown. */
+			/** The last time the section flash on flag was flipped. */
 			long _sectionsFlashLastShowSec;
 			long _sectionsFlashLastShowUSec;
+
+			/** Whether flashed sections are being shown. */
+			bool _sectionsFlashOn = true;
+
+			/** Whether section flashing is enabled. */
+			bool _flashingEnabled = false;
 	};
 }
 

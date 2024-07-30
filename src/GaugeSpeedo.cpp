@@ -14,7 +14,7 @@ GaugeSpeedo::~GaugeSpeedo()
 
 GaugeSpeedo::GaugeSpeedo(double radius, double dialCentreX, double dialCentreY, unsigned maxSpeed, int globalPositionX,
 	int globalPositionY, unsigned width, unsigned height)
-	: GaugeDial(radius, dialCentreX, dialCentreY, globalPositionX, globalPositionY, width, height)
+	: GaugeDial(radius, dialCentreX, dialCentreY, globalPositionX, globalPositionY, width, height, false)
 {
 	_maxSpeed = maxSpeed;
 

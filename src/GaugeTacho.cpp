@@ -15,7 +15,7 @@ GaugeTacho::~GaugeTacho()
 
 GaugeTacho::GaugeTacho(unsigned maxRpm, unsigned redlineRpm, unsigned redlineWarningRpm, bool flashRedline, double radius,
 	double dialCentreX, double dialCentreY, int globalPositionX, int globalPositionY, unsigned width, unsigned height)
-	: GaugeDial(radius, dialCentreX, dialCentreY, globalPositionX, globalPositionY, width, height)
+	: GaugeDial(radius, dialCentreX, dialCentreY, globalPositionX, globalPositionY, width, height, true)
 {
 	_maxRpm = maxRpm;
 	_redlineRpm = redlineRpm;
@@ -82,10 +82,12 @@ void GaugeTacho::_drawDefaultForeground(CairoSurface& surface, double sectionRad
 
 bool GaugeTacho::_requiresDrawForeground(Instrument* instrument)
 {
-	if(instrument == &_tachoInstr)
+	bool retVal = GaugeDial::_requiresDrawForeground(instrument);
+
+	if(!retVal && instrument == &_tachoInstr)
 	{
-		return _lastRpm != _tachoInstr.getRpm();
+		retVal = _lastRpm != _tachoInstr.getRpm();
 	}
 
-	return false;
+	return retVal;
 }

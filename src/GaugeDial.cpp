@@ -14,12 +14,18 @@ GaugeDial::~GaugeDial()
 }
 
 GaugeDial::GaugeDial(double radius, double dialCentreX, double dialCentreY, int globalPositionX, int globalPositionY,
-	unsigned width, unsigned height) : Gauge(globalPositionX, globalPositionY, width, height)
-
+	unsigned width, unsigned height, bool flashingEnabled) : Gauge(globalPositionX, globalPositionY, width, height)
 {
 	_radius = radius;
 	_dialCentreX = dialCentreX;
 	_dialCentreY = dialCentreY;
+
+	struct timeval curTime;
+	gettimeofday(&curTime, 0);
+	_sectionsFlashLastShowSec = curTime.tv_sec;
+	_sectionsFlashLastShowUSec = curTime.tv_usec;
+
+	_flashingEnabled = flashingEnabled;
 }
 
 double GaugeDial::_getRadius()
@@ -271,17 +277,18 @@ void GaugeDial::_drawStandardIndicatorSections(CairoSurface& surface, double val
 {
 	bool flashActive = false;
 
-	// Get whether any sections flash.
-	for(unsigned index = 0; index < numIndicatorRadialSections; index++)
+	if(_flashingEnabled)
 	{
-		if(indicatorRadialSections[index].flash && valueToIndicate >= indicatorRadialSections[index].indicatedValueStart)
+		// Get whether any sections flash.
+		for(unsigned index = 0; index < numIndicatorRadialSections; index++)
 		{
-			flashActive = true;
-			break;
+			if(indicatorRadialSections[index].flash && valueToIndicate >= indicatorRadialSections[index].indicatedValueStart)
+			{
+				flashActive = true;
+				break;
+			}
 		}
 	}
-
-	bool flashDraw = true;
 
 	if(flashActive)
 	{
@@ -292,16 +299,15 @@ void GaugeDial::_drawStandardIndicatorSections(CairoSurface& surface, double val
 		long millis = (curTime.tv_sec - _sectionsFlashLastShowSec) * 1000 +
 			(curTime.tv_usec - _sectionsFlashLastShowUSec) / 1000;
 
-		if(millis > _sectionsFlashPeriod * 2)
+		if(millis > _sectionsFlashPeriod)
 		{
+			_sectionsFlashOn = !_sectionsFlashOn;
 			_sectionsFlashLastShowSec = curTime.tv_sec;
 			_sectionsFlashLastShowUSec = curTime.tv_usec;
 		}
-
-		flashDraw = millis < _sectionsFlashPeriod;
 	}
 
-	if(flashAll && !flashDraw) return;
+	if(flashAll && !_sectionsFlashOn) return;
 
 	cairo_t* cr = surface.getContext();
 
@@ -316,7 +322,7 @@ void GaugeDial::_drawStandardIndicatorSections(CairoSurface& surface, double val
 	{
 		IndicatorRadialSection& section = indicatorRadialSections[index];
 
-		if((!section.flash || (section.flash && flashDraw)) && valueToIndicate >= section.indicatedValueStart &&
+		if((!section.flash || (section.flash && _sectionsFlashOn)) && valueToIndicate >= section.indicatedValueStart &&
 			(!section.onlyShowIfWithinRange || valueToIndicate < section.indicatedValueEnd))
 		{
 			double sectionEndValue = valueToIndicate > section.indicatedValueEnd ? section.indicatedValueEnd :
@@ -459,4 +465,18 @@ string GaugeDial::_generateExtentstring(double value)
 	}
 
 	return extentString;
+}
+
+bool GaugeDial::_requiresDrawForeground(Instrument* instrument)
+{
+	// Flashing on/off requires a foreground draw even when no new data is available.
+
+	struct timeval curTime;
+
+	gettimeofday(&curTime, 0);
+
+	long millis = (curTime.tv_sec - _sectionsFlashLastShowSec) * 1000 +
+		(curTime.tv_usec - _sectionsFlashLastShowUSec) / 1000;
+
+	return millis > _sectionsFlashPeriod;
 }

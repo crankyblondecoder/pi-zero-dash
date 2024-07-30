@@ -15,7 +15,7 @@ GaugeFuelLevel::~GaugeFuelLevel()
 
 GaugeFuelLevel::GaugeFuelLevel(int maxFuelLevel, double radius, double dialCentreX,
 	double dialCentreY, int globalPositionX, int globalPositionY, unsigned width, unsigned height)
-	: GaugeDial(radius, dialCentreX, dialCentreY, globalPositionX, globalPositionY, width, height)
+	: GaugeDial(radius, dialCentreX, dialCentreY, globalPositionX, globalPositionY, width, height, false)
 {
 	_maxFuelLevel = maxFuelLevel;
 
