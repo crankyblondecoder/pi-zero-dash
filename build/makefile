@@ -7,7 +7,7 @@ GaugeLowVoltage_e36.o GaugeOilTemperature_e36.o GaugeParkBrake_e36.o GaugeSpeedo
 GaugeTacho.o GaugeTacho_e36.o GaugeTurnIndicator.o GaugeTurnIndicator_e36.o \
 Instrument.o InstrumentBoost.o InstrumentEngineTemp.o InstrumentFuelLevel.o InstrumentIndicator.o InstrumentOilPressure.o \
 InstrumentOilTemperature.o InstrumentOnOff.o InstrumentSpeedo.o InstrumentTacho.o InstrumentVoltage.o \
-Visual.o
+Latcher.o LatcherPico.o Visual.o
 
 # NOTE: Put required libs last in the build so Debian based systems don't cry.
 export libs = drm cairo
