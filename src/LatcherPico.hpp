@@ -21,6 +21,9 @@ namespace piZeroDash
 			void _poll();
 
 		private:
+
+			/** SPI device file descriptor. */
+			int _spiFd = -2;
 	};
 }
 

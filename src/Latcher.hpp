@@ -40,6 +40,9 @@ namespace piZeroDash
 			/** Worker thread used for latched data source polling. */
 			pthread_t _workThread;
 
+			/** Whether polling is active. */
+			bool _polling = false;
+
 			/** Whether to stop polling. */
 			bool _stop = false;
 
