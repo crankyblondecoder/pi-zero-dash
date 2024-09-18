@@ -35,6 +35,12 @@ namespace piZeroDash
 			/** Polling function hook. Called for each polling interval. */
 			virtual void _poll() = 0;
 
+			/**
+			 * Whether concrete implementation of a latcher is ready to supply latched data.
+			 * If a latcher is not ready by the time start is called it will not start.
+			 */
+			virtual bool _isReady() = 0;
+
 		private:
 
 			/** Worker thread used for latched data source polling. */
