@@ -5,6 +5,9 @@
 
 #include "Latcher.hpp"
 
+/** GPIO Pin number. Should be the same as the line number. */
+#define PZD_MASTER_ACTIVE_GPIO 25
+
 namespace piZeroDash
 {
 	/**
@@ -29,6 +32,12 @@ namespace piZeroDash
 
 			/** SPI device file descriptor. */
 			int _spiFd = -2;
+
+			/** GPIO device (chip) file descriptor. */
+			int _gpioChipFd = -2;
+
+			/** GPIO line file descriptor. */
+			__s32 _gpioLineFd = -1;
 
 			/** Whether this latcher is ready. */
 			bool _ready = false;
