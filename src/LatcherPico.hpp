@@ -43,6 +43,11 @@ namespace piZeroDash
 			bool _ready = false;
 
 			/**
+			 * Set whether the "master active" GPIO line is active.
+			 */
+			void __setMasterActive(bool masterActive);
+
+			/**
 			 * Transmit/recieve SPI data from pico.
 			 * @note SPI transmits and recieves the same amount of data every frame.
 			 * @param rxBuf Recieve buffer

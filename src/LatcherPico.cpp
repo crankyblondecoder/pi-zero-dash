@@ -112,11 +112,13 @@ LatcherPico::LatcherPico()
 
 void LatcherPico::_poll()
 {
-	if(_gpioChipFd > -1 && _gpioLineFd > -1)
+	if(_ready)
 	{
-		// TODO ... Take the "master active" GPIO high to indicate to the pico that comms is active.
+		__setMasterActive(true);
 
-		// TODO ... Take the "master active" GPIO low to indicate to the pico that comms is deactive.
+		// TODO ...
+
+		__setMasterActive(false);
 	}
 }
 
@@ -125,9 +127,32 @@ bool LatcherPico::_isReady()
 	return _ready;
 }
 
+void LatcherPico::__setMasterActive(bool masterActive)
+{
+	if(_gpioChipFd > -1 && _gpioLineFd > -1)
+	{
+		gpio_v2_line_values lineVals;
+		lineVals.mask = 1 << PZD_MASTER_ACTIVE_GPIO;
+
+		if(masterActive)
+		{
+			// Take the "master active" GPIO high to indicate to the pico that comms is active.
+			lineVals.bits = 1 << PZD_MASTER_ACTIVE_GPIO;
+		}
+		else
+		{
+			// Take the "master active" GPIO low to indicate to the pico that comms is deactive.
+			lineVals.bits = 0;
+		}
+
+		ioctl(_gpioChipFd, GPIO_V2_LINE_SET_VALUES_IOCTL, &lineVals);
+	}
+}
+
 void LatcherPico::__picoSpiTxRx(uint8_t* rxBuf, uint8_t* txBuf, int length)
 {
 	if(_spiFd > -1)
 	{
+		// TODO ...
 	}
 }
