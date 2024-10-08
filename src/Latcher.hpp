@@ -3,6 +3,9 @@
 
 #include <pthread.h>
 
+/** Maximum number of unique latched data values. */
+#define MAX_LATCHED_INDEXES 64
+
 namespace piZeroDash
 {
 	/**
@@ -29,6 +32,21 @@ namespace piZeroDash
 
 			/** Initial thread entry point. */
         	void __threadEntry();
+
+			/**
+			 * Used to request a particular latched data value.
+			 */
+			enum LatchedDataIndex
+			{
+				/** Engine RPM. */
+				ENGINE_RPM,
+
+				/** Speed km/h. */
+				SPEED_KMH,
+
+				/** Engine temperature degrees celsius. */
+				ENGINE_TEMP_C
+			};
 
 		protected:
 

@@ -1,8 +1,11 @@
 #include <fcntl.h>
+#include <iostream>
 #include <linux/spi/spidev.h>
 #include <linux/gpio.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+
+using namespace std;
 
 #include "LatcherPico.hpp"
 
@@ -17,9 +20,6 @@ LatcherPico::~LatcherPico()
 LatcherPico::LatcherPico()
 {
 	// Setup SPI comms to the pico.
-
-	// TODO ... Console output to indicate error
-	blah;
 
 	// Hardwire to first SPI bus with first chip select line.
 	_spiFd = open("/dev/spidev0.0", O_RDWR);
@@ -104,9 +104,29 @@ LatcherPico::LatcherPico()
 						// Assume ready has been initialised to false prior.
 						_ready = true;
 					}
+					else
+					{
+						cout << "GPIO line request failed via ioctl.\n";
+					}
+				}
+				else
+				{
+					cout << "Could not open GPIO device file.\n";
 				}
 			}
+			else
+			{
+				cout << "Could not set SPI bits per word via ioctl.\n";
+			}
 		}
+		else
+		{
+			cout << "Could not set SPI mode via ioctl.\n";
+		}
+	}
+	else
+	{
+		cout << "Could not open SPI device file.\n";
 	}
 }
 
@@ -149,10 +169,144 @@ void LatcherPico::__setMasterActive(bool masterActive)
 	}
 }
 
-void LatcherPico::__picoSpiTxRx(uint8_t* rxBuf, uint8_t* txBuf, int length)
+bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint8_t reqId)
 {
+	// Rely on the pico sending data contiguously. So once the request id is received assume all expected data follows.
+	// ie The pico will fill its TX FIFO before enabling the send so there will be no gaps in the byte stream.
+
+	bool success = true;
+
 	if(_spiFd > -1)
 	{
-		// TODO ...
+		int bytesToRead = length;
+
+		// Offset to add to buffers for partial reads.
+		unsigned long bufOffset = 0;
+
+		while(bytesToRead)
+		{
+			// Clear the rx buffer to zero.
+			for(int index = 0; index < length; index++)
+			{
+				rxBuf[index] = 0;
+			}
+
+			// Create, setup and where necessary zero an SPI transfer structure.
+			// See: https://codebrowser.dev/linux/linux/include/uapi/linux/spi/spidev.h.html
+
+			spi_ioc_transfer transf;
+
+			transf.tx_buf = (unsigned long) txBuf;
+			transf.rx_buf = (unsigned long) (rxBuf + bufOffset);
+			transf.len = bytesToRead;
+			transf.speed_hz = 0; // Use default.
+			transf.delay_usecs = 0;
+			transf.bits_per_word = 0; // Use default.
+			transf.cs_change = true;
+			transf.tx_nbits = 0;
+			transf.rx_nbits = 0;
+			transf.word_delay_usecs = 0;
+			transf.pad = 0;
+
+			int error = ioctl(_spiFd, SPI_IOC_MESSAGE(1), &transf);
+
+			if(error >= 0)
+			{
+				// Transmission okay.
+
+				if(!reqId || rxBuf[0] == reqId)
+				{
+					// Don't have to wait for the request id so done.
+					bytesToRead = 0;
+				}
+				else
+				{
+					// Look for the request id in the rx buffer.
+					// This should only ever happen once.
+
+					int index;
+
+					for(index = 0; index < length; index++)
+					{
+						if(rxBuf[index] == reqId)
+						{
+							break;
+						}
+					}
+
+					if(index < length)
+					{
+						// Request id was found.
+
+						// Setup for the final iteration of the transfer.
+						bytesToRead = index;
+						bufOffset = length - index;
+
+						// Shift all read buffer entries left until the request id is the first entry.
+						for(int shiftToIndex = 0; index < length; index++, shiftToIndex++)
+						{
+							rxBuf[shiftToIndex] = rxBuf[index];
+						}
+
+						// Set the entire transmit buffer to zero as it will have already been sent.
+						for(index = 0; index < length; index++) txBuf[index] = 0;
+					}
+
+					// Note: If the request id was not found the number of bytes to read should still be the full amount.
+				}
+			}
+			else
+			{
+				// Transmission not okay. Abort.
+				bytesToRead = 0;
+				success = false;
+ 			}
+		}
 	}
+}
+
+int LatcherPico::__downloadLatchedDataIndex(const char* latchedDataIndexName)
+{
+	int retVal = -1;
+
+	// Use the same request id and command.
+	_txBuf[0] = GET_LATCHED_DATA_INDEX;
+	_txBuf[1] = 0x11;
+
+	_txBuf[2] = latchedDataIndexName[0];
+	_txBuf[3] = latchedDataIndexName[1];
+	_txBuf[4] = latchedDataIndexName[2];
+
+	bool okay = __picoSpiTxRx(_txBuf, _rxBuf, 5, 0);
+
+	if(okay)
+	{
+		okay = __picoSpiTxRx(_txBuf, _rxBuf, 2, 0x11);
+
+		if(okay)
+		{
+			retVal = _rxBuf[1];
+		}
+	}
+
+	return retVal;
+}
+
+void LatcherPico::__downloadLatchedDataIndexes()
+{
+	// Data index strings are from pico_dash_latch.c
+
+	// Engine RPM.
+	_picoLatchedDataIndexes[LatcherPico::ENGINE_RPM] = __downloadLatchedDataIndex("ERM");
+
+	// Speed in KMH.
+	_picoLatchedDataIndexes[LatcherPico::SPEED_KMH] = __downloadLatchedDataIndex("SKH");
+
+	// Engine temperature degrees celsius.
+	_picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] = __downloadLatchedDataIndex("ETC");
+}
+
+void LatcherPico::__downloadLatchedDataResolutions()
+{
+
 }
