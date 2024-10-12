@@ -1,6 +1,7 @@
 #ifndef PZD_LATCHER_PICO_H
 #define PZD_LATCHER_PICO_H
 
+#include <linux/gpio.h>
 #include <stdint.h>
 
 #include "Latcher.hpp"

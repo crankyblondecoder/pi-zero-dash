@@ -3,6 +3,11 @@
 
 using namespace std;
 
+#include "Latcher.hpp"
+#include "LatcherPico.hpp"
+
+using namespace piZeroDash;
+
 int main(int argc, char* argv[])
 {
 	if(argc > 1)
@@ -12,4 +17,12 @@ int main(int argc, char* argv[])
 	}
 
 	cout << "*** Pi Zero Dash ***";
+
+	LatcherPico curLatcher;
+
+	Latcher::setCurrentLatcher(&curLatcher);
+
+	// TODO ... Thready stuff.
+
+	Latcher::setCurrentLatcher(0);
 }

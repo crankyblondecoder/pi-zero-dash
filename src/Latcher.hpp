@@ -48,6 +48,8 @@ namespace piZeroDash
 				ENGINE_TEMP_C
 			};
 
+			static void setCurrentLatcher(Latcher* latcher);
+
 		protected:
 
 			/** Polling function hook. Called for each polling interval. */
@@ -76,6 +78,9 @@ namespace piZeroDash
 			/** The last time the polling loop _finished_. */
 			long _lastPollSec;
 			long _lastPollUSec;
+
+			/** The current latcher being used. */
+			static Latcher* __currentLatcher;
 	};
 }
 

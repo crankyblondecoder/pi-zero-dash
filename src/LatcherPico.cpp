@@ -103,6 +103,10 @@ LatcherPico::LatcherPico()
 
 						// Assume ready has been initialised to false prior.
 						_ready = true;
+
+						// Can now attempt to initialise latched data indexes and resolutions.
+						__downloadLatchedDataIndexes();
+						__downloadLatchedDataResolutions();
 					}
 					else
 					{
@@ -263,6 +267,8 @@ bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint
  			}
 		}
 	}
+
+	return success;
 }
 
 int LatcherPico::__downloadLatchedDataIndex(const char* latchedDataIndexName)
@@ -299,14 +305,20 @@ void LatcherPico::__downloadLatchedDataIndexes()
 	// Engine RPM.
 	_picoLatchedDataIndexes[LatcherPico::ENGINE_RPM] = __downloadLatchedDataIndex("ERM");
 
+	cout << "ERM Index: "  << _picoLatchedDataIndexes[LatcherPico::ENGINE_RPM] << "\n";
+
 	// Speed in KMH.
 	_picoLatchedDataIndexes[LatcherPico::SPEED_KMH] = __downloadLatchedDataIndex("SKH");
 
+	cout << "SKH Index: "  << _picoLatchedDataIndexes[LatcherPico::SPEED_KMH] << "\n";
+
 	// Engine temperature degrees celsius.
 	_picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] = __downloadLatchedDataIndex("ETC");
+
+	cout << "ETC Index: "  << _picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] << "\n";
 }
 
 void LatcherPico::__downloadLatchedDataResolutions()
 {
-
+	// TODO ...
 }
