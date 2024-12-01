@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 		//atoi(argv[1]);
 	}
 
-	cout << "*** Pi Zero Dash ***";
+	cout << "*** Pi Zero Dash ***\n\n";
 
 	LatcherPico curLatcher;
 
