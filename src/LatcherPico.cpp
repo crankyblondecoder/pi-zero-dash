@@ -300,6 +300,8 @@ int LatcherPico::__downloadLatchedDataIndex(const char* latchedDataIndexName)
 
 void LatcherPico::__downloadLatchedDataIndexes()
 {
+	__setMasterActive(true);
+
 	// Data index strings are from pico_dash_latch.c
 
 	// Engine RPM.
@@ -316,6 +318,8 @@ void LatcherPico::__downloadLatchedDataIndexes()
 	_picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] = __downloadLatchedDataIndex("ETC");
 
 	cout << "ETC Index: "  << _picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] << "\n";
+
+	__setMasterActive(false);
 }
 
 void LatcherPico::__downloadLatchedDataResolutions()
