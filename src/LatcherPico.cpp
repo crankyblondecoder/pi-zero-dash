@@ -302,6 +302,8 @@ void LatcherPico::__downloadLatchedDataIndexes()
 {
 	__setMasterActive(true);
 
+return;
+
 	// Data index strings are from pico_dash_latch.c
 
 	// Engine RPM.
