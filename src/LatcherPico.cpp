@@ -302,6 +302,8 @@ void LatcherPico::__downloadLatchedDataIndexes()
 {
 	__setMasterActive(true);
 
+	sleep(60);
+
 return;
 
 	// Data index strings are from pico_dash_latch.c
