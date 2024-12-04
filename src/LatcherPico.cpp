@@ -156,18 +156,20 @@ void LatcherPico::__setMasterActive(bool masterActive)
 	if(_gpioChipFd > -1 && _gpioLineFd > -1)
 	{
 		gpio_v2_line_values lineVals;
-		//lineVals.mask = 1 << PZD_MASTER_ACTIVE_GPIO;
+
+		// Matches index into lineReq.offsets array when line was requested.
 		lineVals.mask = 1;
 
 		if(masterActive)
 		{
 			// Take the "master active" GPIO high to indicate to the pico that comms is active.
-			//lineVals.bits = 1 << PZD_MASTER_ACTIVE_GPIO;
+			// Matches index into lineReq.offsets array when line was requested.
 			lineVals.bits = 1;
 		}
 		else
 		{
 			// Take the "master active" GPIO low to indicate to the pico that comms is deactive.
+			// Matches index into lineReq.offsets array when line was requested.
 			lineVals.bits = 0;
 		}
 
