@@ -169,7 +169,8 @@ void LatcherPico::__setMasterActive(bool masterActive)
 			lineVals.bits = 0;
 		}
 
-		ioctl(_gpioChipFd, GPIO_V2_LINE_SET_VALUES_IOCTL, &lineVals);
+		// Yes the _line_ file descriptor is used, not the GPIO device file descriptor.
+		ioctl(_gpioLineFd, GPIO_V2_LINE_SET_VALUES_IOCTL, &lineVals);
 	}
 }
 
@@ -302,10 +303,9 @@ void LatcherPico::__downloadLatchedDataIndexes()
 {
 	__setMasterActive(true);
 
-	sleep(60);
+sleep(60);
 
-return;
-
+/*
 	// Data index strings are from pico_dash_latch.c
 
 	// Engine RPM.
@@ -322,7 +322,7 @@ return;
 	_picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] = __downloadLatchedDataIndex("ETC");
 
 	cout << "ETC Index: "  << _picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] << "\n";
-
+*/
 	__setMasterActive(false);
 }
 
