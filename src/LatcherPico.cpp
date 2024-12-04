@@ -157,12 +157,13 @@ void LatcherPico::__setMasterActive(bool masterActive)
 	{
 		gpio_v2_line_values lineVals;
 		//lineVals.mask = 1 << PZD_MASTER_ACTIVE_GPIO;
-		lineVals.mask = 0;
+		lineVals.mask = 1;
 
 		if(masterActive)
 		{
 			// Take the "master active" GPIO high to indicate to the pico that comms is active.
-			lineVals.bits = 1 << PZD_MASTER_ACTIVE_GPIO;
+			//lineVals.bits = 1 << PZD_MASTER_ACTIVE_GPIO;
+			lineVals.bits = 1;
 		}
 		else
 		{
@@ -171,7 +172,12 @@ void LatcherPico::__setMasterActive(bool masterActive)
 		}
 
 		// Yes the _line_ file descriptor is used, not the GPIO device file descriptor.
-		ioctl(_gpioLineFd, GPIO_V2_LINE_SET_VALUES_IOCTL, &lineVals);
+		int error = ioctl(_gpioLineFd, GPIO_V2_LINE_SET_VALUES_IOCTL, &lineVals);
+
+		if(error != 0)
+		{
+			cout << "Error while setting master active to:" << masterActive << " errno:" << errno << "\n";
+		}
 	}
 }
 
