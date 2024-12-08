@@ -312,26 +312,29 @@ void LatcherPico::__downloadLatchedDataIndexes()
 {
 	__setMasterActive(true);
 
-sleep(60);
-
-/*
 	// Data index strings are from pico_dash_latch.c
+
+	cout << "Waiting for ERM latched data index.\n";
 
 	// Engine RPM.
 	_picoLatchedDataIndexes[LatcherPico::ENGINE_RPM] = __downloadLatchedDataIndex("ERM");
 
 	cout << "ERM Index: "  << _picoLatchedDataIndexes[LatcherPico::ENGINE_RPM] << "\n";
 
+	cout << "Waiting for KMH latched data index.\n";
+
 	// Speed in KMH.
 	_picoLatchedDataIndexes[LatcherPico::SPEED_KMH] = __downloadLatchedDataIndex("SKH");
 
 	cout << "SKH Index: "  << _picoLatchedDataIndexes[LatcherPico::SPEED_KMH] << "\n";
 
+	cout << "Waiting for ETC latched data index.\n";
+
 	// Engine temperature degrees celsius.
 	_picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] = __downloadLatchedDataIndex("ETC");
 
 	cout << "ETC Index: "  << _picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] << "\n";
-*/
+
 	__setMasterActive(false);
 }
 
