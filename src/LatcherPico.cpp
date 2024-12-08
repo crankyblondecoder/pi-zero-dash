@@ -109,6 +109,9 @@ LatcherPico::LatcherPico()
 						// Assume ready has been initialised to false prior.
 						_ready = true;
 
+						// Make sure master active is in known "off" state.
+						__setMasterActive(false);
+
 						// Can now attempt to initialise latched data indexes and resolutions.
 						__downloadLatchedDataIndexes();
 						__downloadLatchedDataResolutions();
