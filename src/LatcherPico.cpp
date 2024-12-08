@@ -57,7 +57,7 @@ LatcherPico::LatcherPico()
 				// Output SPI clock speed info.
 				uint32_t clockHz = 0;
 				error = ioctl(_spiFd, SPI_IOC_RD_MAX_SPEED_HZ, &clockHz);
-				if(error > -1) cout << "SPI Bus Clock " << clockHz << "hz.\n";
+				if(error > -1) cout << "SPI Bus Clock " << clockHz/1000 << "khz.\n";
 
 				// Attempt to open the GPIO device.
 				_gpioChipFd = open("/dev/gpiochip0", O_RDWR);
