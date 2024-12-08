@@ -4,6 +4,7 @@
 #include <linux/gpio.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <cstring>
 
 using namespace std;
 
@@ -54,8 +55,13 @@ LatcherPico::LatcherPico()
 
 			if(error > -1)
 			{
+				// Set SPI clock freq to something Pico can handle. Assume the max setup on the Pico is 8Mhz and go lower
+				// than that. Set quite low so that a cheap logic analyser can get enough samples.
+				uint32_t clockHz = 4 * 1000 * 1000;
+				error = ioctl(_spiFd, SPI_IOC_WR_MAX_SPEED_HZ, &clockHz);
+				if(error == -1) cout << "SPI Bus Clock ioctl error: " << strerror(errno) << "\n";
+
 				// Output SPI clock speed info.
-				uint32_t clockHz = 0;
 				error = ioctl(_spiFd, SPI_IOC_RD_MAX_SPEED_HZ, &clockHz);
 				if(error > -1) cout << "SPI Bus Clock " << clockHz/1000 << "khz.\n";
 
