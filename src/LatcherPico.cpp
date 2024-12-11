@@ -197,8 +197,13 @@ void LatcherPico::__setMasterActive(bool masterActive)
 	}
 }
 
-bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint8_t reqId)
+bool LatcherPico::
+__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint8_t reqId)
 {
+	// Single master active/deactive cycle per SPI transfer session. This hopefully should give the transfers a
+	// "reset on fault" tolerance because it is assumed the pico resets its SPI transfer when master active goes low.
+	__setMasterActive(true);
+
 	// Rely on the pico sending data contiguously. So once the request id is received assume all expected data follows.
 	// ie The pico will fill its TX FIFO before enabling the send so there will be no gaps in the byte stream.
 
@@ -251,8 +256,12 @@ bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint
 				{
 					// Look for the request id in the rx buffer.
 					// This should only ever happen once.
+					// RX data should be 0's prior to the request id being found.
+
+					// If the first non-zero value found is not the request id then abort the transfer
 
 					int index;
+					bool badReqId = false;
 
 					for(index = 0; index < length; index++)
 					{
@@ -260,15 +269,23 @@ bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint
 						{
 							break;
 						}
+						else if(rxBuf[index] > 0)
+						{
+							// Bad request id found. Abort transfer.
+							badReqId = true;
+							bytesToRead = 0;
+							success = false;
+							break;
+						}
 					}
 
-					if(index < length)
+					if(!badReqId && index < length)
 					{
 						// Request id was found.
 
 						// Setup for the final iteration of the transfer.
 						bytesToRead = index;
-						bufOffset = length - index;
+						bufOffset = length - bytesToRead;
 
 						// Shift all read buffer entries left until the request id is the first entry.
 						for(int shiftToIndex = 0; index < length; index++, shiftToIndex++)
@@ -292,6 +309,8 @@ bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint
 		}
 	}
 
+	__setMasterActive(false);
+
 	return success;
 }
 
@@ -299,9 +318,10 @@ int LatcherPico::__downloadLatchedDataIndex(const char* latchedDataIndexName)
 {
 	int retVal = -1;
 
-	// Use the same request id and command.
+	// Note: Don't use the same request id and command. It makes it difficult to debug on the pico.
+
 	_txBuf[0] = GET_LATCHED_DATA_INDEX;
-	_txBuf[1] = 0x11;
+	_txBuf[1] = GET_LATCHED_DATA_INDEX_REQ_ID;
 
 	_txBuf[2] = latchedDataIndexName[0];
 	_txBuf[3] = latchedDataIndexName[1];
@@ -311,7 +331,7 @@ int LatcherPico::__downloadLatchedDataIndex(const char* latchedDataIndexName)
 
 	if(okay)
 	{
-		okay = __picoSpiTxRx(_txBuf, _rxBuf, 2, 0x11);
+		okay = __picoSpiTxRx(_txBuf, _rxBuf, 2, GET_LATCHED_DATA_INDEX_REQ_ID);
 
 		if(okay)
 		{
@@ -324,8 +344,6 @@ int LatcherPico::__downloadLatchedDataIndex(const char* latchedDataIndexName)
 
 void LatcherPico::__downloadLatchedDataIndexes()
 {
-	__setMasterActive(true);
-
 	// Data index strings are from pico_dash_latch.c
 
 	cout << "Waiting for ERM latched data index.\n";
@@ -348,8 +366,6 @@ void LatcherPico::__downloadLatchedDataIndexes()
 	_picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] = __downloadLatchedDataIndex("ETC");
 
 	cout << "ETC Index: "  << _picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] << "\n";
-
-	__setMasterActive(false);
 }
 
 void LatcherPico::__downloadLatchedDataResolutions()

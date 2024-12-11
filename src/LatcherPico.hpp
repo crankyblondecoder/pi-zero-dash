@@ -103,5 +103,14 @@ enum SpiCommand
 	GET_LATCHED_DATA = 0x13
 };
 
+/**
+ * These are the request ID's
+ */
+enum SpiCommandRequestId
+{
+	GET_LATCHED_DATA_INDEX_REQ_ID = 0xF1,
+	GET_LATCHED_DATA_RESOLUTION_REQ_ID = 0xF2,
+	GET_LATCHED_DATA_REQ_ID = 0xF3
+};
 
 #endif
