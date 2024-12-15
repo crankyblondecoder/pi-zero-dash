@@ -70,10 +70,11 @@ LatcherPico::LatcherPico()
 
 				if(_gpioChipFd > -1)
 				{
-					// Get chip line that matches required GPIO.
+					// Get chip lines that matches required GPIO's.
 					gpio_v2_line_request lineReq = {};
 
-					lineReq.offsets[0] = PZD_MASTER_ACTIVE_GPIO;
+					lineReq.offsets[0] = PZD_COMMAND_ACTIVE_GPIO;
+					lineReq.offsets[1] = PZD_READY_FOR_COMMAND_GPIO;
 
 					lineReq.consumer[0] = 'P';
 					lineReq.consumer[1] = 'Z';
@@ -84,10 +85,21 @@ LatcherPico::LatcherPico()
 					lineReq.consumer[6] = 0;
 
 					// Default flags.
-					lineReq.config.flags = GPIO_V2_LINE_FLAG_OUTPUT;
+					lineReq.config.flags = 0;
 
-					// No line specific attributes are necessary.
-					lineReq.config.num_attrs = 0;
+					// Because more than one GPIO, line specific attributes are necessary.
+					lineReq.config.num_attrs = 2;
+
+					lineReq.config.attrs[0].attr.id = GPIO_V2_LINE_ATTR_ID_FLAGS;
+					lineReq.config.attrs[0].attr.padding = 0;
+					lineReq.config.attrs[0].attr.flags = GPIO_V2_LINE_FLAG_OUTPUT;
+					lineReq.config.attrs[0].mask = 1;
+
+					lineReq.config.attrs[1].attr.id = GPIO_V2_LINE_ATTR_ID_FLAGS;
+					lineReq.config.attrs[1].attr.padding = 0;
+					lineReq.config.attrs[1].attr.flags = GPIO_V2_LINE_FLAG_INPUT | GPIO_V2_LINE_FLAG_EDGE_RISING |
+						GPIO_V2_LINE_FLAG_EDGE_FALLING;
+					lineReq.config.attrs[0].mask = 2;
 
 					lineReq.config.padding[0] = 0;
 					lineReq.config.padding[1] = 0;
@@ -116,7 +128,7 @@ LatcherPico::LatcherPico()
 						_ready = true;
 
 						// Make sure master active is in known "off" state.
-						__setMasterActive(false);
+						__setCommandActive(false);
 
 						// Can now attempt to initialise latched data indexes and resolutions.
 						__downloadLatchedDataIndexes();
@@ -152,11 +164,7 @@ void LatcherPico::_poll()
 {
 	if(_ready)
 	{
-		__setMasterActive(true);
-
 		// TODO ...
-
-		__setMasterActive(false);
 	}
 }
 
@@ -165,7 +173,7 @@ bool LatcherPico::_isReady()
 	return _ready;
 }
 
-void LatcherPico::__setMasterActive(bool masterActive)
+void LatcherPico::__setCommandActive(bool commandActive)
 {
 	if(_gpioChipFd > -1 && _gpioLineFd > -1)
 	{
@@ -174,15 +182,15 @@ void LatcherPico::__setMasterActive(bool masterActive)
 		// Matches index into lineReq.offsets array when line was requested.
 		lineVals.mask = 1;
 
-		if(masterActive)
+		if(commandActive)
 		{
-			// Take the "master active" GPIO high to indicate to the pico that comms is active.
+			// Take the "command active" GPIO high to indicate to the pico that comms is active.
 			// Matches index into lineReq.offsets array when line was requested.
 			lineVals.bits = 1;
 		}
 		else
 		{
-			// Take the "master active" GPIO low to indicate to the pico that comms is deactive.
+			// Take the "command active" GPIO low to indicate to the pico that comms is deactive.
 			// Matches index into lineReq.offsets array when line was requested.
 			lineVals.bits = 0;
 		}
@@ -192,17 +200,78 @@ void LatcherPico::__setMasterActive(bool masterActive)
 
 		if(error != 0)
 		{
-			cout << "Error while setting master active to:" << masterActive << " errno:" << errno << "\n";
+			cout << "Error while setting master active to:" << commandActive << " errno:" << errno << "\n";
 		}
 	}
 }
 
-bool LatcherPico::
-__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint8_t reqId)
+int LatcherPico::__getReadyForCommandActive()
+{
+	int retVal = -1;
+
+	if(_gpioLineFd > -1)
+	{
+		gpio_v2_line_values lineVals;
+		lineVals.mask = 2;
+
+		int error = ioctl(_gpioLineFd, GPIO_V2_LINE_GET_VALUES_IOCTL, &lineVals);
+
+		if(error > -1)
+		{
+			retVal = lineVals.bits & 2;
+		}
+	}
+
+	return retVal;
+}
+
+int LatcherPico::__readGpioEventsBlocking()
+{
+	int retVal = -1;
+
+	if(_gpioLineFd > -1)
+	{
+		retVal = read(_gpioLineFd, &_gpioLineEventBuffer, sizeof(gpio_v2_line_event) * GPIO_LINE_EVENT_BUFFER_SIZE);
+
+		if(retVal > 0) retVal /= sizeof(gpio_v2_line_event);
+	}
+
+	return retVal;
+}
+
+void LatcherPico::__waitForReadyForCommandActive()
+{
+	int readyForCommandActive = __getReadyForCommandActive();
+
+	while(readyForCommandActive == 0)
+	{
+		int error = __readGpioEventsBlocking();
+
+		if(error < 0) break;
+
+		readyForCommandActive = __getReadyForCommandActive();
+	}
+}
+
+void LatcherPico::__waitForReadyForCommandInactive()
+{
+	int readyForCommandActive = __getReadyForCommandActive();
+
+	while(readyForCommandActive == 1)
+	{
+		int error = __readGpioEventsBlocking();
+
+		if(error < 0) break;
+
+		readyForCommandActive = __getReadyForCommandActive();
+	}
+}
+
+bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint8_t reqId)
 {
 	// Single master active/deactive cycle per SPI transfer session. This hopefully should give the transfers a
 	// "reset on fault" tolerance because it is assumed the pico resets its SPI transfer when master active goes low.
-	__setMasterActive(true);
+	__setCommandActive(true);
 
 	// Rely on the pico sending data contiguously. So once the request id is received assume all expected data follows.
 	// ie The pico will fill its TX FIFO before enabling the send so there will be no gaps in the byte stream.
@@ -309,7 +378,7 @@ __picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint8_t reqId)
 		}
 	}
 
-	__setMasterActive(false);
+	__setCommandActive(false);
 
 	return success;
 }

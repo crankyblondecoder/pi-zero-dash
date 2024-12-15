@@ -6,8 +6,14 @@
 
 #include "Latcher.hpp"
 
-/** GPIO Pin number. Should be the same as the line number. */
-#define PZD_MASTER_ACTIVE_GPIO 25
+/** GPIO Pin number for 'Command Active'. This is written. Should be the same as the line number. */
+#define PZD_COMMAND_ACTIVE_GPIO 25
+
+/** GPIO Pin number for 'Ready For Command'. This is read. Should be the same as the line number. */
+#define PZD_READY_FOR_COMMAND_GPIO 24
+
+/** Number of line event structs in buffer. */
+#define GPIO_LINE_EVENT_BUFFER_SIZE 16
 
 namespace piZeroDash
 {
@@ -49,6 +55,9 @@ namespace piZeroDash
 			/** Common SPI receive buffer. */
 			uint8_t _rxBuf[5];
 
+			/** GPIO Line event read buffer. */
+			gpio_v2_line_event _gpioLineEventBuffer[GPIO_LINE_EVENT_BUFFER_SIZE];
+
 			/**
 			 * Matches pico latched data indexes to pi zero dash latched data indexes.
 			 * @note If -1 is present it indicates an error condition while retrieving the pico latched data index.
@@ -56,9 +65,33 @@ namespace piZeroDash
 			int _picoLatchedDataIndexes[MAX_LATCHED_INDEXES];
 
 			/**
-			 * Set whether the "master active" GPIO line is active.
+			 * Set whether the "command active" GPIO line is active.
 			 */
-			void __setMasterActive(bool masterActive);
+			void __setCommandActive(bool masterActive);
+
+			/**
+			 * Get the current state of the ready for command active gpio line.
+			 * @returns 1 for active, 0 for inactive and -1 for error.
+			 */
+			int __getReadyForCommandActive();
+
+			/**
+			 * Read the available GPIO events, blocking until events are available.
+			 * @returns Number of events read into the buffer. -1 For error.
+			 */
+			int __readGpioEventsBlocking();
+
+			/**
+			 * Wait for the 'Ready For Command' GPIO to go active (high).
+			 * @note Will block until condition is met or error occurs.
+			 */
+			void __waitForReadyForCommandActive();
+
+			/**
+			 * Wait for the 'Ready For Command' GPIO to go inactive (low).
+			 * @note Will block until condition is met or error occurs.
+			 */
+			void __waitForReadyForCommandInactive();
 
 			/**
 			 * Transmit/recieve SPI data from pico.
@@ -98,9 +131,9 @@ namespace piZeroDash
  */
 enum SpiCommand
 {
-	GET_LATCHED_DATA_INDEX = 0x11,
-	GET_LATCHED_DATA_RESOLUTION = 0x12,
-	GET_LATCHED_DATA = 0x13
+	GET_LATCHED_DATA_INDEX = 0xF1,
+	GET_LATCHED_DATA_RESOLUTION = 0xF2,
+	GET_LATCHED_DATA = 0xF3
 };
 
 /**
@@ -108,9 +141,9 @@ enum SpiCommand
  */
 enum SpiCommandRequestId
 {
-	GET_LATCHED_DATA_INDEX_REQ_ID = 0xF1,
-	GET_LATCHED_DATA_RESOLUTION_REQ_ID = 0xF2,
-	GET_LATCHED_DATA_REQ_ID = 0xF3
+	GET_LATCHED_DATA_INDEX_REQ_ID = 0xE1,
+	GET_LATCHED_DATA_RESOLUTION_REQ_ID = 0xE2,
+	GET_LATCHED_DATA_REQ_ID = 0xE3
 };
 
 #endif
