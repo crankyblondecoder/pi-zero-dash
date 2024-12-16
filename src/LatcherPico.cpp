@@ -99,7 +99,7 @@ LatcherPico::LatcherPico()
 					lineReq.config.attrs[1].attr.padding = 0;
 					lineReq.config.attrs[1].attr.flags = GPIO_V2_LINE_FLAG_INPUT | GPIO_V2_LINE_FLAG_EDGE_RISING |
 						GPIO_V2_LINE_FLAG_EDGE_FALLING;
-					lineReq.config.attrs[0].mask = 2;
+					lineReq.config.attrs[1].mask = 2;
 
 					lineReq.config.padding[0] = 0;
 					lineReq.config.padding[1] = 0;
@@ -107,7 +107,7 @@ LatcherPico::LatcherPico()
 					lineReq.config.padding[3] = 0;
 					lineReq.config.padding[4] = 0;
 
-					lineReq.num_lines = 1;
+					lineReq.num_lines = 2;
 					lineReq.event_buffer_size = 0;
 
 					lineReq.padding[0] = 0;
@@ -198,7 +198,7 @@ void LatcherPico::__setCommandActive(bool commandActive)
 		// Yes the _line_ file descriptor is used, not the GPIO device file descriptor.
 		int error = ioctl(_gpioLineFd, GPIO_V2_LINE_SET_VALUES_IOCTL, &lineVals);
 
-		if(error != 0)
+		if(error < 0)
 		{
 			cout << "Error while setting master active to:" << commandActive << " errno:" << errno << "\n";
 		}
