@@ -267,19 +267,15 @@ void LatcherPico::__waitForReadyForCommandInactive()
 	}
 }
 
-bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint8_t reqId)
+bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint8_t reqId, uint8_t errorReqId)
 {
-	// Single master active/deactive cycle per SPI transfer session. This hopefully should give the transfers a
-	// "reset on fault" tolerance because it is assumed the pico resets its SPI transfer when master active goes low.
-	__setCommandActive(true);
-
-	// Rely on the pico sending data contiguously. So once the request id is received assume all expected data follows.
-	// ie The pico will fill its TX FIFO before enabling the send so there will be no gaps in the byte stream.
-
 	bool success = true;
 
 	if(_spiFd > -1)
 	{
+		// Rely on the pico sending data contiguously. So once the request id is received assume all expected data follows.
+		// ie The pico will fill its TX FIFO before enabling the send so there will be no gaps in the byte stream.
+
 		int bytesToRead = length;
 
 		// Offset to add to buffers for partial reads.
@@ -288,7 +284,7 @@ bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint
 		while(bytesToRead)
 		{
 			// Clear the rx buffer to zero.
-			for(int index = 0; index < length; index++)
+			for(int index = bufOffset; index < length; index++)
 			{
 				rxBuf[index] = 0;
 			}
@@ -316,7 +312,7 @@ bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint
 			{
 				// Transmission okay.
 
-				if(!reqId || rxBuf[0] == reqId)
+				if(!reqId || rxBuf[0] == reqId || (errorReqId != 0 && rxBuf[0] == errorReqId))
 				{
 					// Don't have to wait for the request id so done.
 					bytesToRead = 0;
@@ -324,17 +320,16 @@ bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint
 				else
 				{
 					// Look for the request id in the rx buffer.
-					// This should only ever happen once.
 					// RX data should be 0's prior to the request id being found.
 
-					// If the first non-zero value found is not the request id then abort the transfer
+					// If the first non-zero value found is not the request id or error id then abort the transfer
 
 					int index;
 					bool badReqId = false;
 
 					for(index = 0; index < length; index++)
 					{
-						if(rxBuf[index] == reqId)
+						if(rxBuf[index] == reqId || rxBuf[index] == errorReqId)
 						{
 							break;
 						}
@@ -364,9 +359,13 @@ bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint
 
 						// Set the entire transmit buffer to zero as it will have already been sent.
 						for(index = 0; index < length; index++) txBuf[index] = 0;
+
+						// If the error request id was found, don't read any more data.
+						if(rxBuf[0] == errorReqId) bytesToRead = 0;
 					}
 
-					// Note: If the request id was not found the number of bytes to read should still be the full amount.
+					// Note: If the request or request error id was not found the number of bytes to read should still be the
+					//       full amount.
 				}
 			}
 			else
@@ -377,10 +376,44 @@ bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint
  			}
 		}
 	}
+	else
+	{
+		success = false;
+	}
+
+	return success;
+}
+
+bool LatcherPico::__sendRecvCommand(int commandLength, int replyLength, uint8_t reqId)
+{
+	// Assumes command is in the tx buffer and reply is in the rx buffer.
+
+	bool okay = false;
+
+	// Wait for the Pico to be ready for a command.
+	__waitForReadyForCommandActive();
+
+	// Single master active/deactive cycle per SPI transfer session. This hopefully should give the transfers a
+	// "reset on fault" tolerance because it is assumed the pico resets its SPI transfer when master active goes low.
+	__setCommandActive(true);
+
+	if(__picoSpiTxRx(_txBuf, _rxBuf, commandLength, 0, 0))
+	{
+		// Ready for command goes low when a reply is available.
+		__waitForReadyForCommandInactive();
+
+		// Clear the tx buffer so the Pico doesn't get the same command again.
+		for(int index = 0; index < TX_RX_BUFFER_SIZE; index++) _txBuf[index] = 0;
+
+		okay = __picoSpiTxRx(_txBuf, _rxBuf, replyLength, reqId, 0xFF);
+
+		// A successful rx transfer can still be the error reply from the Pico.
+		if(okay) okay = _rxBuf[0] == reqId;
+	}
 
 	__setCommandActive(false);
 
-	return success;
+	return okay;
 }
 
 int LatcherPico::__downloadLatchedDataIndex(const char* latchedDataIndexName)
@@ -396,16 +429,11 @@ int LatcherPico::__downloadLatchedDataIndex(const char* latchedDataIndexName)
 	_txBuf[3] = latchedDataIndexName[1];
 	_txBuf[4] = latchedDataIndexName[2];
 
-	bool okay = __picoSpiTxRx(_txBuf, _rxBuf, 5, 0);
+	bool okay = __sendRecvCommand(5, 2, GET_LATCHED_DATA_INDEX_REQ_ID);
 
 	if(okay)
 	{
-		okay = __picoSpiTxRx(_txBuf, _rxBuf, 2, GET_LATCHED_DATA_INDEX_REQ_ID);
-
-		if(okay)
-		{
-			retVal = _rxBuf[1];
-		}
+		retVal = _rxBuf[1];
 	}
 
 	return retVal;
