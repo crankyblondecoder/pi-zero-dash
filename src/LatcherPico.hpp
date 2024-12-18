@@ -18,6 +18,9 @@
 /** The size of the tx and rx buffers. */
 #define TX_RX_BUFFER_SIZE 16
 
+/** The Pico latched data command/response frame size, in bytes. */
+#define PICO_SPI_LATCHED_DATA_CMD_RESP_FRAME_SIZE 8
+
 namespace piZeroDash
 {
 	/**
@@ -97,29 +100,23 @@ namespace piZeroDash
 			void __waitForReadyForCommandInactive();
 
 			/**
-			 * Transmit/recieve SPI data from pico.
+			 * Transmit/recieve SPI data from Pico.
 			 * @note SPI transmits and recieves the same amount of data every SPI frame.
 			 * @note The Pico will return a request ID of 0xFF when a command error occurs.
 			 * @param txBuf Transmit buffer.
 			 * @param rxBuf Recieve buffer
-			 * @param length Length of buffers
-			 * @param reqId This request ID indicates the start of the receive stream. Keep on transferring until this value
-			 *        is recieved and the total amount of subsequent data recieved is length - 1. Use 0 for null (ie 0 is
-			 *        not a valid request ID). This value is returned in the first rx buffer location.
-			 * @param errorReqId If non-zero, this value being read as the request ID indicates an error from the Pico. No
-			 *        more data is read after this value is encountered.
+			 * @param length Length of buffers and amount of data to read from SPI bus.
 			 * @returns True for success. False otherwise.
 			 */
-			bool __picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length, uint8_t reqId, uint8_t errorReqId);
+			bool __picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length);
 
 			/**
 			 * Send a command to the Pico, then wait for reply.
-			 * @note Assumes command is in tx buffer and reply is in rx buffer.
-			 * @param commandLength Length of command in tx buffer.
-			 * @param replyLength Length of reply in rx buffer.
-			 * @param reqId Request ID that indicates the start of the reply part of the rx stream.
+			 * Assumes command is in tx buffer and reply is in rx buffer.
+			 * @note The first entry in the tx buffer is assumed to be the command ID.
+			 * @returns True if command was successful. False otherwise.
 			 */
-			bool __sendRecvCommand(int commandLength, int replyLength, uint8_t reqId);
+			bool __sendRecvCommand();
 
 			/**
 			 * Download a single latched data index from the pico.
@@ -141,24 +138,14 @@ namespace piZeroDash
 }
 
 /**
- * Commands to get data from the pico via SPI.
+ * Commands to get latched data from the pico via SPI.
  * @note These have been copied from pico_dash_spi.h
  */
-enum SpiCommand
+enum PicoLatchedDataSpiCommand
 {
 	GET_LATCHED_DATA_INDEX = 0xF1,
 	GET_LATCHED_DATA_RESOLUTION = 0xF2,
 	GET_LATCHED_DATA = 0xF3
-};
-
-/**
- * These are the request ID's
- */
-enum SpiCommandRequestId
-{
-	GET_LATCHED_DATA_INDEX_REQ_ID = 0xE1,
-	GET_LATCHED_DATA_RESOLUTION_REQ_ID = 0xE2,
-	GET_LATCHED_DATA_REQ_ID = 0xE3
 };
 
 #endif
