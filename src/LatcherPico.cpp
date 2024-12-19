@@ -218,7 +218,7 @@ int LatcherPico::__getReadyForCommandActive()
 
 		if(error > -1)
 		{
-			retVal = lineVals.bits & 2;
+			retVal = (lineVals.bits & 2) >> 1;
 		}
 	}
 
