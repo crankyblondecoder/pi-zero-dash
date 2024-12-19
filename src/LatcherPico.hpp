@@ -99,6 +99,9 @@ namespace piZeroDash
 			 */
 			void __waitForReadyForCommandInactive();
 
+			/** Clear the tx buffer with 0's */
+			void __clearTxBuffer();
+
 			/**
 			 * Transmit/recieve SPI data from Pico.
 			 * @note SPI transmits and recieves the same amount of data every SPI frame.

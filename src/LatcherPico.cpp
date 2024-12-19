@@ -339,9 +339,16 @@ bool LatcherPico::__sendRecvCommand()
 	return okay;
 }
 
+void LatcherPico::__clearTxBuffer()
+{
+	for(int index = 0; index < TX_RX_BUFFER_SIZE; index++) _txBuf[index] = 0;
+}
+
 int LatcherPico::__downloadLatchedDataIndex(const char* latchedDataIndexName)
 {
 	int retVal = -1;
+
+	__clearTxBuffer();
 
 	// Note: Don't use the same request id and command. It makes it difficult to debug on the pico.
 
