@@ -318,12 +318,16 @@ bool LatcherPico::__sendRecvCommand()
 	__setCommandActive(true);
 
 	// Wait for the Pico to be ready for a command.
+	cout << "Waiting for pico ready for command.\n";
 	__waitForReadyForCommandActive();
+	cout << "Pico is ready for command.\n";
 
 	if(__picoSpiTxRx(_txBuf, _rxBuf, PICO_SPI_LATCHED_DATA_CMD_RESP_FRAME_SIZE))
 	{
 		// Ready for command goes low when a reply is available.
+		cout << "Waiting for pico to reply.\n";
 		__waitForReadyForCommandInactive();
+		cout << "Pico has replied.\n";
 
 		// Clear the tx buffer so the Pico doesn't get the same command again.
 		for(int index = 0; index < TX_RX_BUFFER_SIZE; index++) _txBuf[index] = 0;
