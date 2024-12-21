@@ -66,9 +66,15 @@ namespace piZeroDash
 
 			/**
 			 * Matches pico latched data indexes to pi zero dash latched data indexes.
+			 * @note latched data indexes are never 0, which indicates "not assigned".
 			 * @note If -1 is present it indicates an error condition while retrieving the pico latched data index.
 			 */
 			int _picoLatchedDataIndexes[MAX_LATCHED_INDEXES];
+
+			/**
+			 * Pico latched data resolutions that match the latched data indexes, array indexes match between these two arrays.
+			 */
+			int _picoLatchedDataResolutions[MAX_LATCHED_INDEXES];
 
 			/**
 			 * Set whether the "command active" GPIO line is active.
@@ -132,6 +138,13 @@ namespace piZeroDash
 			 * Download all of the latched data indexes from the pico that are required to retrieve latched data.
 			 */
 			void __downloadLatchedDataIndexes();
+
+			/**
+			 * Download a single latched data resolution for a previously retrieved latched data index.
+			 * @param latchedDataIndex Latched data index of resolution to download.
+			 * @returns Resolution supplied from the Pico. -1 if unsuccessful.
+			 */
+			int __downloadLatchedDataResolution(int latchedDataIndex);
 
 			/**
 			 * Download all the resolutions for the previously retrieved latched data indexes.

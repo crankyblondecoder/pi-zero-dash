@@ -20,6 +20,9 @@ LatcherPico::~LatcherPico()
 
 LatcherPico::LatcherPico()
 {
+	// Clear latched data index data.
+	for(int index = 0; index < MAX_LATCHED_INDEXES; index++) _picoLatchedDataIndexes[index] = 0;
+
 	// Setup SPI comms to the pico.
 
 	// Hardwire to first SPI bus with first chip select line.
@@ -318,16 +321,12 @@ bool LatcherPico::__sendRecvCommand()
 	__setCommandActive(true);
 
 	// Wait for the Pico to be ready for a command.
-	cout << "Waiting for pico ready for command.\n";
 	__waitForReadyForCommandActive();
-	cout << "Pico is ready for command.\n";
 
 	if(__picoSpiTxRx(_txBuf, _rxBuf, PICO_SPI_LATCHED_DATA_CMD_RESP_FRAME_SIZE))
 	{
 		// Ready for command goes low when a reply is available.
-		cout << "Waiting for pico to reply.\n";
 		__waitForReadyForCommandInactive();
-		cout << "Pico has replied.\n";
 
 		// Clear the tx buffer so the Pico doesn't get the same command again.
 		for(int index = 0; index < TX_RX_BUFFER_SIZE; index++) _txBuf[index] = 0;
@@ -353,8 +352,6 @@ int LatcherPico::__downloadLatchedDataIndex(const char* latchedDataIndexName)
 	int retVal = -1;
 
 	__clearTxBuffer();
-
-	// Note: Don't use the same request id and command. It makes it difficult to debug on the pico.
 
 	_txBuf[0] = GET_LATCHED_DATA_INDEX;
 	_txBuf[1] = latchedDataIndexName[0];
@@ -397,7 +394,53 @@ void LatcherPico::__downloadLatchedDataIndexes()
 	cout << "ETC Index: "  << _picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] << "\n";
 }
 
+int LatcherPico::__downloadLatchedDataResolution(int latchedDataIndex)
+{
+	int retVal = -1;
+
+	__clearTxBuffer();
+
+	_txBuf[0] = GET_LATCHED_DATA_RESOLUTION;
+	_txBuf[1] = latchedDataIndex;
+
+	bool okay = __sendRecvCommand();
+
+	if(okay)
+	{
+		// Data returned is 16 bit integer, little endian byte order.
+
+		retVal = _rxBuf[2];
+		retVal <<= 8;
+		retVal += _rxBuf[1];
+	}
+
+	return retVal;
+}
+
 void LatcherPico::__downloadLatchedDataResolutions()
 {
-	// TODO ...
+	for(int index = 0; index < MAX_LATCHED_INDEXES; index++)
+	{
+		int latchedDataIndex = _picoLatchedDataIndexes[index];
+
+		if(latchedDataIndex > 0)
+		{
+			_picoLatchedDataResolutions[index] = __downloadLatchedDataResolution(latchedDataIndex);
+		}
+	}
+
+	if(_picoLatchedDataIndexes[LatcherPico::ENGINE_RPM] > 0)
+	{
+		cout << "ERM resolution: " << _picoLatchedDataResolutions[LatcherPico::ENGINE_RPM] << "\n";
+	}
+
+	if(_picoLatchedDataIndexes[LatcherPico::SPEED_KMH] > 0)
+	{
+		cout << "SKH resolution: " << _picoLatchedDataResolutions[LatcherPico::SPEED_KMH] << "\n";
+	}
+
+	if(_picoLatchedDataIndexes[LatcherPico::ENGINE_TEMP_C] > 0)
+	{
+		cout << "ETC resolution: " << _picoLatchedDataResolutions[LatcherPico::ENGINE_TEMP_C] << "\n";
+	}
 }
