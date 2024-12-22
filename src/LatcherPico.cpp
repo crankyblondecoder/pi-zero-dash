@@ -2,6 +2,7 @@
 #include <iostream>
 #include <linux/spi/spidev.h>
 #include <linux/gpio.h>
+#include <poll.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <cstring>
@@ -234,6 +235,7 @@ int LatcherPico::__readGpioEventsBlocking()
 
 	if(_gpioLineFd > -1)
 	{
+		// Note: Should read the entire event buffer in one go.
 		retVal = read(_gpioLineFd, &_gpioLineEventBuffer, sizeof(gpio_v2_line_event) * GPIO_LINE_EVENT_BUFFER_SIZE);
 
 		if(retVal > 0) retVal /= sizeof(gpio_v2_line_event);
@@ -242,32 +244,118 @@ int LatcherPico::__readGpioEventsBlocking()
 	return retVal;
 }
 
-void LatcherPico::__waitForReadyForCommandActive()
+int LatcherPico::__readGpioEventsNonBlocking(int timeout)
 {
-	int readyForCommandActive = __getReadyForCommandActive();
+	// Poll GPIO line FD so reading it doesn't block.
 
-	while(readyForCommandActive == 0)
+	int retVal = 0;
+
+	if(_gpioLineFd > -1)
 	{
-		int error = __readGpioEventsBlocking();
+		pollfd pollFd;
+		pollFd.fd = _gpioLineFd;
+		pollFd.events = POLLIN;
+		pollFd.revents = 0;
 
-		if(error < 0) break;
+		int numPollEvents = poll(&pollFd, 1, 0);
 
-		readyForCommandActive = __getReadyForCommandActive();
+		if(numPollEvents > 0)
+		{
+			// Shouldn't block.
+			retVal = __readGpioEventsBlocking();
+		}
 	}
+
+	return retVal;
 }
 
-void LatcherPico::__waitForReadyForCommandInactive()
+void LatcherPico::__clearGpioEvents()
+{
+	__readGpioEventsNonBlocking(0);
+}
+
+bool LatcherPico::__waitForReadyForCommandActive()
 {
 	int readyForCommandActive = __getReadyForCommandActive();
 
-	while(readyForCommandActive == 1)
-	{
-		int error = __readGpioEventsBlocking();
+	bool error = readyForCommandActive == -1;
+	bool edgeHighFound = false;
 
-		if(error < 0) break;
+	while(readyForCommandActive == 0 && !edgeHighFound)
+	{
+		int numEvents = __readGpioEventsNonBlocking(WAIT_FOR_READY_TIMEOUT);
+
+		if(numEvents <= 0)
+		{
+			error = true;
+			break;
+		}
+
+		// Detect ready for command going high in the list of events. Even if ready for command is currently inactive,
+		// ready for command going active at any time in pending events causes the wait to stop. This mitigates a
+		// deadlock when the Pico rapidly flips from inactive to active to inactive.
+
+		for(int index = 0; index < numEvents; index++)
+		{
+			if(_gpioLineEventBuffer[index].id == GPIO_V2_LINE_EVENT_RISING_EDGE)
+			{
+				edgeHighFound = true;
+				break;
+			}
+		}
 
 		readyForCommandActive = __getReadyForCommandActive();
+
+		if(readyForCommandActive == -1)
+		{
+			error = true;
+			break;
+		}
 	}
+
+	return !error && readyForCommandActive == 1;
+}
+
+bool LatcherPico::__waitForReadyForCommandInactive()
+{
+	int readyForCommandActive = __getReadyForCommandActive();
+
+	bool error = readyForCommandActive == -1;
+	bool edgeLowFound = false;
+
+	while(readyForCommandActive == 1 && !edgeLowFound)
+	{
+		int numEvents = __readGpioEventsNonBlocking(WAIT_FOR_READY_TIMEOUT);
+
+		if(numEvents <= 0)
+		{
+			error = true;
+			break;
+		}
+
+		// Detect ready for command going high in the list of events. Even if ready for command is currently inactive,
+		// ready for command going active at any time in pending events causes the wait to stop. This mitigates a
+		// deadlock when the Pico rapidly flips from inactive to active to inactive.
+
+		for(int index = 0; index < numEvents; index++)
+		{
+			if(_gpioLineEventBuffer[index].id == GPIO_V2_LINE_EVENT_FALLING_EDGE)
+			{
+				edgeLowFound = true;
+				break;
+			}
+		}
+
+		readyForCommandActive = __getReadyForCommandActive();
+
+		if(readyForCommandActive == -1)
+		{
+			error = true;
+			break;
+		}
+	}
+
+	return !error && readyForCommandActive == 0;
 }
 
 bool LatcherPico::__picoSpiTxRx(uint8_t* txBuf, uint8_t* rxBuf, int length)
@@ -316,25 +404,32 @@ bool LatcherPico::__sendRecvCommand()
 
 	bool okay = false;
 
+	// Clear the GPIO events before command goes active. This is so the scenario where the Ready For Command signal returned
+	// by the Pico rapidly goes high/low can be detected.
+	__clearGpioEvents();
+
 	// Single master active/deactive cycle per SPI transfer session. This hopefully should give the transfers a
 	// "reset on fault" tolerance because it is assumed the pico resets its SPI transfer when master active goes low.
 	__setCommandActive(true);
 
 	// Wait for the Pico to be ready for a command.
-	__waitForReadyForCommandActive();
+	bool activeOkay = __waitForReadyForCommandActive();
 
-	if(__picoSpiTxRx(_txBuf, _rxBuf, PICO_SPI_LATCHED_DATA_CMD_RESP_FRAME_SIZE))
+	if(activeOkay && __picoSpiTxRx(_txBuf, _rxBuf, PICO_SPI_LATCHED_DATA_CMD_RESP_FRAME_SIZE))
 	{
 		// Ready for command goes low when a reply is available.
-		__waitForReadyForCommandInactive();
+		bool replyReady = __waitForReadyForCommandInactive();
 
-		// Clear the tx buffer so the Pico doesn't get the same command again.
-		for(int index = 0; index < TX_RX_BUFFER_SIZE; index++) _txBuf[index] = 0;
+		if(replyReady)
+		{
+			// Clear the tx buffer so the Pico doesn't get the same command again.
+			for(int index = 0; index < TX_RX_BUFFER_SIZE; index++) _txBuf[index] = 0;
 
-		okay = __picoSpiTxRx(_txBuf, _rxBuf, PICO_SPI_LATCHED_DATA_CMD_RESP_FRAME_SIZE);
+			okay = __picoSpiTxRx(_txBuf, _rxBuf, PICO_SPI_LATCHED_DATA_CMD_RESP_FRAME_SIZE);
 
-		// A successful rx transfer can still be the error reply from the Pico.
-		if(okay) okay = _rxBuf[0] == command;
+			// A successful rx transfer can still be the error reply from the Pico.
+			if(okay) okay = _rxBuf[0] == command;
+		}
 	}
 
 	__setCommandActive(false);

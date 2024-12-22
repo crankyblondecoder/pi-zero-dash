@@ -21,6 +21,9 @@
 /** The Pico latched data command/response frame size, in bytes. */
 #define PICO_SPI_LATCHED_DATA_CMD_RESP_FRAME_SIZE 8
 
+/** Wait for ready timeout. Applies to both Active/Inactive tests. */
+#define WAIT_FOR_READY_TIMEOUT 2
+
 namespace piZeroDash
 {
 	/**
@@ -94,16 +97,32 @@ namespace piZeroDash
 			int __readGpioEventsBlocking();
 
 			/**
-			 * Wait for the 'Ready For Command' GPIO to go active (high).
-			 * @note Will block until condition is met or error occurs.
+			 * Read the available GPIO events, not blocking until events are available.
+			 * @param timeout Maximum number of milliseconds to wait for input for.
+			 * @returns Number of events read into the buffer. -1 For error.
 			 */
-			void __waitForReadyForCommandActive();
+			int __readGpioEventsNonBlocking(int timeout);
+
+			/**
+			 * Clear all GPIO events from the event buffer.
+			 */
+			void __clearGpioEvents();
+
+			/**
+			 * Wait for the 'Ready For Command' GPIO to go active (high).
+			 * @note Will block until condition is met or error occurs up to an abitrary timeout.
+			 * @returns True if ready for command is active, false if an error condition or timeout occurred, or ready for
+			 *          command is currently inactive..
+			 */
+			bool __waitForReadyForCommandActive();
 
 			/**
 			 * Wait for the 'Ready For Command' GPIO to go inactive (low).
-			 * @note Will block until condition is met or error occurs.
+			 * @note Will block until condition is met or error occurs up to an abitrary timeout.
+			 * @returns True if ready for command is inactive, false if an error condition or timeout occurred, or ready for
+			 *          command is currently active..
 			 */
-			void __waitForReadyForCommandInactive();
+			bool __waitForReadyForCommandInactive();
 
 			/** Clear the tx buffer with 0's */
 			void __clearTxBuffer();
