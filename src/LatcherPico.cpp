@@ -257,7 +257,7 @@ int LatcherPico::__readGpioEventsNonBlocking(int timeout)
 		pollFd.events = POLLIN;
 		pollFd.revents = 0;
 
-		int numPollEvents = poll(&pollFd, 1, 0);
+		int numPollEvents = poll(&pollFd, 1, timeout);
 
 		if(numPollEvents > 0)
 		{
