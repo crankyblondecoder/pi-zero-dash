@@ -45,10 +45,25 @@ namespace piZeroDash
 				SPEED_KMH,
 
 				/** Engine temperature degrees celsius. */
-				ENGINE_TEMP_C
+				ENGINE_TEMP_C,
+
+				/** Forced induction boost in PSI. */
+				BOOST_PSI
 			};
 
-			static void setCurrentLatcher(Latcher* latcher);
+			/**
+			 * Get the value of floating point latched data.
+			 * @param dataIndex Index of latched data to get.
+			 * @returns Latched data value.
+			 */
+			virtual double getLatchedDataValueDouble(LatchedDataIndex dataIndex) = 0;
+
+			/**
+			 * Get the value of boolean latched data.
+			 * @param dataIndex Index of latched data to get.
+			 * @returns Latched data value.
+			 */
+			virtual bool getLatchedDataValueBool(LatchedDataIndex dataIndex) = 0;
 
 		protected:
 
@@ -78,9 +93,6 @@ namespace piZeroDash
 			/** The last time the polling loop _finished_. */
 			long _lastPollSec;
 			long _lastPollUSec;
-
-			/** The current latcher being used. */
-			static Latcher* __currentLatcher;
 	};
 }
 

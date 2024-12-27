@@ -17,6 +17,7 @@
 #include "GaugeSpeedo_e36.hpp"
 #include "GaugeTacho_e36.hpp"
 #include "GaugeTurnIndicator_e36.hpp"
+#include "LatcherPico.hpp"
 
 namespace piZeroDash
 {
@@ -39,6 +40,9 @@ namespace piZeroDash
 			 */
 			Dash_e36(double speedoWidthPercent, double tachoWidthPercent, double turnIndicatorWidthPercent,
 				double lightHeightPercent, double engineTempWidthPercent, double boostWidthPercent);
+
+			/** Set the latcher that communicates with the Pi Pico. */
+			void setPicoLatcher(LatcherPico* picoLatcher);
 
 		protected:
 

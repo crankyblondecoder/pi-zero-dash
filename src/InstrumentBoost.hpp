@@ -9,6 +9,7 @@ namespace piZeroDash
 {
 	/**
 	 * Generic forced induction boost instrument.
+	 * Defaults to the units of PSI.
 	 */
 	class InstrumentBoost : public Instrument
 	{
@@ -20,7 +21,7 @@ namespace piZeroDash
 			// Impl.
 			bool latch();
 
-			/** Get the currently latched amount of boost in . */
+			/** Get the currently latched amount of boost in psi. */
 			double getBoost();
 
 			/** Run a test cycle. */

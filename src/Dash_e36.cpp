@@ -171,3 +171,8 @@ void Dash_e36::_drawBackground(CairoSurface& surface)
 void Dash_e36::_drawForeground(CairoSurface& surface)
 {
 }
+
+void Dash_e36::setPicoLatcher(LatcherPico* picoLatcher)
+{
+	_tacho.set
+}

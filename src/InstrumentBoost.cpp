@@ -4,6 +4,7 @@
 using namespace std;
 
 #include "InstrumentBoost.hpp"
+#include "Latcher.hpp"
 
 using namespace piZeroDash;
 
@@ -17,6 +18,8 @@ InstrumentBoost::InstrumentBoost()
 
 bool InstrumentBoost::latch()
 {
+	bool newVal = false;
+
 	if(inTestMode())
 	{
 		double testVal = _getNumericalTestValue();
@@ -24,14 +27,26 @@ bool InstrumentBoost::latch()
 		if(_latchedValue != testVal)
 		{
 			_latchedValue = testVal;
-			return true;
+			newVal = true;
 		}
+	}
+	else
+	{
+		Latcher* curLatcher = _getLatcher();
 
-		return false;
+		if(curLatcher)
+		{
+			double latchedVal = curLatcher -> getLatchedDataValueDouble(Latcher::BOOST_PSI);
+
+			if(_latchedValue != latchedVal)
+			{
+				_latchedValue = latchedVal;
+				newVal = true;
+			}
+		}
 	}
 
-	// TODO ... Get actual boost data from pico.
-	return false;
+	return newVal;
 }
 
 double InstrumentBoost::getBoost()

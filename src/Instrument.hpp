@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <sys/time.h>
 
+#include "Latcher.hpp"
+
 namespace piZeroDash
 {
 	/**
@@ -26,9 +28,18 @@ namespace piZeroDash
 			/** Get whether this instrument is currently in test mode. */
 			bool inTestMode();
 
+			/**
+			 * Set the latcher used to latch instrument data.
+			 * @param latcher Pointer to latcher to set. _Not_ owned by this.
+			 */
+			void setLatcher(Latcher* latcher);
+
 		protected:
 
-			/** Get whether this instrument is currently in test mode. */
+			/**
+			 * Get whether this instrument is currently in test mode.
+			 * @returns Pointer to current latcher. 0 for none.
+			 */
 			bool _getInTestMode();
 
 			/**
@@ -44,6 +55,9 @@ namespace piZeroDash
 			 * Get a numerical test value.
 			 */
 			double _getNumericalTestValue();
+
+			/** Get the current latcher bound to this instrument. */
+			Latcher* _getLatcher();
 
 		private:
 
@@ -78,6 +92,9 @@ namespace piZeroDash
 
 			/** Whether testing is in single step mode */
 			bool _testSingleStep;
+
+			/** Current latcher used to source instrument data. */
+			Latcher* _latcher;
 	};
 }
 

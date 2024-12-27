@@ -18,11 +18,7 @@ int main(int argc, char* argv[])
 
 	cout << "*** Pi Zero Dash ***\n\n";
 
-	LatcherPico curLatcher;
-
-	Latcher::setCurrentLatcher(&curLatcher);
+	LatcherPico picoLatcher;
 
 	// TODO ... Thready stuff.
-
-	Latcher::setCurrentLatcher(0);
 }

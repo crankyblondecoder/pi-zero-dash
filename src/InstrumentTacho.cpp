@@ -16,6 +16,8 @@ InstrumentTacho::InstrumentTacho()
 
 bool InstrumentTacho::latch()
 {
+	bool newVal = false;
+
 	if(inTestMode())
 	{
 		double testVal = _getNumericalTestValue();
@@ -23,14 +25,26 @@ bool InstrumentTacho::latch()
 		if(_latchedValue != testVal)
 		{
 			_latchedValue = testVal;
-			return true;
+			newVal = true;
 		}
+	}
+	else
+	{
+		Latcher* curLatcher = _getLatcher();
 
-		return false;
+		if(curLatcher)
+		{
+			double latchedVal = curLatcher -> getLatchedDataValueDouble(Latcher::ENGINE_RPM);
+
+			if(_latchedValue != latchedVal)
+			{
+				_latchedValue = latchedVal;
+				newVal = true;
+			}
+		}
 	}
 
-	// TODO ... Get actual rpm data from pico.
-	return false;
+	return newVal;
 }
 
 unsigned InstrumentTacho::getRpm()

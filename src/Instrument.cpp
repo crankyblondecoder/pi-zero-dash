@@ -10,6 +10,16 @@ Instrument::Instrument()
 {
 }
 
+void Instrument::setLatcher(Latcher* latcher)
+{
+	_latcher = latcher;
+}
+
+Latcher* Instrument::_getLatcher()
+{
+	return _latcher;
+}
+
 void Instrument::_testNumerical(double min, double max, double testStepPerMillis, bool forwardOnly)
 {
 	_numTestMin = min;
@@ -23,6 +33,8 @@ void Instrument::_testNumerical(double min, double max, double testStepPerMillis
 	_testSingleStep = false;
 
 	_inTestMode = true;
+
+	_latcher = 0;
 }
 
 bool Instrument::inTestMode()

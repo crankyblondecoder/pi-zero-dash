@@ -6,13 +6,6 @@
 
 using namespace piZeroDash;
 
-Latcher* Latcher::__currentLatcher;
-
-void Latcher::setCurrentLatcher(Latcher* latcher)
-{
-	__currentLatcher = latcher;
-}
-
 // -- Non class thread entry --
 void* _threadEntry(void* thread)
 {

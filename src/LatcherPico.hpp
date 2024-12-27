@@ -36,6 +36,12 @@ namespace piZeroDash
 			virtual ~LatcherPico();
 			LatcherPico();
 
+			// Impl
+			double getLatchedDataValueDouble(LatchedDataIndex dataIndex);
+
+			// Impl.
+			bool getLatchedDataValueBool(LatchedDataIndex dataIndex);
+
 		protected:
 
 			// Impl.
@@ -78,6 +84,11 @@ namespace piZeroDash
 			 * Pico latched data resolutions that match the latched data indexes, array indexes match between these two arrays.
 			 */
 			int _picoLatchedDataResolutions[MAX_LATCHED_INDEXES];
+
+			/**
+			 * Pico raw latched data. ie Hasn't had resolutions applied yet.
+			 */
+			int _picoLatchedDataRaw[MAX_LATCHED_INDEXES];
 
 			/**
 			 * Set whether the "command active" GPIO line is active.
@@ -169,6 +180,17 @@ namespace piZeroDash
 			 * Download all the resolutions for the previously retrieved latched data indexes.
 			 */
 			void __downloadLatchedDataResolutions();
+
+			/**
+			 * Download all the raw latched data for the previously retrieved latched data indexes.
+			 */
+			void __downloadLatchedDataRaw();
+
+			/** Get the resolved latched data float value for the given index. */
+			double __getLatchedDoubleValue(int latchedDataIndex);
+
+			/** Get the resolved latched data bool value for the given index. */
+			bool __getLatchedBoolValue(int latchedDataIndex);
 	};
 }
 

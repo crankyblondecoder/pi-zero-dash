@@ -128,15 +128,15 @@ LatcherPico::LatcherPico()
 					{
 						_gpioLineFd = lineReq.fd;
 
-						// Assume ready has been initialised to false prior.
-						_ready = true;
-
 						// Make sure master active is in known "off" state.
 						__setCommandActive(false);
 
 						// Can now attempt to initialise latched data indexes and resolutions.
 						__downloadLatchedDataIndexes();
 						__downloadLatchedDataResolutions();
+
+						// Can signal to polling that it can start. Assume ready has been initialised to false prior.
+						_ready = true;
 					}
 					else
 					{
@@ -168,7 +168,7 @@ void LatcherPico::_poll()
 {
 	if(_ready)
 	{
-		// TODO ...
+		__downloadLatchedDataRaw();
 	}
 }
 
@@ -538,4 +538,98 @@ void LatcherPico::__downloadLatchedDataResolutions()
 	{
 		cout << "ETC resolution: " << _picoLatchedDataResolutions[LatcherPico::ENGINE_TEMP_C] << "\n";
 	}
+}
+
+void LatcherPico::__downloadLatchedDataRaw()
+{
+	for(int index = 0; index < MAX_LATCHED_INDEXES; index++)
+	{
+		int latchedDataIndex = _picoLatchedDataIndexes[index];
+
+		if(latchedDataIndex > 0)
+		{
+			__clearTxBuffer();
+
+			_txBuf[0] = GET_LATCHED_DATA;
+			_txBuf[1] = latchedDataIndex;
+
+			bool okay = __sendRecvCommand();
+
+			if(okay)
+			{
+				// Data returned is a 32 bit integer, little endian byte order.
+
+				uint32_t coercVal;
+				uint32_t rawVal = 0;
+
+				rawVal = _rxBuf[4] << 24;
+				coercVal = _rxBuf[3] << 16;
+				rawVal += coercVal;
+				coercVal = _rxBuf[2] << 8;
+				rawVal += coercVal;
+				rawVal += _rxBuf[1];
+
+				_picoLatchedDataRaw[index] = rawVal;
+			}
+		}
+	}
+}
+
+double LatcherPico::getLatchedDataValueDouble(LatchedDataIndex dataIndex)
+{
+	double retVal;
+
+	switch (dataIndex)
+	{
+		case Latcher::ENGINE_RPM:
+
+			retVal = __getLatchedDoubleValue(dataIndex);
+			break;
+
+		case Latcher::SPEED_KMH:
+
+			retVal = __getLatchedDoubleValue(dataIndex);
+			break;
+
+		case Latcher::ENGINE_TEMP_C:
+
+			retVal = __getLatchedDoubleValue(dataIndex);
+			break;
+
+		case Latcher::BOOST_PSI:
+
+			retVal = __getLatchedDoubleValue(dataIndex);
+			break;
+
+		default:
+
+			retVal = 0;
+			break;
+	}
+}
+
+bool LatcherPico::getLatchedDataValueBool(LatchedDataIndex dataIndex)
+{
+	// TODO ... Indicators etc.
+	return false;
+}
+
+double LatcherPico::__getLatchedDoubleValue(int latchedDataIndex)
+{
+	if(_picoLatchedDataIndexes[latchedDataIndex] > 0 && _picoLatchedDataResolutions[latchedDataIndex] != 0)
+	{
+		return (double)_picoLatchedDataRaw[latchedDataIndex] / (double)_picoLatchedDataResolutions[latchedDataIndex];
+	}
+
+	return 0;
+}
+
+bool LatcherPico::__getLatchedBoolValue(int latchedDataIndex)
+{
+	if(_picoLatchedDataIndexes[latchedDataIndex] > 0)
+	{
+		return _picoLatchedDataRaw[latchedDataIndex] != 0;
+	}
+
+	return false;
 }
