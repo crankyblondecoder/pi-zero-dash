@@ -44,6 +44,9 @@ namespace piZeroDash
 			/** Set the latcher that communicates with the Pi Pico. */
 			void setPicoLatcher(LatcherPico* picoLatcher);
 
+			/** Set the latcher that communicates with the Pi Zero GPIO connected instruments. */
+			void setPiZeroLatcher(Latcher* latcher);
+
 		protected:
 
 			// Impl.

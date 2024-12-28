@@ -38,6 +38,9 @@ namespace piZeroDash
 			/** Whether this gauge is currentlyu in a test cycle. */
 			virtual bool inTestMode() = 0;
 
+			/** Set the latcher of all instruments attached to this gauge.  */
+			void setInstrumentLatcher(Latcher* latcher);
+
 		protected:
 
 			/**
@@ -123,8 +126,10 @@ namespace piZeroDash
 
 		private:
 
+			/** Number of instruments attached to this gauge. */
 			unsigned _instrumentCount;
 
+			/** Instruments attached to this gauge. */
 			Instrument** _instruments;
 
 			/** Whether the first foreground has been drawn for this gauge. */

@@ -606,6 +606,8 @@ double LatcherPico::getLatchedDataValueDouble(LatchedDataIndex dataIndex)
 			retVal = 0;
 			break;
 	}
+
+	return retVal;
 }
 
 bool LatcherPico::getLatchedDataValueBool(LatchedDataIndex dataIndex)

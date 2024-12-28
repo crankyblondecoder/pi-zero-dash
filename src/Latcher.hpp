@@ -90,8 +90,10 @@ namespace piZeroDash
 			/** Interval at which latched data is polled. In micro seconds. */
 			long _pollingInterval;
 
-			/** The last time the polling loop _finished_. */
+			/** The last time the polling loop _finished_. Seconds component. */
 			long _lastPollSec;
+
+			/** The last time the polling loop _finished_. Micro seconds component. */
 			long _lastPollUSec;
 	};
 }

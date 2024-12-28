@@ -64,19 +64,15 @@ void Latcher::__threadEntry()
 
 		gettimeofday(&curTime, 0);
 
-		long nanoSeconds = (curTime.tv_sec - _lastPollSec) * 1000000 + (curTime.tv_usec - _lastPollUSec);
+		long microSeconds = (curTime.tv_sec - _lastPollSec) * 1000000 + (curTime.tv_usec - _lastPollUSec);
 
-		long pollTimeDiff = _pollingInterval - nanoSeconds;
+		long pollTimeDiff = _pollingInterval - microSeconds;
 
 		if(pollTimeDiff > 0)
 		{
 			// Need to wait for next polling window.
-			timespec sleepDuration;
-			sleepDuration.tv_sec = 0;
-			sleepDuration.tv_nsec = pollTimeDiff;
-
 			// Ignore any error.
-			nanosleep(&sleepDuration, NULL);
+			usleep(pollTimeDiff);
 		}
 
 		_poll();

@@ -50,6 +50,14 @@ void Gauge::_addInstrument(Instrument* instrument)
 	_instruments[_instrumentCount++] = instrument;
 }
 
+void Gauge::setInstrumentLatcher(Latcher* latcher)
+{
+	for(unsigned index = 0; index < _instrumentCount; index++)
+	{
+		_instruments[index] -> setLatcher(latcher);
+	}
+}
+
 void Gauge::_drawDefaultBoxPath(cairo_t* cr, double cornerRadius, double left, double right, double top, double bottom)
 {
 	cairo_new_sub_path(cr);

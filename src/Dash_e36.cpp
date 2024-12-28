@@ -174,5 +174,35 @@ void Dash_e36::_drawForeground(CairoSurface& surface)
 
 void Dash_e36::setPicoLatcher(LatcherPico* picoLatcher)
 {
-	_tacho.set
+	_speedo -> setInstrumentLatcher(picoLatcher);
+
+	_tacho -> setInstrumentLatcher(picoLatcher);
+
+	_turnLeft -> setInstrumentLatcher(picoLatcher);
+
+	_turnRight -> setInstrumentLatcher(picoLatcher);
+
+	_headlight -> setInstrumentLatcher(picoLatcher);
+
+	_engineTemp -> setInstrumentLatcher(picoLatcher);
+
+	_boost -> setInstrumentLatcher(picoLatcher);
+
+	_fuelLevel -> setInstrumentLatcher(picoLatcher);
+
+	_parkBrake -> setInstrumentLatcher(picoLatcher);
+
+	_doorOpen -> setInstrumentLatcher(picoLatcher);
+
+	_lowVoltage -> setInstrumentLatcher(picoLatcher);
+
+	_lowOilPressure -> setInstrumentLatcher(picoLatcher);
+
+	_oilTemp -> setInstrumentLatcher(picoLatcher);
+}
+
+void Dash_e36::setPiZeroLatcher(Latcher* latcher)
+{
+	// TODO ... Canbus direct to Pi Zero.
+	_ecuWarning -> setInstrumentLatcher(latcher);
 }
